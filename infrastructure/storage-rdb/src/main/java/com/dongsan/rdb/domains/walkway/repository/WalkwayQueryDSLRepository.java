@@ -1,10 +1,10 @@
 package com.dongsan.rdb.domains.walkway.repository;
 
-
-import static com.dongsan.domains.walkway.entity.QLikedWalkway.likedWalkwayEntity;
+import static com.dongsan.rdb.domains.walkway.entity.QLikedWalkwayEntity.likedWalkwayEntity;
 
 import com.dongsan.core.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.core.domains.walkway.ExposeLevel;
+import com.dongsan.rdb.domains.walkway.entity.QWalkwayEntity;
 import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -27,11 +27,11 @@ public class WalkwayQueryDSLRepository {
     public List<WalkwayEntity> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
         return queryFactory.selectFrom(walkwayEntity)
                 .join(likedWalkwayEntity)
-                .on(likedWalkwayEntity.walkway.eq(walkwayEntity))
+                .on(likedWalkwayEntity.walkwayEntity.eq(walkwayEntity))
                 .where(
-                        likedWalkwayEntity.member.id.eq(memberId),
+                        likedWalkwayEntity.memberEntity.id.eq(memberId),
                         walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-                                .or(walkwayEntity.member.id.eq(memberId)),
+                                .or(walkwayEntity.memberEntity.id.eq(memberId)),
                         createdAtLt(lastCreatedAt)
                 )
                 .orderBy(walkwayEntity.createdAt.desc())
@@ -41,7 +41,7 @@ public class WalkwayQueryDSLRepository {
 
     public List<WalkwayEntity> getUserWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
         return queryFactory.selectFrom(walkwayEntity)
-                .where(walkwayEntity.member.id.eq(memberId), createdAtLt(lastCreatedAt))
+                .where(walkwayEntity.memberEntity.id.eq(memberId), createdAtLt(lastCreatedAt))
                 .orderBy(walkwayEntity.createdAt.desc())
                 .limit(size)
                 .fetch();
@@ -82,14 +82,14 @@ public class WalkwayQueryDSLRepository {
     public List<WalkwayEntity> searchWalkwaysLiked(SearchWalkwayQuery query) {
         WalkwayEntity lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
                 .where(walkwayEntity.id.eq(query.lastWalkwayId()))
-                .fetch();
+                .fetchOne();
 
         return queryFactory.select(walkwayEntity)
                 .from(walkwayEntity)
                 .where(
                         this.searchFilterDistance(query.longitude(), query.latitude(), query.distance()),
                         walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-                                .or(walkwayEntity.member.id.eq(query.userId())),
+                                .or(walkwayEntity.memberEntity.id.eq(query.userId())),
                         lastWalkwayEntity == null
                                 ? null
                                 : walkwayEntity.likeCount.lt(lastWalkwayEntity.getLikeCount())
@@ -106,14 +106,14 @@ public class WalkwayQueryDSLRepository {
     public List<WalkwayEntity> searchWalkwaysRating(SearchWalkwayQuery query) {
         WalkwayEntity lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
                 .where(walkwayEntity.id.eq(query.lastWalkwayId()))
-                .fetch();
+                .fetchOne();
 
         return queryFactory.select(walkwayEntity)
                 .from(walkwayEntity)
                 .where(
                         this.searchFilterDistance(query.longitude(), query.latitude(), query.distance()),
                         walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-                                .or(walkwayEntity.member.id.eq(query.userId())),
+                                .or(walkwayEntity.memberEntity.id.eq(query.userId())),
                         lastWalkwayEntity == null
                                 ? null
                                 : walkwayEntity.rating.lt(lastWalkwayEntity.getRating())
