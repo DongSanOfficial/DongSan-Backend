@@ -1,10 +1,8 @@
-package com.dongsan.rdb.domains.walkway.repository;
+package com.dongsan.rdb.domains.walkway;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.entity.LikedWalkwayEntity;
-import com.dongsan.rdb.domains.walkway.entity.QLikedWalkwayEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;

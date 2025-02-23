@@ -10,7 +10,7 @@
 //import com.dongsan.rdb.domains.member.MemberEntity;
 //import com.dongsan.rdb.domains.review.RatingCount;
 //import com.dongsan.rdb.domains.review.ReviewEntity;
-//import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+//import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 //import com.dongsan.rdb.domains.walkway.enums.ExposeLevel;
 //import java.time.LocalDateTime;
 //import java.util.ArrayList;

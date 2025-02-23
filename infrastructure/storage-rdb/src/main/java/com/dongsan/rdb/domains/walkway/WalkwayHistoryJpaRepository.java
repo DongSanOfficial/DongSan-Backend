@@ -1,6 +1,5 @@
-package com.dongsan.rdb.domains.walkway.repository;
+package com.dongsan.rdb.domains.walkway;
 
-import com.dongsan.rdb.domains.walkway.entity.WalkwayHistoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

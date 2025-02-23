@@ -9,30 +9,22 @@ public class ImageFixture {
     private static final String URL = "https://test.com";
 
     public static ImageEntity createImage(String url) {
-        return ImageEntity.builder()
-                .url(url)
-                .build();
+        return new ImageEntity(url);
     }
 
     public static ImageEntity createImage() {
-        return ImageEntity.builder()
-                .url(URL)
-                .build();
+        return new ImageEntity(URL);
     }
 
     public static ImageEntity createImageWithId(Long id, String url) {
-        ImageEntity imageEntity = ImageEntity.builder()
-                .url(url)
-                .build();
+        ImageEntity imageEntity = new ImageEntity(url);
         reflectId(id, imageEntity);
         reflectCreatedAt(LocalDateTime.now(), imageEntity);
         return imageEntity;
     }
 
     public static ImageEntity createImageWithId(Long id) {
-        ImageEntity imageEntity = ImageEntity.builder()
-                .url(URL)
-                .build();
+        ImageEntity imageEntity = new ImageEntity(URL);
         reflectId(id, imageEntity);
         reflectCreatedAt(LocalDateTime.now(), imageEntity);
         return imageEntity;

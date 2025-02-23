@@ -1,4 +1,4 @@
-package com.dongsan.rdb.domains.walkway.entity;
+package com.dongsan.rdb.domains.walkway;
 
 import com.dongsan.core.domains.review.ReviewedWalkway;
 import com.dongsan.core.support.util.Author;
@@ -77,7 +77,7 @@ public class WalkwayEntity extends BaseEntity {
     protected WalkwayEntity() {}
 
     // 연관관계 매핑도 생성 시 매핑합니다.
-    private WalkwayEntity(String name, Double distance, Integer time, ExposeLevel exposeLevel, Point startLocation,
+    public WalkwayEntity(String name, Double distance, Integer time, ExposeLevel exposeLevel, Point startLocation,
                           Point endLocation, String memo, LineString course, String courseImageUrl, MemberEntity memberEntity, List<String> hashtags){
         this.name = name;
         this.distance = distance;
@@ -186,5 +186,13 @@ public class WalkwayEntity extends BaseEntity {
 
     public List<String> getHashtags() {
         return hashtags;
+    }
+
+    public MemberEntity getMemberEntity() {
+        return memberEntity;
+    }
+
+    public ExposeLevel getExposeLevel() {
+        return exposeLevel;
     }
 }

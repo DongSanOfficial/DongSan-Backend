@@ -9,7 +9,7 @@
 //import com.dongsan.rdb.domains.bookmark.BookmarkEntity;
 //import com.dongsan.rdb.domains.bookmark.MarkedWalkway;
 //import com.dongsan.rdb.domains.bookmark.MarkedWalkwayJpaRepository;
-//import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+//import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Nested;

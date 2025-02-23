@@ -8,11 +8,8 @@ import static fixture.WalkwayFixture.createWalkway;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dongsan.common.support.RepositoryTest;
-import com.dongsan.rdb.domains.bookmark.BookmarkEntity;
-import com.dongsan.rdb.domains.bookmark.MarkedWalkwayEntity;
-import com.dongsan.rdb.domains.bookmark.MarkedWalkwayQueryDSLRepository;
 import com.dongsan.rdb.domains.member.MemberEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 import com.dongsan.rdb.domains.walkway.enums.ExposeLevel;
 import java.time.LocalDateTime;
 import java.util.List;

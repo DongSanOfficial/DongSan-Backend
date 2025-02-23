@@ -1,8 +1,6 @@
-package com.dongsan.rdb.domains.walkway.repository;
+package com.dongsan.rdb.domains.walkway;
 
 import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.entity.QWalkwayHistoryEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayHistoryEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;

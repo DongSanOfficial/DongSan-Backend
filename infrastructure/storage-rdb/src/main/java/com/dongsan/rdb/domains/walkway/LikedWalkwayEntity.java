@@ -1,4 +1,4 @@
-package com.dongsan.rdb.domains.walkway.entity;
+package com.dongsan.rdb.domains.walkway;
 
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
@@ -34,5 +34,13 @@ public class LikedWalkwayEntity extends BaseEntity {
 
     public Long getId() {
         return id;
+    }
+
+    public MemberEntity getMemberEntity() {
+        return memberEntity;
+    }
+
+    public WalkwayEntity getWalkwayEntity() {
+        return walkwayEntity;
     }
 }

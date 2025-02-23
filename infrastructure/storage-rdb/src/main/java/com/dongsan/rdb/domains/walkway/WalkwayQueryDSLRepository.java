@@ -1,11 +1,7 @@
-package com.dongsan.rdb.domains.walkway.repository;
-
-import static com.dongsan.rdb.domains.walkway.entity.QLikedWalkwayEntity.likedWalkwayEntity;
+package com.dongsan.rdb.domains.walkway;
 
 import com.dongsan.core.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.entity.QWalkwayEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;

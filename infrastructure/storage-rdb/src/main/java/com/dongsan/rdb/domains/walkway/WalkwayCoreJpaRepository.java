@@ -9,15 +9,6 @@ import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.domains.walkway.WalkwayRepository;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
-import com.dongsan.rdb.domains.walkway.entity.LikedWalkwayEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayHistoryEntity;
-import com.dongsan.rdb.domains.walkway.repository.LikedWalkwayJpaRepository;
-import com.dongsan.rdb.domains.walkway.repository.LikedWalkwayQueryDSLRepository;
-import com.dongsan.rdb.domains.walkway.repository.WalkwayHistoryJpaRepository;
-import com.dongsan.rdb.domains.walkway.repository.WalkwayHistoryQueryDSLRepository;
-import com.dongsan.rdb.domains.walkway.repository.WalkwayJpaRepository;
-import com.dongsan.rdb.domains.walkway.repository.WalkwayQueryDSLRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -152,14 +143,6 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
         walkwayJpaRepository.save(walkwayEntity);
         likedWalkwayJpaRepository.deleteByMemberIdAndWalkwayId(memberId, walkwayId);
     }
-
-//    @Override
-//    public LikedWalkway getLikedWalkway(Long memberId, Long walkwayId) {
-//        LikedWalkwayEntity likedWalkwayEntity = likedWalkwayJpaRepository.findByMemberIdAndWalkwayId(memberId, walkwayId)
-//                .orElseThrow(() -> new CoreException(CoreErrorCode.LIKED_WALKWAY_NOT_FOUND));
-//        return LikedWalkwayMapper.toLikedWalkway(likedWalkwayEntity);
-//    }
-
 
     @Override
     public Long saveWalkwayHistory(CreateWalkwayHistory createWalkwayHistory) {
