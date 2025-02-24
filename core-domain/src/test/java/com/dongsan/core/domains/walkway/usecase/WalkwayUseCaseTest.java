@@ -26,7 +26,7 @@ import com.dongsan.core.domains.walkway.service.HashtagWalkwayWriter;
 import com.dongsan.core.domains.walkway.WalkwayWriter;
 import com.dongsan.core.domains.walkway.WalkwayReader;
 import fixture.ImageFixture;
-import fixture.MemberFixture;
+import member.MemberFixture;
 import fixture.WalkwayFixture;
 import java.util.ArrayList;
 import java.util.List;

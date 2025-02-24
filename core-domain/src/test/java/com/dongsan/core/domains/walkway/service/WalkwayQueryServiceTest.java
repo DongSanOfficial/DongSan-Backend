@@ -24,7 +24,7 @@ import com.dongsan.domains.walkway.repository.WalkwayRepository;
 import com.dongsan.core.domains.walkway.service.factory.SearchWalkwayServiceFactory;
 import com.dongsan.core.domains.walkway.service.search.walkway.SearchWalkwayService;
 import fixture.MarkedWalkwayFixture;
-import fixture.MemberFixture;
+import member.MemberFixture;
 import fixture.WalkwayFixture;
 import java.time.LocalDateTime;
 import java.util.Collections;

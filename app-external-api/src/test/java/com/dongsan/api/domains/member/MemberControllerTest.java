@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.member;
 
-import static fixture.MemberFixture.createMember;
+import static member.MemberFixture.createMember;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
