@@ -2,8 +2,6 @@ package com.dongsan.api.domains.bookmark;
 
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import com.dongsan.api.support.response.ApiResponse;
-import com.dongsan.api.support.validation.annotation.ExistBookmark;
-import com.dongsan.api.support.validation.annotation.ExistWalkway;
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
 import com.dongsan.core.domains.bookmark.MarkedWalkway;
@@ -70,8 +68,8 @@ public class BookmarkController {
     @DeleteMapping("/bookmarks/{bookmarkId}/walkways/{walkwayId}")
     @Operation(summary = "북마크에 산책로를 제거")
     public ApiResponse<Void> excludeWalkway(
-            @ExistBookmark @PathVariable Long bookmarkId,
-            @ExistWalkway @PathVariable Long walkwayId,
+            @PathVariable Long bookmarkId,
+            @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ){
         bookmarkService.excludeWalkway(customOAuth2User.getMemberId(), bookmarkId, walkwayId);
@@ -91,7 +89,7 @@ public class BookmarkController {
     @GetMapping("/bookmarks/{bookmarkId}/walkways")
     @Operation(summary = "북마크에 저장된 산책로 조회")
     public ApiResponse<GetBookmarkDetailResponse> getBookmarkWalkways(
-            @ExistBookmark @PathVariable Long bookmarkId,
+            @PathVariable Long bookmarkId,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User

@@ -1,16 +1,13 @@
 package com.dongsan.rdb.domains.bookmark;
 
-import static fixture.BookmarkFixture.createBookmark;
+import static fixture.BookmarkEntityFixture.createBookmark;
 import static fixture.MarkedWalkwayFixture.createMarkedWalkway;
-import static fixture.MemberFixture.createMember;
-import static fixture.WalkwayFixture.createPrivateWalkway;
-import static fixture.WalkwayFixture.createWalkway;
+import static fixture.MemberEntityFixture.createMember;
+import static fixture.WalkwayEntityFixture.createPrivateWalkway;
+import static fixture.WalkwayEntityFixture.createWalkway;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dongsan.common.support.RepositoryTest;
-import com.dongsan.rdb.domains.bookmark.BookmarkEntity;
-import com.dongsan.rdb.domains.bookmark.MarkedWalkwayEntity;
-import com.dongsan.rdb.domains.bookmark.MarkedWalkwayQueryDSLRepository;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
 import com.dongsan.rdb.domains.walkway.enums.ExposeLevel;
