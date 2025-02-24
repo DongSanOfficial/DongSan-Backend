@@ -1,14 +1,14 @@
 package com.dongsan.rdb.domains.walkway;
 
 import static fixture.LikedWalkwayFixture.createLikedWalkway;
-import static fixture.MemberFixture.createMember;
-import static fixture.WalkwayFixture.createPrivateWalkway;
-import static fixture.WalkwayFixture.createWalkway;
+import static fixture.WalkwayEntityFixture.createPrivateWalkway;
+import static fixture.WalkwayEntityFixture.createWalkway;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dongsan.common.support.RepositoryTest;
 import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.member.MemberEntity;
+import fixture.MemberEntityFixture;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ class LikedWalkwayQueryDSLRepositoryTest extends  RepositoryTest {
 
         @BeforeEach
         void setUp(){
-            memberEntity = createMember();
+            memberEntity = MemberEntityFixture.createMember();
             em.persist(memberEntity);
             for(int i=0; i<5; i++){
                 WalkwayEntity walkwayEntity = createWalkway(memberEntity);
@@ -46,7 +46,7 @@ class LikedWalkwayQueryDSLRepositoryTest extends  RepositoryTest {
         @DisplayName("타인이 등록한 산책로의 경우 공개 상태의 산책로만 조회한다.")
         void it_returns_others_public_walkway(){
             // given
-            MemberEntity other = createMember();
+            MemberEntity other = MemberEntityFixture.createMember();
             WalkwayEntity otherPublicWalkwayEntity = createWalkway(other);
             WalkwayEntity otherPrivateWalkwayEntity = createPrivateWalkway(other);
             em.persist(other);

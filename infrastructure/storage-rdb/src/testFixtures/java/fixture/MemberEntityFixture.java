@@ -1,30 +1,24 @@
 package fixture;
 
+import static com.dongsan.core.domains.member.MemberRole.*;
+
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
-public class MemberFixture {
+public class MemberEntityFixture {
     private static final String EMAIL = "abc@gmail.com";
     private static final String NICKNAME = "동네산책";
     private static final String PROFILE_IMAGE_URL = "image.png";
 
     public static MemberEntity createMember(){
-        return MemberEntity.builder()
-                .email(EMAIL)
-                .nickname(NICKNAME)
-                .profileImageUrl(PROFILE_IMAGE_URL)
-                .build();
+        return new MemberEntity(EMAIL, NICKNAME, PROFILE_IMAGE_URL, ROLE_USER);
     }
 
     public static MemberEntity createMember(String email, String nickname, String profileImageUrl){
-        return MemberEntity.builder()
-                .email(email)
-                .nickname(nickname)
-                .profileImageUrl(profileImageUrl)
-                .build();
+        return new MemberEntity(email, nickname, profileImageUrl, ROLE_USER);
     }
 
     public static MemberEntity createMemberWithId(Long id){

@@ -28,6 +28,6 @@ public class MemberController {
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
         Member member = memberService.getMember(customOAuth2User.getMemberId());
-        return ApiResponse.success(new GetProfileResponse(member.profileImageUrl(), member.email(), member.nickname()));
+        return ApiResponse.success(new GetProfileResponse(member));
     }
 }

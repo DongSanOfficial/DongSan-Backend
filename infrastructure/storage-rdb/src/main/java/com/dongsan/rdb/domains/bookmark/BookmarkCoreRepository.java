@@ -7,8 +7,6 @@ import com.dongsan.core.domains.bookmark.BookmarkRepository;
 import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.domains.bookmark.MarkedWalkway;
 import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.rdb.domains.bookmark.entity.QBookmark;
-import com.dongsan.rdb.domains.bookmark.entity.QMarkedWalkway;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
@@ -32,8 +30,8 @@ public class BookmarkCoreRepository implements BookmarkRepository {
     private final WalkwayJpaRepository walkwayJpaRepository;
     private final JPAQueryFactory queryFactory;
 
-    private QBookmark bookmark = QBookmark.bookmark;
-    private QMarkedWalkway markedWalkway = QMarkedWalkway.markedWalkway;
+    private QBookmarkEntity bookmark = QBookmarkEntity.bookmarkEntity;
+    private QMarkedWalkwayEntity markedWalkway = QMarkedWalkwayEntity.markedWalkwayEntity;
 
 
     public BookmarkCoreRepository(BookmarkJpaRepository bookmarkJpaRepository,
@@ -113,7 +111,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
                 .from(markedWalkway)
                 .join(markedWalkway.walkway).fetchJoin()
                 .where(markedWalkway.bookmark.id.eq(bookmarkId), markedBookmarkCreatedAtLt(lastCreatedAt),
-                        markedWalkway.walkway.member.id.eq(memberId)
+                        markedWalkway.walkway.memberEntity.id.eq(memberId)
                                 .or(markedWalkway.walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
                 .orderBy(markedWalkway.createdAt.desc())
                 .limit(size)
@@ -133,7 +131,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
     @Override
     public List<Bookmark> getUserBookmarks(Integer size, LocalDateTime lastCreatedAt, Long memberId) {
         List<BookmarkEntity> bookmarkEntities = queryFactory.selectFrom(bookmark)
-                .where(bookmark.member.id.eq(memberId),
+                .where(bookmark.memberEntity.id.eq(memberId),
                         bookmarkCreatedAtLt(lastCreatedAt))
                 .limit(size)
                 .orderBy(bookmark.createdAt.desc())
@@ -154,7 +152,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
                 .from(bookmark)
                 .leftJoin(markedWalkway)
                 .on(markedWalkway.walkway.id.eq(walkwayId).and(markedWalkway.bookmark.id.eq(bookmark.id)))
-                .where(bookmark.member.id.eq(memberId),
+                .where(bookmark.memberEntity.id.eq(memberId),
                         bookmarkCreatedAtLt(lastCreatedAt))
                 .limit(size)
                 .orderBy(bookmark.createdAt.desc())
@@ -183,7 +181,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
                 .from(markedWalkway)
                 .where(
                         markedWalkway.walkway.id.eq(walkwayId),
-                        markedWalkway.bookmark.member.id.eq(memberId)
+                        markedWalkway.bookmark.memberEntity.id.eq(memberId)
                 )
                 .fetchFirst() != null;
     }

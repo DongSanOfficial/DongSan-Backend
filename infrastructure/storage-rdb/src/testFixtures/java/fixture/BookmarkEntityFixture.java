@@ -3,26 +3,19 @@ package fixture;
 import com.dongsan.rdb.domains.bookmark.BookmarkEntity;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
-
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
-public class BookmarkFixture {
+public class BookmarkEntityFixture {
 
     private static final String NAME = "산책로 모음이에용";
 
     public static BookmarkEntity createBookmark(MemberEntity memberEntity){
-        return BookmarkEntity.builder()
-                .name(NAME)
-                .member(memberEntity)
-                .build();
+        return new BookmarkEntity(NAME, memberEntity);
     }
 
     public static BookmarkEntity createBookmark(MemberEntity memberEntity, String name){
-        return BookmarkEntity.builder()
-                .name(name)
-                .member(memberEntity)
-                .build();
+        return new BookmarkEntity(name, memberEntity);
     }
 
     public static BookmarkEntity createBookmarkWithId(Long id, MemberEntity memberEntity){

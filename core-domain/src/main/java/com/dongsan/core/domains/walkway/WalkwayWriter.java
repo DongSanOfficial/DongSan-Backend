@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class WalkwayWriter {
 
     @Autowired
-
-
     public WalkwayWriter(WalkwayRepository walkwayRepository) {
         this.walkwayRepository = walkwayRepository;
     }

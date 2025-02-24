@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dongsan.common.support.RepositoryTest;
 import com.dongsan.rdb.domains.member.MemberEntity;
-import fixture.MemberFixture;
-import fixture.WalkwayFixture;
+import fixture.MemberEntityFixture;
+import fixture.WalkwayEntityFixture;
 import fixture.WalkwayHistoryFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +29,8 @@ class WalkwayHistoryQueryDSLRepositoryTest extends RepositoryTest {
         WalkwayEntity walkway;
         @BeforeEach
         void setUp() {
-            member = MemberFixture.createMember();
-            walkway = WalkwayFixture.createWalkway(member);
+            member = MemberEntityFixture.createMember();
+            walkway = WalkwayEntityFixture.createWalkway(member);
             em.persist(member);
             em.persist(walkway);
             for (int i = 0; i < 5; i++) {

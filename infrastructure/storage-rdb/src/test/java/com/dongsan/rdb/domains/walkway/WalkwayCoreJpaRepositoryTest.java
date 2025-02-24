@@ -1,7 +1,6 @@
 package com.dongsan.rdb.domains.walkway;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -15,8 +14,8 @@ import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
 import fixture.LikedWalkwayFixture;
-import fixture.MemberFixture;
-import fixture.WalkwayFixture;
+import fixture.MemberEntityFixture;
+import fixture.WalkwayEntityFixture;
 import fixture.WalkwayHistoryFixture;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -60,9 +59,9 @@ class WalkwayCoreJpaRepositoryTest {
             Long memberId = 1L;
             Long walkwayId = 1L;
             CreateWalkway createWalkway
-                    = new CreateWalkway("Sample Walkway", 2.5, 30, ExposeLevel.PUBLIC, null, null, "A beautiful walkway.", null, null,null,memberId);
-            MemberEntity memberEntity = MemberFixture.createMember();
-            WalkwayEntity walkwayEntity = WalkwayFixture.createWalkwayWithId(walkwayId, memberEntity);
+                    = new CreateWalkway("Sample Walkway", 2.5, 30, ExposeLevel.PUBLIC, null, null, "A beautiful walkway.", null, null,null, memberId);
+            MemberEntity memberEntity = MemberEntityFixture.createMember();
+            WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkwayWithId(walkwayId, memberEntity);
 
             when(memberJpaRepository.getReferenceById(memberId)).thenReturn(memberEntity);
             when(walkwayJpaRepository.save(any(WalkwayEntity.class))).thenReturn(walkwayEntity);
@@ -83,7 +82,7 @@ class WalkwayCoreJpaRepositoryTest {
         void it_returns_walkway() {
             // given
             Long walkwayId = 1L;
-            WalkwayEntity walkwayEntity = WalkwayFixture.createWalkway(null);
+            WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkway(null);
 
             when(walkwayJpaRepository.findById(walkwayId)).thenReturn(Optional.of(walkwayEntity));
 
@@ -118,8 +117,8 @@ class WalkwayCoreJpaRepositoryTest {
             // given
             Long memberId = 1L;
             Long walkwayId = 1L;
-            MemberEntity memberEntity = MemberFixture.createMember();
-            WalkwayEntity walkwayEntity = WalkwayFixture.createWalkway(memberEntity);
+            MemberEntity memberEntity = MemberEntityFixture.createMember();
+            WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkway(memberEntity);
             LikedWalkwayEntity likedWalkwayEntity = LikedWalkwayFixture.createLikedWalkway(memberEntity, walkwayEntity);        when(memberJpaRepository.getReferenceById(memberId)).thenReturn(memberEntity);
             when(walkwayJpaRepository.getReferenceById(walkwayId)).thenReturn(walkwayEntity);
             when(likedWalkwayJpaRepository.save(any(LikedWalkwayEntity.class))).thenReturn(likedWalkwayEntity);
@@ -140,7 +139,7 @@ class WalkwayCoreJpaRepositoryTest {
         void it_returns_sorted_list() {
             // given
             SearchWalkwayQuery query = new SearchWalkwayQuery(null, null, null, null, null, 10);
-            List<WalkwayEntity> walkwayEntities = List.of(WalkwayFixture.createWalkway(null));
+            List<WalkwayEntity> walkwayEntities = List.of(WalkwayEntityFixture.createWalkway(null));
 
             when(walkwayQueryDSLRepository.searchWalkwaysLiked(query)).thenReturn(walkwayEntities);
 
@@ -160,7 +159,7 @@ class WalkwayCoreJpaRepositoryTest {
         void it_returns_sorted_list() {
             // given
             SearchWalkwayQuery query = new SearchWalkwayQuery(null, null, null, null, null, 10);
-            List<WalkwayEntity> walkwayEntities = List.of(WalkwayFixture.createWalkway(null));
+            List<WalkwayEntity> walkwayEntities = List.of(WalkwayEntityFixture.createWalkway(null));
 
             when(walkwayQueryDSLRepository.searchWalkwaysRating(query)).thenReturn(walkwayEntities);
 
@@ -182,7 +181,7 @@ class WalkwayCoreJpaRepositoryTest {
             Long memberId = 1L;
             Integer size = 10;
             LocalDateTime lastCreatedAt = LocalDateTime.now();
-            List<WalkwayEntity> walkwayEntities = List.of(WalkwayFixture.createWalkway(null));
+            List<WalkwayEntity> walkwayEntities = List.of(WalkwayEntityFixture.createWalkway(null));
 
             when(walkwayQueryDSLRepository.getUserLikedWalkway(memberId, size, lastCreatedAt)).thenReturn(walkwayEntities);
 
@@ -204,7 +203,7 @@ class WalkwayCoreJpaRepositoryTest {
             Long memberId = 1L;
             Integer size = 10;
             LocalDateTime lastCreatedAt = LocalDateTime.now();
-            List<WalkwayEntity> walkwayEntities = List.of(WalkwayFixture.createWalkway(null));
+            List<WalkwayEntity> walkwayEntities = List.of(WalkwayEntityFixture.createWalkway(null));
 
             when(walkwayQueryDSLRepository.getUserWalkway(memberId, size, lastCreatedAt)).thenReturn(walkwayEntities);
 
@@ -226,7 +225,7 @@ class WalkwayCoreJpaRepositoryTest {
             Integer reviewCount = 100;
             Double rating = 3.5;
             Long walkwayId = 1L;
-            WalkwayEntity walkwayEntity = WalkwayFixture.createWalkway(null);
+            WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkway(null);
 
             when(walkwayJpaRepository.getReferenceById(walkwayId)).thenReturn(walkwayEntity);
 
@@ -268,7 +267,7 @@ class WalkwayCoreJpaRepositoryTest {
             // given
             Long memberId = 1L;
             Long walkwayId = 1L;
-            WalkwayEntity walkwayEntity = WalkwayFixture.createWalkway(null);
+            WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkway(null);
 
             when(walkwayJpaRepository.getReferenceById(walkwayId)).thenReturn(walkwayEntity);
 
@@ -291,8 +290,8 @@ class WalkwayCoreJpaRepositoryTest {
             Long memberId = 1L;
             Long walkwayId = 1L;
             CreateWalkwayHistory createHistory = new CreateWalkwayHistory(memberId, walkwayId, 1000.0, 30);
-            MemberEntity memberEntity = MemberFixture.createMember();
-            WalkwayEntity walkwayEntity = WalkwayFixture.createWalkway(memberEntity);
+            MemberEntity memberEntity = MemberEntityFixture.createMember();
+            WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkway(memberEntity);
             WalkwayHistoryEntity historyEntity = WalkwayHistoryFixture.createWalkwayHistory(memberEntity, walkwayEntity);
 
             when(memberJpaRepository.getReferenceById(memberId)).thenReturn(memberEntity);

@@ -1,12 +1,12 @@
 package com.dongsan.rdb.domains.walkway;
 
-import static fixture.MemberFixture.createMember;
-import static fixture.WalkwayFixture.createWalkway;
+import static fixture.WalkwayEntityFixture.createWalkway;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dongsan.common.support.RepositoryTest;
 import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.member.MemberEntity;
+import fixture.MemberEntityFixture;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ class WalkwayQueryDSLRepositoryTest extends RepositoryTest {
 
         @BeforeEach
         void setUp(){
-            MemberEntity memberEntity = createMember();
+            MemberEntity memberEntity = MemberEntityFixture.createMember();
             em.persist(memberEntity);
             for(int i=0; i<5; i++){
                 WalkwayEntity walkwayEntity = createWalkway(memberEntity);
@@ -106,7 +106,7 @@ class WalkwayQueryDSLRepositoryTest extends RepositoryTest {
 
         @BeforeEach
         void setUp() {
-            MemberEntity memberEntity = createMember();
+            MemberEntity memberEntity = MemberEntityFixture.createMember();
             em.persist(memberEntity);
 
             for (int i = 0; i < 5; i++) {

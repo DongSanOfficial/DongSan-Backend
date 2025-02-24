@@ -8,6 +8,8 @@ import com.dongsan.api.domains.auth.security.handler.CustomAccessDeniedHandler;
 import com.dongsan.api.domains.auth.security.handler.CustomAuthenticationEntryPoint;
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuthUserService;
 import com.dongsan.api.domains.auth.security.oauth2.CustomSuccessHandler;
+import com.dongsan.core.domains.auth.TokenReader;
+import com.dongsan.core.domains.auth.TokenWriter;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -103,7 +105,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain jwtSecurityFilterChain(HttpSecurity http, JwtService jwtService, CookieService cookieService, AuthService authService,
+    public SecurityFilterChain jwtSecurityFilterChain(HttpSecurity http, JwtService jwtService, CookieService cookieService, TokenReader tokenReader, TokenWriter tokenWriter,
                                                       CustomAuthenticationEntryPoint customAuthenticationEntryPoint)
             throws Exception {
         http
@@ -122,7 +124,7 @@ public class SecurityConfig {
                  * shouldNotFilter 로 jwt 필터에서 해당 경로를 타지 않도록 해주거나
                  * 아래처럼 컴포넌트로 등록하지 않고, 수동으로 등록하는 방법을 사용할 수 있다.
                  */
-                .addFilterBefore(new AuthFilter(jwtService, cookieService, authService, tokenReader, tokenWriter),
+                .addFilterBefore(new AuthFilter(jwtService, cookieService, tokenReader, tokenWriter),
                         UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         // Admin 경로에 있어야 하는 role

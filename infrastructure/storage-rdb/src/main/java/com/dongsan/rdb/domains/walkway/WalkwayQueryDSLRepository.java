@@ -1,5 +1,7 @@
 package com.dongsan.rdb.domains.walkway;
 
+import static com.dongsan.rdb.domains.walkway.QLikedWalkwayEntity.likedWalkwayEntity;
+
 import com.dongsan.core.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.querydsl.core.types.dsl.BooleanExpression;

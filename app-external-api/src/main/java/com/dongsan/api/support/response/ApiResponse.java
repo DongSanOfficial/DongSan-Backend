@@ -38,4 +38,23 @@ public class ApiResponse<T> {
         return new ApiResponse<>(false, code, message, null, errors);
     }
 
+    public Boolean getSuccess() {
+        return isSuccess;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public List<ValidationError> getErrors() {
+        return errors;
+    }
 }

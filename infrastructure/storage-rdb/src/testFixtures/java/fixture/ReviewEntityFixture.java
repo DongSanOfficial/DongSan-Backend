@@ -9,7 +9,7 @@ import com.dongsan.rdb.domains.walkway.WalkwayHistoryEntity;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
-public class ReviewFixture {
+public class ReviewEntityFixture {
     private static final Integer RATING = 5;
     private static final String CONTENT = "리뷰 내용";
 

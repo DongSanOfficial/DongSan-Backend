@@ -12,7 +12,7 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 
-public class WalkwayFixture {
+public class WalkwayEntityFixture {
     private static final String NAME = "Sample Walkway";
     private static final Double DISTANCE = 2.5;
     private static final Integer TIME = 30; // minutes
