@@ -15,6 +15,10 @@ public class BookmarkFixture {
         return new Bookmark(BOOKMARK_ID, TITLE, AUTHOR, CREATED_AT);
     }
 
+    public static Bookmark createBookmark(Long authorId){
+        return new Bookmark(BOOKMARK_ID, TITLE, new Author(authorId), CREATED_AT);
+    }
+
     public static Bookmark createBookmark(Long bookmarkId, String title){
         return new Bookmark(bookmarkId, title, AUTHOR, CREATED_AT);
     }
