@@ -1,6 +1,7 @@
 package bookmark;
 
 import com.dongsan.core.domains.bookmark.Bookmark;
+import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.support.util.Author;
 import java.time.LocalDateTime;
 
@@ -16,5 +17,13 @@ public class BookmarkFixture {
 
     public static Bookmark createBookmark(Long bookmarkId, String title){
         return new Bookmark(bookmarkId, title, AUTHOR, CREATED_AT);
+    }
+
+    public static BookmarkWithMarkedStatus createBookmarkWithMarkedStatus(){
+        return new BookmarkWithMarkedStatus(BOOKMARK_ID, TITLE, CREATED_AT, true);
+    }
+
+    public static BookmarkWithMarkedStatus createBookmarkWithMarkedStatus(Long bookmarkId, String title, boolean marked){
+        return new BookmarkWithMarkedStatus(bookmarkId, title, CREATED_AT, marked);
     }
 }
