@@ -3,8 +3,8 @@ package com.dongsan.rdb.domains.walkway.repository;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.domains.walkway.entity.QLikedWalkway;
 import com.dongsan.rdb.domains.walkway.entity.LikedWalkwayEntity;
+import com.dongsan.rdb.domains.walkway.entity.QLikedWalkwayEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ public class LikedWalkwayQueryDSLRepository {
         this.queryFactory = queryFactory;
     }
 
-    private QLikedWalkway likedWalkway = QLikedWalkway.likedWalkwayEntity;
+    private QLikedWalkwayEntity likedWalkway = QLikedWalkwayEntity.likedWalkwayEntity;
 
     /**
      * 사용자가 좋아요한 산책로를 좋아요를 누른 시점을 기준으로 내림차순 정렬한다.
@@ -39,9 +39,9 @@ public class LikedWalkwayQueryDSLRepository {
     public List<LikedWalkwayEntity> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt){
         return queryFactory
                 .selectFrom(likedWalkway)
-                .join(likedWalkway.walkway).fetchJoin()
-                .where(likedWalkway.member.id.eq(memberId), createdAtLt(lastCreatedAt),
-                        likedWalkway.walkway.member.id.eq(memberId).or(likedWalkway.walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
+                .join(likedWalkway.walkwayEntity).fetchJoin()
+                .where(likedWalkway.memberEntity.id.eq(memberId), createdAtLt(lastCreatedAt),
+                        likedWalkway.walkwayEntity.memberEntity.id.eq(memberId).or(likedWalkway.walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)))
                 .orderBy(likedWalkway.createdAt.desc())
                 .limit(size)
                 .fetch();
@@ -59,9 +59,9 @@ public class LikedWalkwayQueryDSLRepository {
     public Map<Long, Boolean> existsLikedWalkways(Long memberId, List<Long> walkwayIds) {
         return queryFactory.from(likedWalkway)
                 .where(
-                        likedWalkway.member.id.eq(memberId),
-                        likedWalkway.walkway.id.in(walkwayIds)
+                        likedWalkway.memberEntity.id.eq(memberId),
+                        likedWalkway.walkwayEntity.id.in(walkwayIds)
                 )
-                .transform(groupBy(likedWalkway.walkway.id).as(likedWalkway.isNotNull()));
+                .transform(groupBy(likedWalkway.walkwayEntity.id).as(likedWalkway.isNotNull()));
     }
 }

@@ -6,7 +6,7 @@ import com.dongsan.rdb.domains.walkway.repository.HashtagEntity;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
-public class HashtagFixture {
+public class HashtagEntityFixture {
 
     private static final String NAME = "산책로 태그";
 

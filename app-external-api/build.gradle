@@ -3,6 +3,7 @@ dependencies {
     implementation project(':infrastructure:storage-file')
     runtimeOnly project(':infrastructure:storage-rdb')
     runtimeOnly project(':infrastructure:storage-cache')
+    testImplementation(testFixtures(project(":core-domain")))
 
     // spring boot web
     implementation 'org.springframework.boot:spring-boot-starter-web'

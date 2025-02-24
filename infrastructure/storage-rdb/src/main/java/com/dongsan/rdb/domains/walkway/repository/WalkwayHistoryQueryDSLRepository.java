@@ -1,6 +1,7 @@
 package com.dongsan.rdb.domains.walkway.repository;
 
 import com.dongsan.core.domains.walkway.ExposeLevel;
+import com.dongsan.rdb.domains.walkway.entity.QWalkwayHistoryEntity;
 import com.dongsan.rdb.domains.walkway.entity.WalkwayHistoryEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,15 +17,15 @@ public class WalkwayHistoryQueryDSLRepository {
         this.queryFactory = queryFactory;
     }
 
-    private QWalkwayHistory walkwayHistory = QWalkwayHistory.walkwayHistory;
+    private QWalkwayHistoryEntity walkwayHistory = QWalkwayHistoryEntity.walkwayHistoryEntity;
 
     public List<WalkwayHistoryEntity> getCanReviewWalkwayHistories(Long walkwayId, Long memberId) {
         return queryFactory.selectFrom(walkwayHistory)
-                .join(walkwayHistory.walkway).fetchJoin()
+                .join(walkwayHistory.walkwayEntity).fetchJoin()
                 .where(
-                        walkwayHistory.member.id.eq(memberId),
-                        walkwayHistory.walkway.id.eq(walkwayId),
-                        walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0/3.0)),
+                        walkwayHistory.memberEntity.id.eq(memberId),
+                        walkwayHistory.walkwayEntity.id.eq(walkwayId),
+                        walkwayHistory.distance.goe(walkwayHistory.walkwayEntity.distance.multiply(2.0/3.0)),
                         walkwayHistory.isReviewed.eq(false)
                 )
                 .orderBy(walkwayHistory.createdAt.desc())
@@ -33,12 +34,12 @@ public class WalkwayHistoryQueryDSLRepository {
 
     public List<WalkwayHistoryEntity> getUserCanReviewWalkwayHistories(Long memberId, int size, LocalDateTime lastCreatedAt) {
         return queryFactory.selectFrom(walkwayHistory)
-                .join(walkwayHistory.walkway).fetchJoin()
+                .join(walkwayHistory.walkwayEntity).fetchJoin()
                 .where(
-                        walkwayHistory.member.id.eq(memberId),
-                        walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0/3.0)),
+                        walkwayHistory.memberEntity.id.eq(memberId),
+                        walkwayHistory.distance.goe(walkwayHistory.walkwayEntity.distance.multiply(2.0/3.0)),
                         walkwayHistory.isReviewed.eq(false),
-                        walkwayHistory.walkway.exposeLevel.eq(ExposeLevel.PUBLIC),
+                        walkwayHistory.walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC),
                         createdAtLt(lastCreatedAt)
                 )
                 .limit(size)
