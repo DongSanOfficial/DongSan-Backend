@@ -38,7 +38,7 @@ public class BookmarkService {
         Bookmark bookmark = bookmarkReader.getBookmark(bookmarkId);
         bookmarkValidator.validateBookmarkOwner(memberId, bookmark);
         bookmarkValidator.validateUniqueBookmarkName(memberId, name);
-        bookmarkWriter.renameBookmark(bookmark, name);
+        bookmarkWriter.renameBookmark(bookmarkId, name);
     }
 
     @Transactional
