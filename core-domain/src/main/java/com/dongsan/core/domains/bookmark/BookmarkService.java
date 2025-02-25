@@ -1,11 +1,9 @@
 package com.dongsan.core.domains.bookmark;
 
-import com.dongsan.core.support.error.CoreErrorCode;
-import com.dongsan.core.support.error.CoreException;
+import com.dongsan.core.domains.walkway.WalkwayReader;
+import com.dongsan.core.domains.walkway.WalkwayValidator;
 import com.dongsan.core.support.util.CursorPagingRequest;
 import com.dongsan.core.support.util.CursorPagingResponse;
-import com.dongsan.core.domains.walkway.Walkway;
-import com.dongsan.core.domains.walkway.WalkwayReader;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +16,16 @@ public class BookmarkService {
     private final BookmarkWriter bookmarkWriter;
     private final BookmarkValidator bookmarkValidator;
     private final WalkwayReader walkwayReader;
+    private final WalkwayValidator walkwayValidator;
 
     public BookmarkService(BookmarkReader bookmarkReader, BookmarkWriter bookmarkWriter,
-                           BookmarkValidator bookmarkValidator, WalkwayReader walkwayReader) {
+                           BookmarkValidator bookmarkValidator, WalkwayReader walkwayReader,
+                           WalkwayValidator walkwayValidator) {
         this.bookmarkReader = bookmarkReader;
         this.bookmarkWriter = bookmarkWriter;
         this.bookmarkValidator = bookmarkValidator;
         this.walkwayReader = walkwayReader;
+        this.walkwayValidator = walkwayValidator;
     }
 
     @Transactional
@@ -44,7 +45,7 @@ public class BookmarkService {
     @Transactional
     public void includeWalkway(Long memberId, Long bookmarkId, Long walkwayId) {
         Bookmark bookmark = bookmarkReader.getBookmark(bookmarkId);
-        Walkway walkway = walkwayReader.getWalkway(walkwayId);
+        walkwayValidator.validateWalkwayExists(walkwayId);
         bookmarkValidator.validateBookmarkOwner(memberId, bookmark);
         bookmarkValidator.validateWalkwayNotInBookmark(bookmarkId, walkwayId);
         bookmarkWriter.includeWalkway(bookmarkId, walkwayId);
@@ -53,7 +54,7 @@ public class BookmarkService {
     @Transactional
     public void excludeWalkway(Long memberId, Long bookmarkId, Long walkwayId) {
         Bookmark bookmark = bookmarkReader.getBookmark(bookmarkId);
-        Walkway walkway = walkwayReader.getWalkway(walkwayId);
+        walkwayValidator.validateWalkwayExists(walkwayId);
         bookmarkValidator.validateBookmarkOwner(memberId, bookmark);
         bookmarkValidator.validateWalkwayExistsInBookmark(bookmarkId, walkwayId);
         bookmarkWriter.excludeWalkway(bookmarkId, walkwayId);
@@ -82,9 +83,7 @@ public class BookmarkService {
     }
 
     public CursorPagingResponse<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long memberId, Long walkwayId, CursorPagingRequest paging) {
-        if (!walkwayReader.existsWalkway(walkwayId)) {
-            throw new CoreException(CoreErrorCode.WALKWAY_NOT_FOUND);
-        }
+        walkwayValidator.validateWalkwayExists(walkwayId);
         LocalDateTime createdAt = paging.lastId() == null ? null : bookmarkReader.getBookmark(paging.lastId()).createdAt();
         List<BookmarkWithMarkedStatus> bookmarks = bookmarkReader.getBookmarksWithMarkedStatus(walkwayId, memberId, createdAt,
                 paging.size());

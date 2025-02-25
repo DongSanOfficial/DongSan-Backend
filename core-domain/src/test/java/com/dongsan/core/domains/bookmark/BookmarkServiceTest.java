@@ -1,299 +1,416 @@
-//package com.dongsan.domains.bookmark.usecase;
-//
-//import static fixture.BookmarkFixture.createBookmark;
-//import static fixture.MemberFixture.createMember;
-//import static fixture.ReflectFixture.reflectField;
-//import static fixture.WalkwayFixture.createWalkway;
-//import static org.assertj.core.api.Assertions.assertThat;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//import static org.mockito.Mockito.verify;
-//import static org.mockito.Mockito.when;
-//
-//import com.dongsan.common.error.code.BookmarkErrorCode;
-//import com.dongsan.common.error.exception.CustomException;
-//import com.dongsan.core.domains.bookmark.BookmarkService;
-//import com.dongsan.domains.bookmark.dto.BookmarksWithMarkedWalkwayDTO;
-//import com.dongsan.core.domains.bookmark.GetBookmarkDetailParam;
-//import com.dongsan.core.domains.bookmark.BookmarkNameRequest;
-//import com.dongsan.core.domains.bookmark.WalkwayIdRequest;
-//import com.dongsan.core.domains.bookmark.BookmarkIdResponse;
-//import com.dongsan.core.domains.bookmark.BookmarksWithMarkedWalkwayResponse;
-//import com.dongsan.core.domains.bookmark.GetBookmarkDetailResponse;
-//import com.dongsan.domains.bookmark.entity.Bookmark;
-//import com.dongsan.core.domains.bookmark.BookmarkWriter;
-//import com.dongsan.core.domains.bookmark.BookmarkReader;
-//import com.dongsan.core.domains.bookmark.MarkedWalkwayReader;
-//import com.dongsan.domains.member.entity.Member;
-//import com.dongsan.core.domains.member.MemberReader;
-//import com.dongsan.domains.walkway.entity.Walkway;
-//import com.dongsan.core.domains.walkway.WalkwayReader;
-//import java.time.LocalDateTime;
-//import java.util.ArrayList;
-//import java.util.List;
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Nested;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//
-//@ExtendWith(MockitoExtension.class)
-//@DisplayName("BookmarkUseCase Unit Test")
-//class BookmarkServiceTest {
-//    @InjectMocks
-//    BookmarkService bookmarkService;
-//    @Mock
-//    MemberReader memberReader;
-//    @Mock
-//    BookmarkReader bookmarkReader;
-//    @Mock
-//    BookmarkWriter bookmarkWriter;
-//    @Mock
-//    WalkwayReader walkwayQueryService;
-//    @Mock
-//    MarkedWalkwayReader markedWalkwayReader;
-//
-//    @Nested
-//    @DisplayName("createBookmark 메서드는")
-//    class Describe_createBookmark{
-//        @Test
-//        @DisplayName("생성한 북마크의 id를 DTO로 변환한다.")
-//        void it_returns_responseDTO(){
-//            // given
-//            Long memberId = 1L;
-//            Member member = createMember();
-//            reflectField(member, "id", memberId);
-//            BookmarkNameRequest request = BookmarkNameRequest.builder()
-//                    .name("북마크1")
-//                    .build();
-//            Long bookmarkId = 1L;
-//            when(memberReader.getMember(memberId)).thenReturn(member);
-//            when(bookmarkWriter.createBookmark(member, request.name())).thenReturn(bookmarkId);
-//
-//            // when
-//            BookmarkIdResponse response = bookmarkService.createBookmark(memberId, request);
-//
-//            // then
-//            verify(bookmarkReader).hasSameBookmarkName(member.getId(), request.name());
-//            assertThat(response.bookmarkId()).isEqualTo(bookmarkId);
-//        }
-//    }
-//
-//
-//    @Nested
-//    @DisplayName("renameBookmark 메서드는")
-//    class Describe_renameBookmark{
-//        @Test
-//        @DisplayName("북마크 이름을 변경한다.")
-//        void it_renames(){
-//            // given
-//            Long memberId = 1L;
-//            Long bookmarkId = 1L;
-//            BookmarkNameRequest request = BookmarkNameRequest.builder()
-//                    .name("북마크1")
-//                    .build();
-//            Member member = createMember();
-//            reflectField(member, "id", memberId);
-//            Bookmark bookmark = createBookmark(member);
-//            reflectField(bookmark, "id", bookmarkId);
-//
-//            when(memberReader.getMember(memberId)).thenReturn(member);
-//            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
-//
-//            // when
-//            bookmarkService.renameBookmark(memberId, bookmarkId, request);
-//
-//            // then
-//            verify(bookmarkReader).isOwnerOfBookmark(member, bookmark);
-//            verify(bookmarkReader).hasSameBookmarkName(member.getId(), request.name());
-//            verify(bookmarkWriter).renameBookmark(bookmark, request.name());
-//        }
-//    }
-//
-//    @Nested
-//    @DisplayName("addWalkway 메서드는")
-//    class Describe_addWalkway{
-//        @Test
-//        @DisplayName("이미 북마크에 추가된 산책로이면 예외를 반환한다.")
-//        void it_throws_exception(){
-//            // given
-//            Long memberId = 1L;
-//            Long bookmarkId = 2L;
-//            WalkwayIdRequest request = WalkwayIdRequest.builder()
-//                    .walkwayId(3L)
-//                    .build();
-//            Member member = createMember();
-//            Bookmark bookmark = createBookmark(null);
-//            Walkway walkway = createWalkway(null);
-//            when(memberReader.getMember(memberId)).thenReturn(member);
-//            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
-//            when(walkwayQueryService.getWalkway(request.walkwayId())).thenReturn(walkway);
-//            when(bookmarkReader.isWalkwayAdded(bookmark, walkway)).thenReturn(true);
-//
-//            // when & then
-//            CustomException thrown = assertThrows(CustomException.class, () -> {
-//                bookmarkService.addWalkway(memberId, bookmarkId, request);
-//            });
-//            Assertions.assertEquals(BookmarkErrorCode.WALKWAY_ALREADY_EXIST_IN_BOOKMARK, thrown.getErrorCode());
-//        }
-//
-//        @Test
-//        @DisplayName("북마크에 저장되지 않은 산책로이면 북마크에 산책로를 추가한다.")
-//        void it_adds_walkway(){
-//            // given
-//            Long memberId = 1L;
-//            Long bookmarkId = 2L;
-//            WalkwayIdRequest request = WalkwayIdRequest.builder()
-//                    .walkwayId(3L)
-//                    .build();
-//            Member member = createMember();
-//            Bookmark bookmark = createBookmark(null);
-//            Walkway walkway = createWalkway(null);
-//            when(memberReader.getMember(memberId)).thenReturn(member);
-//            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
-//            when(walkwayQueryService.getWalkway(request.walkwayId())).thenReturn(walkway);
-//            when(bookmarkReader.isWalkwayAdded(bookmark, walkway)).thenReturn(false);
-//
-//            // when
-//            bookmarkService.addWalkway(memberId, bookmarkId, request);
-//
-//            // then
-//            verify(bookmarkWriter).addWalkway(bookmark, walkway);
-//        }
-//    }
-//
-//    @Nested
-//    @DisplayName("deleteWalkway 메서드는")
-//    class Describe_deleteWalkway{
-//        @Test
-//        @DisplayName("이미 북마크에 추가된 산책로이면 북마크를 삭제한다.")
-//        void it_deletes_walkway(){
-//            // given
-//            Long memberId = 1L;
-//            Long bookmarkId = 2L;
-//            Long walkwayId = 3L;
-//            Member member = createMember();
-//            Bookmark bookmark = createBookmark(null);
-//            Walkway walkway = createWalkway(null);
-//            when(memberReader.getMember(memberId)).thenReturn(member);
-//            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
-//            when(walkwayQueryService.getWalkway(walkwayId)).thenReturn(walkway);
-//            when(bookmarkReader.isWalkwayAdded(bookmark, walkway)).thenReturn(true);
-//
-//            // when
-//            bookmarkService.deleteWalkway(memberId, bookmarkId, walkwayId);
-//
-//            // then
-//            verify(bookmarkWriter).deleteWalkway(bookmark, walkway);
-//        }
-//
-//        @Test
-//        @DisplayName("북마크에 저장되지 않은 산책로이면 예외를 반환한다.")
-//        void it_throws_exception(){
-//            // given
-//            Long memberId = 1L;
-//            Long bookmarkId = 2L;
-//            Long walkwayId = 3L;
-//            Member member = createMember();
-//            Bookmark bookmark = createBookmark(null);
-//            Walkway walkway = createWalkway(null);
-//            when(memberReader.getMember(memberId)).thenReturn(member);
-//            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
-//            when(walkwayQueryService.getWalkway(walkwayId)).thenReturn(walkway);
-//            when(bookmarkReader.isWalkwayAdded(bookmark, walkway)).thenReturn(false);
-//
-//            // when & then
-//            CustomException thrown = assertThrows(CustomException.class, () -> {
-//                bookmarkService.deleteWalkway(memberId, bookmarkId, walkwayId);
-//            });
-//            Assertions.assertEquals(BookmarkErrorCode.WALKWAY_NOT_EXIST_IN_BOOKMARK, thrown.getErrorCode());
-//        }
-//    }
-//
-//    @Nested
-//    @DisplayName("getBookmarksWithMarkedWalkway 메서드는")
-//    class Describe_getBookmarksWithMarkedWalkway {
-//        @Test
-//        @DisplayName("북마크 리스트 DTO를 반환한다.")
-//        void it_returns_DTO() {
-//            // Given
-//            Long memberId = 1L;
-//            Long walkwayId = 1L;
-//            int size = 5;
-//            List<BookmarksWithMarkedWalkwayDTO> bookmarks = new ArrayList<>();
-//
-//            for (int i = 0; i < 5; i++) {
-//                BookmarksWithMarkedWalkwayDTO bookmark = new BookmarksWithMarkedWalkwayDTO(1L, 1L, "test", 1L);
-//                bookmarks.add(bookmark);
-//            }
-//
-//            when(walkwayQueryService.existsWalkway(walkwayId)).thenReturn(true);
-//            when(bookmarkReader.getBookmarksWithMarkedWalkway(walkwayId, memberId, null, size)).thenReturn(bookmarks);
-//
-//            // When
-//            BookmarksWithMarkedWalkwayResponse result
-//                    = bookmarkService.getBookmarksWithMarkedWalkway(memberId, walkwayId, null, size);
-//
-//            // Then
-//            assertThat(result.bookmarks()).hasSize(bookmarks.size());
-//        }
-//    }
-//
-//    @Nested
-//    @DisplayName("deleteBookmark 메서드는")
-//    class Describe_deleteBookmark{
-//        @Test
-//        @DisplayName("북마크를 삭제한다.")
-//        void it_deletes_bookmark(){
-//            // given
-//            Long memberId = 1L;
-//            Long bookmarkId = 2L;
-//            Member member = createMember();
-//            Bookmark bookmark = createBookmark(member);
-//            when(memberReader.getMember(memberId)).thenReturn(member);
-//            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
-//
-//            // when
-//            bookmarkService.deleteBookmark(memberId, bookmarkId);
-//
-//            // then
-//            verify(bookmarkReader).isOwnerOfBookmark(member, bookmark);
-//            verify(bookmarkWriter).deleteBookmark(bookmark);
-//        }
-//    }
-//
-//    @Nested
-//    @DisplayName("getBookmarkDetails 메서드는")
-//    class Describe_getBookmarkDetails{
-//        @Test
-//        @DisplayName("북마크 상세 정보를 DTO로 반환한다.")
-//        void it_returns_DTO(){
-//            // given
-//            GetBookmarkDetailParam param = new GetBookmarkDetailParam(1L, 2L, 10, 3L);
-//            Member member = createMember();
-//            Bookmark bookmark = createBookmark(member);
-//            Walkway walkway = createWalkway(member);
-//            LocalDateTime lastCreatedAt = LocalDateTime.of(2024, 12, 9, 11, 11);
-//            List<Walkway> walkways = List.of(
-//                    createWalkway(null),
-//                    createWalkway(null));
-//            when(memberReader.getMember(param.memberId())).thenReturn(member);
-//            when(bookmarkReader.getBookmark(param.bookmarkId())).thenReturn(bookmark);
-//            when(walkwayQueryService.getWalkway(param.lastId())).thenReturn(walkway);
-//            when(markedWalkwayReader.getCreatedAt(bookmark, walkway)).thenReturn(lastCreatedAt);
-//            when(walkwayQueryService.getBookmarkWalkway(bookmark, param.size()+1, lastCreatedAt, param.memberId())).thenReturn(walkways);
-//
-//            // when
-//            GetBookmarkDetailResponse response = bookmarkService.getBookmarkDetails(param);
-//
-//            // then
-//            assertThat(response.name()).isEqualTo(bookmark.getName());
-//            assertThat(response.walkways()).hasSize(walkways.size());
-//            for(int i=0; i<response.walkways().size(); i++){
-//                assertThat(response.walkways().get(i).name()).isEqualTo(walkways.get(i).getName());
-//            }
-//        }
-//    }
-//}
+package com.dongsan.core.domains.bookmark;
+
+import static bookmark.BookmarkFixture.createBookmark;
+import static bookmark.BookmarkFixture.createBookmarkWithMarkedStatus;
+import static bookmark.MarkedWalkwayFixture.createMarkedWalkway;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.dongsan.core.domains.walkway.Walkway;
+import com.dongsan.core.domains.walkway.WalkwayReader;
+import com.dongsan.core.domains.walkway.WalkwayValidator;
+import com.dongsan.core.support.util.CursorPagingRequest;
+import com.dongsan.core.support.util.CursorPagingResponse;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+@DisplayName("BookmarkService Unit Test")
+class BookmarkServiceTest {
+    @InjectMocks
+    BookmarkService bookmarkService;
+    @Mock
+    BookmarkReader bookmarkReader;
+    @Mock
+    BookmarkWriter bookmarkWriter;
+    @Mock
+    BookmarkValidator bookmarkValidator;
+    @Mock
+    WalkwayReader walkwayReader;
+    @Mock
+    WalkwayValidator walkwayValidator;
+
+    @Nested
+    @DisplayName("createBookmark 메서드는")
+    class Describe_createBookmark{
+        @Test
+        void 생성한_북마크의_Id를_반환한다(){
+            // given
+            Long memberId = 1L;
+            String name = "북마크1";
+            Long bookmarkId = 10L;
+            when(bookmarkWriter.createBookmark(memberId, name)).thenReturn(bookmarkId);
+
+            // when
+            Long result = bookmarkService.createBookmark(memberId, name);
+
+            // then
+            assertThat(result).isEqualTo(bookmarkId);
+            verify(bookmarkValidator).validateUniqueBookmarkName(memberId, name);
+            verify(bookmarkWriter).createBookmark(memberId, name);
+        }
+    }
+
+    @Nested
+    @DisplayName("renameBookmark 메서드는")
+    class Describe_renameBookmark{
+        @Test
+        void 북마크_이름을_변경한다(){
+            // given
+            Long memberId = 1L;
+            Long bookmarkId = 10L;
+            String newName = "새로운 북마크 이름";
+            Bookmark bookmark = createBookmark(10L, "기존 북마크 이름");
+            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
+
+            // when
+            bookmarkService.renameBookmark(memberId, bookmarkId, newName);
+
+            // then
+            verify(bookmarkReader).getBookmark(bookmarkId);
+            verify(bookmarkValidator).validateBookmarkOwner(memberId, bookmark);
+            verify(bookmarkValidator).validateUniqueBookmarkName(memberId, newName);
+            verify(bookmarkWriter).renameBookmark(bookmarkId, newName);
+        }
+    }
+
+    @Nested
+    @DisplayName("includeWalkway 메서드는")
+    class Describe_includeWalkway{
+        @Test
+        void 북마크에_산책로를_추가한다(){
+            // given
+            Long memberId = 1L;
+            Long bookmarkId = 10L;
+            Long walkwayId = 20L;
+            Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
+            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
+
+            // when
+            bookmarkService.includeWalkway(memberId, bookmarkId, walkwayId);
+
+            // then
+            verify(bookmarkReader).getBookmark(bookmarkId);
+            verify(walkwayValidator).validateWalkwayExists(walkwayId);
+            verify(bookmarkValidator).validateBookmarkOwner(memberId, bookmark);
+            verify(bookmarkValidator).validateWalkwayNotInBookmark(bookmarkId, walkwayId);
+            verify(bookmarkWriter).includeWalkway(bookmarkId, walkwayId);
+        }
+    }
+
+    @Nested
+    @DisplayName("excludeWalkway 메서드는")
+    class Describe_excludeWalkway{
+        @Test
+        void 북마크에_산책로를_제외한다(){
+            // given
+            Long memberId = 1L;
+            Long bookmarkId = 10L;
+            Long walkwayId = 20L;
+            Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
+            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
+
+            // when
+            bookmarkService.excludeWalkway(memberId, bookmarkId, walkwayId);
+
+            // then
+            verify(bookmarkReader).getBookmark(bookmarkId);
+            verify(walkwayValidator).validateWalkwayExists(walkwayId);
+            verify(bookmarkValidator).validateBookmarkOwner(memberId, bookmark);
+            verify(bookmarkValidator).validateWalkwayExistsInBookmark(bookmarkId, walkwayId);
+            verify(bookmarkWriter).excludeWalkway(bookmarkId, walkwayId);
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteBookmark 메서드는")
+    class Describe_deleteBookmark{
+        @Test
+        void 산책로를_삭제한다(){
+            // given
+            Long memberId = 1L;
+            Long bookmarkId = 10L;
+            Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
+            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
+
+            // when
+            bookmarkService.deleteBookmark(memberId, bookmarkId);
+
+            // then
+            verify(bookmarkReader).getBookmark(bookmarkId);
+            verify(bookmarkValidator).validateBookmarkOwner(memberId, bookmark);
+            verify(bookmarkWriter).deleteBookmark(bookmarkId);
+        }
+    }
+
+    @Nested
+    @DisplayName("getBookmarkWalkways 메서드는")
+    class Describe_getBookmarkWalkways{
+        @Test
+        void lastId가_null이면_북마크에_저장된_산책로를_첫_페이지를_반환한다(){
+            // given
+            Long memberId = 1L;
+            Long bookmarkId = 10L;
+            CursorPagingRequest paging = new CursorPagingRequest(null, 10);
+            Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
+            List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(
+                    createMarkedWalkway(1L),
+                    createMarkedWalkway(2L),
+                    createMarkedWalkway(3L)
+            ));
+            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
+            when(bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, null, memberId)).thenReturn(markedWalkways);
+
+            // when
+            CursorPagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
+
+            // then
+            assertThat(result.data()).hasSize(markedWalkways.size());
+            assertThat(result.hasNext()).isFalse();
+            verify(bookmarkReader).getBookmark(bookmarkId);
+            verify(bookmarkValidator).validateBookmarkOwner(memberId, bookmark);
+            verify(bookmarkReader).getBookmarkWalkway(bookmarkId, paging.size()+1, null, memberId);
+        }
+
+        @Test
+        void lastId가_존재하면_커서_다음으로_북마크에_저장된_산책로를_반환한다(){
+            // given
+            Long memberId = 1L;
+            Long bookmarkId = 10L;
+            CursorPagingRequest paging = new CursorPagingRequest(1L, 10);
+            Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
+            Walkway walkway =  new Walkway(paging.lastId(), null, null, null, null, null, null, null, null); // TODO : fixture로 추후 변경
+            LocalDateTime lastCreatedAt = LocalDateTime.now().minusHours(10);
+            List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(
+                    createMarkedWalkway(2L),
+                    createMarkedWalkway(3L),
+                    createMarkedWalkway(4L)
+            ));
+            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
+            when(walkwayReader.getWalkway(paging.lastId())).thenReturn(walkway);
+            when(bookmarkReader.getBookmarkedDate(bookmarkId, walkway.walkwayId())).thenReturn(lastCreatedAt);
+            when(bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, lastCreatedAt, memberId)).thenReturn(markedWalkways);
+
+            // when
+            CursorPagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
+
+            // then
+            assertThat(result.data()).hasSize(markedWalkways.size());
+            assertThat(result.hasNext()).isFalse();
+            verify(bookmarkReader).getBookmark(bookmarkId);
+            verify(bookmarkValidator).validateBookmarkOwner(memberId, bookmark);
+            verify(walkwayReader).getWalkway(paging.lastId());
+            verify(bookmarkReader).getBookmarkedDate(bookmarkId, walkway.walkwayId());
+            verify(bookmarkReader).getBookmarkWalkway(bookmarkId, paging.size()+ 1, lastCreatedAt, memberId);
+        }
+
+        @Test
+        void 다음_페이지에_데이터가_존재하면_hasNext에_true를_반환한다(){
+            // given
+            Long memberId = 1L;
+            Long bookmarkId = 10L;
+            CursorPagingRequest paging = new CursorPagingRequest(null, 2);
+            Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
+            List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(
+                    createMarkedWalkway(1L),
+                    createMarkedWalkway(2L),
+                    createMarkedWalkway(3L)
+            ));
+            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
+            when(bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, null, memberId)).thenReturn(markedWalkways);
+
+            // when
+            CursorPagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
+
+            // then
+            assertThat(result.data()).hasSize(markedWalkways.size());
+            assertThat(result.hasNext()).isTrue();
+            verify(bookmarkReader).getBookmark(bookmarkId);
+            verify(bookmarkValidator).validateBookmarkOwner(memberId, bookmark);
+            verify(bookmarkReader).getBookmarkWalkway(bookmarkId, paging.size()+1, null, memberId);
+        }
+    }
+
+    @Nested
+    @DisplayName("getUserBookmarksName 메서드는")
+    class Describe_getUserBookmarksName{
+        @Test
+        void lastId가_null이면_북마크들의_첫_페이지를_반환한다(){
+            // given
+            Long memberId = 1L;
+            CursorPagingRequest paging = new CursorPagingRequest(null, 10);
+            List<Bookmark> bookmarks = new ArrayList<>(List.of(
+                    createBookmark(),
+                    createBookmark(),
+                    createBookmark()
+            ));
+            when(bookmarkReader.getUserBookmarkNames(null, memberId, paging.size())).thenReturn(bookmarks);
+
+            // when
+            CursorPagingResponse<Bookmark> result = bookmarkService.getUserBookmarksName(memberId, paging);
+
+            // then
+            assertThat(result.data()).hasSize(bookmarks.size());
+            assertThat(result.hasNext()).isFalse();
+            verify(bookmarkReader).getUserBookmarkNames(null, memberId, paging.size());
+        }
+
+        @Test
+        void lastId가_존재하면_커서_다음의_북마크들을_반환한다(){
+            // given
+            Long memberId = 1L;
+            CursorPagingRequest paging = new CursorPagingRequest(1L, 10);
+            Bookmark bookmark = createBookmark();
+            List<Bookmark> bookmarks = new ArrayList<>(List.of(
+                    createBookmark(),
+                    createBookmark(),
+                    createBookmark()
+            ));
+            when(bookmarkReader.getBookmark(paging.lastId())).thenReturn(bookmark);
+            when(bookmarkReader.getUserBookmarkNames(bookmark.createdAt(), memberId, paging.size())).thenReturn(bookmarks);
+
+            // when
+            CursorPagingResponse<Bookmark> result = bookmarkService.getUserBookmarksName(memberId, paging);
+
+            // then
+            assertThat(result.data()).hasSize(bookmarks.size());
+            assertThat(result.hasNext()).isFalse();
+            verify(bookmarkReader).getBookmark(paging.lastId());
+            verify(bookmarkReader).getUserBookmarkNames(bookmark.createdAt(), memberId, paging.size());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("getBookmarksWithMarkedWalkway 메서드는")
+    class Describe_getBookmarksWithMarkedWalkway{
+        @Test
+        void lastId가_null이면_북마크들의_첫_페이지를_반환한다(){
+            // given
+            Long memberId = 1L;
+            Long walkwayId = 10L;
+            CursorPagingRequest paging = new CursorPagingRequest(null, 10);
+            List<BookmarkWithMarkedStatus> bookmarks = new ArrayList<>(List.of(
+                    createBookmarkWithMarkedStatus(),
+                    createBookmarkWithMarkedStatus(),
+                    createBookmarkWithMarkedStatus()
+            ));
+            when(bookmarkReader.getBookmarksWithMarkedStatus(walkwayId, memberId, null, paging.size())).thenReturn(bookmarks);
+
+            // when
+            CursorPagingResponse<BookmarkWithMarkedStatus> result = bookmarkService.getBookmarksWithMarkedWalkway(memberId, walkwayId, paging);
+
+            // then
+            assertThat(result.data()).hasSize(bookmarks.size());
+            assertThat(result.hasNext()).isFalse();
+            verify(walkwayValidator).validateWalkwayExists(walkwayId);
+            verify(bookmarkReader).getBookmarksWithMarkedStatus(walkwayId, memberId, null, paging.size());
+        }
+
+        @Test
+        void lastId가_존재하면_커서_다음의_북마크들을_반환한다(){
+            // given
+            Long memberId = 1L;
+            Long walkwayId = 10L;
+            CursorPagingRequest paging = new CursorPagingRequest(1L, 10);
+            Bookmark bookmark = createBookmark();
+            List<BookmarkWithMarkedStatus> bookmarks = new ArrayList<>(List.of(
+                    createBookmarkWithMarkedStatus(),
+                    createBookmarkWithMarkedStatus(),
+                    createBookmarkWithMarkedStatus()
+            ));
+            when(bookmarkReader.getBookmark(paging.lastId())).thenReturn(bookmark);
+            when(bookmarkReader.getBookmarksWithMarkedStatus(walkwayId, memberId, bookmark.createdAt(), paging.size())).thenReturn(bookmarks);
+
+            // when
+            CursorPagingResponse<BookmarkWithMarkedStatus> result = bookmarkService.getBookmarksWithMarkedWalkway(memberId, walkwayId, paging);
+
+            // then
+            assertThat(result.data()).hasSize(bookmarks.size());
+            assertThat(result.hasNext()).isFalse();
+            verify(walkwayValidator).validateWalkwayExists(walkwayId);
+            verify(bookmarkReader).getBookmark(paging.lastId());
+            verify(bookmarkReader).getBookmarksWithMarkedStatus(walkwayId, memberId, bookmark.createdAt(), paging.size());
+        }
+    }
+
+    @Nested
+    @DisplayName("existsMarkedWalkway 메서드는")
+    class Describe_existsMarkedWalkway{
+        @Test
+        void 북마크에_추가된_산책로이면_true를_반환한다(){
+            // given
+            Long memberId = 1L;
+            Long walkwayId = 10L;
+            when(bookmarkReader.existsByMemberIdAndWalkwayId(memberId, walkwayId)).thenReturn(true);
+
+            // when
+            boolean result = bookmarkService.existsMarkedWalkway(memberId, walkwayId);
+
+            // then
+            assertThat(result).isTrue();
+        }
+
+        @Test
+        void 북마크에_추가된_산책로가_아니면_false를_반환한다(){
+            // given
+            Long memberId = 1L;
+            Long walkwayId = 20L;
+            when(bookmarkReader.existsByMemberIdAndWalkwayId(memberId, walkwayId)).thenReturn(false);
+
+            // when
+            boolean result = bookmarkService.existsMarkedWalkway(memberId, walkwayId);
+
+            // then
+            assertThat(result).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("existsMarkedWalkways 메서드는")
+    class Describe_existsMarkedWalkways{
+        @Test
+        void 북마크_Ids가_없으면_빈_map을_반환한다(){
+            // given
+            Long walkwayId = 10L;
+            List<Long> bookmarkIds = Collections.emptyList();
+            when(bookmarkReader.existsMarkedWalkway(walkwayId, bookmarkIds)).thenReturn(Collections.emptyMap());
+
+            // when
+            Map<Long, Boolean> result = bookmarkService.existsMarkedWalkways(walkwayId, bookmarkIds);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        void 북마크_Ids가_존재하면_북마크_추가여부를_map에_반환한다(){
+            // given
+            Long walkwayId = 10L;
+            List<Long> bookmarkIds = List.of(1L, 2L, 3L);
+            Map<Long, Boolean> bookmarksWithMarkedStatus = Map.of(1L, true, 2L, false, 3L, true);
+            when(bookmarkReader.existsMarkedWalkway(walkwayId, bookmarkIds)).thenReturn(bookmarksWithMarkedStatus);
+
+            // when
+            Map<Long, Boolean> result = bookmarkService.existsMarkedWalkways(walkwayId, bookmarkIds);
+
+            // then
+            assertThat(result).isEqualTo(bookmarksWithMarkedStatus);
+            assertThat(result.get(1L)).isTrue();
+            assertThat(result.get(2L)).isFalse();
+            assertThat(result.get(3L)).isTrue();
+        }
+    }
+
+}
