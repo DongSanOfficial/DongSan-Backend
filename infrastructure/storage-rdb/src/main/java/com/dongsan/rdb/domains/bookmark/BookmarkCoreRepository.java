@@ -10,8 +10,8 @@ import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
-import com.dongsan.rdb.domains.walkway.repository.WalkwayJpaRepository;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayJpaRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -64,7 +64,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
 
     @Override
     public boolean existsByMemberIdAndName(Long memberId, String name) {
-        return bookmarkJpaRepository.existsByMemberIdAndName(memberId, name);
+        return bookmarkJpaRepository.existsByMemberEntityIdAndName(memberId, name);
     }
 
     @Override

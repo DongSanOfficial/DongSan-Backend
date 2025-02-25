@@ -1,10 +1,8 @@
-package com.dongsan.rdb.domains.walkway.repository;
+package com.dongsan.rdb.domains.walkway;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.entity.LikedWalkwayEntity;
-import com.dongsan.rdb.domains.walkway.entity.QLikedWalkwayEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
@@ -22,7 +20,7 @@ public class LikedWalkwayQueryDSLRepository {
         this.queryFactory = queryFactory;
     }
 
-    private QLikedWalkwayEntity likedWalkway = QLikedWalkwayEntity.likedWalkwayEntity;
+    private QLikedWalkwayEntity likedWalkwayEntity = QLikedWalkwayEntity.likedWalkwayEntity;
 
     /**
      * 사용자가 좋아요한 산책로를 좋아요를 누른 시점을 기준으로 내림차순 정렬한다.
@@ -38,11 +36,11 @@ public class LikedWalkwayQueryDSLRepository {
      */
     public List<LikedWalkwayEntity> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt){
         return queryFactory
-                .selectFrom(likedWalkway)
-                .join(likedWalkway.walkwayEntity).fetchJoin()
-                .where(likedWalkway.memberEntity.id.eq(memberId), createdAtLt(lastCreatedAt),
-                        likedWalkway.walkwayEntity.memberEntity.id.eq(memberId).or(likedWalkway.walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)))
-                .orderBy(likedWalkway.createdAt.desc())
+                .selectFrom(likedWalkwayEntity)
+                .join(likedWalkwayEntity.walkwayEntity).fetchJoin()
+                .where(likedWalkwayEntity.memberEntity.id.eq(memberId), createdAtLt(lastCreatedAt),
+                        likedWalkwayEntity.walkwayEntity.memberEntity.id.eq(memberId).or(likedWalkwayEntity.walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)))
+                .orderBy(likedWalkwayEntity.createdAt.desc())
                 .limit(size)
                 .fetch();
     }
@@ -53,15 +51,15 @@ public class LikedWalkwayQueryDSLRepository {
      * @return 조건 만족 안하면 null 반환, where 절에서 null은 무시된다.
      */
     private BooleanExpression createdAtLt(LocalDateTime lastCreatedAt){
-        return lastCreatedAt != null ? likedWalkway.createdAt.lt(lastCreatedAt) : null;
+        return lastCreatedAt != null ? likedWalkwayEntity.createdAt.lt(lastCreatedAt) : null;
     }
 
     public Map<Long, Boolean> existsLikedWalkways(Long memberId, List<Long> walkwayIds) {
-        return queryFactory.from(likedWalkway)
+        return queryFactory.from(likedWalkwayEntity)
                 .where(
-                        likedWalkway.memberEntity.id.eq(memberId),
-                        likedWalkway.walkwayEntity.id.in(walkwayIds)
+                        likedWalkwayEntity.memberEntity.id.eq(memberId),
+                        likedWalkwayEntity.walkwayEntity.id.in(walkwayIds)
                 )
-                .transform(groupBy(likedWalkway.walkwayEntity.id).as(likedWalkway.isNotNull()));
+                .transform(groupBy(likedWalkwayEntity.walkwayEntity.id).as(likedWalkwayEntity.isNotNull()));
     }
 }

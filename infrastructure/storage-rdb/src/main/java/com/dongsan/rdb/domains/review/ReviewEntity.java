@@ -1,12 +1,11 @@
 package com.dongsan.rdb.domains.review;
 
 import com.dongsan.core.domains.review.Review;
-import com.dongsan.core.domains.review.ReviewedWalkway;
 import com.dongsan.core.domains.review.Reviewer;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayHistoryEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayHistoryEntity;
 import jakarta.persistence.*;
 
 @Entity

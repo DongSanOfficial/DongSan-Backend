@@ -1,4 +1,4 @@
-package com.dongsan.rdb.domains.walkway.entity;
+package com.dongsan.rdb.domains.walkway;
 
 import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
@@ -57,4 +57,23 @@ public class WalkwayHistoryEntity extends BaseEntity {
         return new WalkwayHistory(id, memberEntity.getId(), walkwayEntity.toWalkway(), distance, time, isReviewed, getCreatedAt());
     }
 
+    public Double getDistance() {
+        return distance;
+    }
+
+    public MemberEntity getMemberEntity() {
+        return memberEntity;
+    }
+
+    public WalkwayEntity getWalkwayEntity() {
+        return walkwayEntity;
+    }
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public Boolean getIsReviewed() {
+        return isReviewed;
+    }
 }

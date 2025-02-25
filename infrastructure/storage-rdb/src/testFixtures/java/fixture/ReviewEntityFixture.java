@@ -3,8 +3,9 @@ package fixture;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.review.ReviewEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 
+import com.dongsan.rdb.domains.walkway.WalkwayHistoryEntity;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
@@ -12,34 +13,23 @@ public class ReviewEntityFixture {
     private static final Integer RATING = 5;
     private static final String CONTENT = "리뷰 내용";
 
-    public static ReviewEntity createReview(MemberEntity memberEntity, WalkwayEntity walkwayEntity){
-        return ReviewEntity.builder()
-                .member(memberEntity)
-                .walkway(walkwayEntity)
-                .rating(RATING)
-                .content(CONTENT)
-                .build();
-
+    public static ReviewEntity createReview(MemberEntity memberEntity, WalkwayEntity walkwayEntity, WalkwayHistoryEntity walkwayHistory){
+        return new ReviewEntity(RATING, CONTENT, memberEntity, walkwayEntity, walkwayHistory);
     }
 
-    public static ReviewEntity createReview(MemberEntity memberEntity, WalkwayEntity walkwayEntity, Integer rating, String content){
-        return ReviewEntity.builder()
-                .member(memberEntity)
-                .walkway(walkwayEntity)
-                .rating(rating)
-                .content(content)
-                .build();
+    public static ReviewEntity createReview(MemberEntity memberEntity, WalkwayEntity walkwayEntity, WalkwayHistoryEntity walkwayHistory, Integer rating, String content){
+        return new ReviewEntity(rating, content, memberEntity, walkwayEntity, walkwayHistory);
     }
 
-    public static ReviewEntity createReviewWithId(Long id, MemberEntity memberEntity, WalkwayEntity walkwayEntity){
-        ReviewEntity reviewEntity = createReview(memberEntity, walkwayEntity);
+    public static ReviewEntity createReviewWithId(Long id, MemberEntity memberEntity, WalkwayEntity walkwayEntity, WalkwayHistoryEntity walkwayHistory){
+        ReviewEntity reviewEntity = createReview(memberEntity, walkwayEntity, walkwayHistory);
         reflectId(id, reviewEntity);
         reflectCreatedAt(LocalDateTime.now(), reviewEntity);
         return reviewEntity;
     }
 
-    public static ReviewEntity createReviewWithId(Long id, MemberEntity memberEntity, WalkwayEntity walkwayEntity, Integer rating, String content){
-        ReviewEntity reviewEntity = createReview(memberEntity, walkwayEntity, rating, content);
+    public static ReviewEntity createReviewWithId(Long id, MemberEntity memberEntity, WalkwayEntity walkwayEntity, WalkwayHistoryEntity walkwayHistory, Integer rating, String content){
+        ReviewEntity reviewEntity = createReview(memberEntity, walkwayEntity, walkwayHistory, rating, content);
         reflectId(id, reviewEntity);
         reflectCreatedAt(LocalDateTime.now(), reviewEntity);
         return reviewEntity;

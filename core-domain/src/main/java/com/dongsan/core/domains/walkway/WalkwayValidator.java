@@ -38,7 +38,11 @@ public class WalkwayValidator {
     }
 
     public void validateWalkwayAccess(Walkway walkway, Long memberId) {
-        if (walkway.exposeLevel().equals(ExposeLevel.PRIVATE) && !walkway.author().authorId().equals(memberId)) {
+        if (walkway.author().authorId().equals(memberId)) {
+            return;
+        }
+
+        if (walkway.exposeLevel().equals(ExposeLevel.PRIVATE)) {
             throw new CoreException(CoreErrorCode.WALKWAY_PRIVATE);
         }
     }

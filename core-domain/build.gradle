@@ -5,4 +5,5 @@ plugins {
 dependencies {
     implementation 'org.springframework:spring-context'
     implementation 'org.springframework:spring-tx'
+    testFixturesImplementation 'org.locationtech.jts:jts-core:1.19.0'
 }

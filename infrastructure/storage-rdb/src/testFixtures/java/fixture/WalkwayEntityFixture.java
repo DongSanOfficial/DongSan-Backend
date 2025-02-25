@@ -1,15 +1,12 @@
 package fixture;
 
-import static fixture.HashtagEntityFixture.createHashtag;
-import static fixture.HashtagWalkwayFixture.createHashtagWalkway;
-
+import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
-import com.dongsan.rdb.domains.walkway.repository.HashtagEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
-import com.dongsan.rdb.domains.walkway.enums.ExposeLevel;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
@@ -33,46 +30,11 @@ public class WalkwayEntityFixture {
     private static final String COURSE_IMAGE_URL = "http://example.com/course-image.png";
 
     public static WalkwayEntity createWalkway(MemberEntity memberEntity) {
-        WalkwayEntity walkWalk = WalkwayEntity.builder()
-                .member(memberEntity)
-                .name(NAME)
-                .distance(DISTANCE)
-                .time(TIME)
-                .exposeLevel(EXPOSE_LEVEL)
-                .startLocation(START_LOCATION)
-                .endLocation(END_LOCATION)
-                .memo(MEMO)
-                .course(COURSE)
-                .courseImageUrl(COURSE_IMAGE_URL)
-                .build();
-        for(int i=0; i<3; i++){
-            HashtagEntity hashtagEntity = createHashtag();
-            walkWalk.getHashtagWalkways().add(createHashtagWalkway(walkWalk, hashtagEntity));
-        }
-
-        return walkWalk;
+        return new WalkwayEntity(NAME, DISTANCE, TIME, EXPOSE_LEVEL, START_LOCATION, END_LOCATION, MEMO, COURSE, COURSE_IMAGE_URL, memberEntity, List.of());
     }
 
     public static WalkwayEntity createPrivateWalkway(MemberEntity memberEntity){
-        WalkwayEntity walkWalk = WalkwayEntity.builder()
-                .member(memberEntity)
-                .name(NAME)
-                .distance(DISTANCE)
-                .time(TIME)
-                .exposeLevel(ExposeLevel.PRIVATE)
-                .startLocation(START_LOCATION)
-                .endLocation(END_LOCATION)
-                .memo(MEMO)
-                .course(COURSE)
-                .courseImageUrl(COURSE_IMAGE_URL)
-                .build();
-        for(int i=0; i<3; i++){
-            HashtagEntity hashtagEntity = createHashtag();
-            walkWalk.getHashtagWalkways().add(createHashtagWalkway(walkWalk, hashtagEntity));
-        }
-
-        return walkWalk;
-
+        return new WalkwayEntity(NAME, DISTANCE, TIME, ExposeLevel.PRIVATE, START_LOCATION, END_LOCATION, MEMO, COURSE, COURSE_IMAGE_URL, memberEntity, List.of());
     }
 
     public static WalkwayEntity createWalkwayWithId(Long id, MemberEntity memberEntity){

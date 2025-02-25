@@ -1,10 +1,9 @@
-package com.dongsan.rdb.domains.walkway.repository;
+package com.dongsan.rdb.domains.walkway;
+
+import static com.dongsan.rdb.domains.walkway.QLikedWalkwayEntity.likedWalkwayEntity;
 
 import com.dongsan.core.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.entity.QLikedWalkwayEntity;
-import com.dongsan.rdb.domains.walkway.entity.QWalkwayEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -22,7 +21,6 @@ public class WalkwayQueryDSLRepository {
 
     private final JPAQueryFactory queryFactory;
     private QWalkwayEntity walkwayEntity = QWalkwayEntity.walkwayEntity;
-    private QLikedWalkwayEntity likedWalkwayEntity = QLikedWalkwayEntity.likedWalkwayEntity;
 
     public List<WalkwayEntity> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
         return queryFactory.selectFrom(walkwayEntity)
@@ -80,8 +78,7 @@ public class WalkwayQueryDSLRepository {
 
     // 좋아요 순 검색
     public List<WalkwayEntity> searchWalkwaysLiked(SearchWalkwayQuery query) {
-        WalkwayEntity lastWalkwayEntity = queryFactory
-                .selectFrom(walkwayEntity)
+        WalkwayEntity lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
                 .where(walkwayEntity.id.eq(query.lastWalkwayId()))
                 .fetchOne();
 
@@ -105,8 +102,7 @@ public class WalkwayQueryDSLRepository {
 
     // 별점 순 검색
     public List<WalkwayEntity> searchWalkwaysRating(SearchWalkwayQuery query) {
-        WalkwayEntity lastWalkwayEntity = queryFactory
-                .selectFrom(walkwayEntity)
+        WalkwayEntity lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
                 .where(walkwayEntity.id.eq(query.lastWalkwayId()))
                 .fetchOne();
 

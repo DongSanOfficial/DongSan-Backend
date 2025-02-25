@@ -9,7 +9,7 @@
 //import com.dongsan.rdb.domains.bookmark.BookmarkEntity;
 //import com.dongsan.rdb.domains.bookmark.MarkedWalkway;
 //import com.dongsan.rdb.domains.member.MemberEntity;
-//import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+//import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 //import fixture.MarkedWalkwayFixture;
 //import fixture.WalkwayFixture;
 //import java.util.ArrayList;

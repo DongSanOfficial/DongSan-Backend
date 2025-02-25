@@ -11,6 +11,7 @@ dependencies {
 
     // JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
 
     // querydsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -31,6 +32,7 @@ dependencies {
     testFixturesImplementation 'org.junit.jupiter:junit-jupiter-api'
     testFixturesImplementation 'org.locationtech.jts:jts-core:1.20.0'
     testFixturesImplementation project(':core-domain')
+    testImplementation project(':core-domain')
 }
 
 // application.yml 설정 파일 복사
@@ -45,3 +47,4 @@ processResources.dependsOn('copyConfig')
 bootJar {
     enabled = false
 }
+
