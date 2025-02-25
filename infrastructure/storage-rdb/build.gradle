@@ -24,11 +24,16 @@ dependencies {
     // p6spy
     implementation "p6spy:p6spy:3.9.1"
 
-    // h2
-    testRuntimeOnly 'com.h2database:h2'
+    // List<String> <-> JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
+
+    // testContainer
+    testImplementation 'org.testcontainers:testcontainers:1.20.1'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.1'
+    testImplementation 'org.testcontainers:mysql:1.20.1'
 
     // testFixtures
-    testFixturesImplementation 'org.junit.jupiter:junit-jupiter-api'
     testFixturesImplementation 'org.locationtech.jts:jts-core:1.20.0'
     testFixturesImplementation project(':core-domain')
     testImplementation(testFixtures(project(":core-domain")))
