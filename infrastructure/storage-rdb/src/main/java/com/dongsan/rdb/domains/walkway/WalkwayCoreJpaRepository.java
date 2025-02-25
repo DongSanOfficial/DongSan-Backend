@@ -72,12 +72,12 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
 
     @Override
     public boolean existsWalkway(Long walkwayId, Long memberId) {
-        return walkwayJpaRepository.existsByIdAndMemberId(walkwayId, memberId);
+        return walkwayJpaRepository.existsByIdAndMemberEntityId(walkwayId, memberId);
     }
 
     @Override
     public boolean existsLikedWalkway(Long memberId, Long walkwayId) {
-        return likedWalkwayJpaRepository.existsByMemberIdAndWalkwayId(memberId, walkwayId);
+        return likedWalkwayJpaRepository.existsByMemberEntityIdAndWalkwayEntityId(memberId, walkwayId);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
         WalkwayEntity walkwayEntity = walkwayJpaRepository.getReferenceById(walkwayId);
         walkwayEntity.decreaseLikeCount();
         walkwayJpaRepository.save(walkwayEntity);
-        likedWalkwayJpaRepository.deleteByMemberIdAndWalkwayId(memberId, walkwayId);
+        likedWalkwayJpaRepository.deleteByMemberEntityIdAndWalkwayEntityId(memberId, walkwayId);
     }
 
     @Override

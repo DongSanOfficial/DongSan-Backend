@@ -7,11 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LikedWalkwayJpaRepository extends JpaRepository<LikedWalkwayEntity, Long> {
-    Optional<LikedWalkwayEntity> findByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
 
-    Boolean existsByMemberAndWalkway(MemberEntity memberEntity, WalkwayEntity walkwayEntity);
+    void deleteByMemberEntityIdAndWalkwayEntityId(Long memberId, Long walkwayId);
 
-    void deleteByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
-
-    Boolean existsByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
+    Boolean existsByMemberEntityIdAndWalkwayEntityId(Long memberId, Long walkwayId);
 }

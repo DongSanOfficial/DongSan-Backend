@@ -5,7 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long>{
-    boolean existsByIdAndMemberId(Long reviewId, Long memberId);
-
-    Integer countByWalkwayId(Long walkwayId);
+    boolean existsByIdAndMemberEntityId(Long reviewId, Long memberId);
 }

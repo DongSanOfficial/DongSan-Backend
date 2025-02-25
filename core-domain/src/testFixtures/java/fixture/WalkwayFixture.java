@@ -8,6 +8,11 @@ import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.support.util.Author;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinates;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 
 public class WalkwayFixture {
 
@@ -33,7 +38,7 @@ public class WalkwayFixture {
     }
 
     public static Walkway createWalkwayWithId(Long walkwayId) {
-        return new Walkway(walkwayId, NAME, CREATED_AT, MEMO, new Stat(LIKE_COUNT, REVIEW_COUNT, RATING), HASHTAGS, null, new Author(MEMBER_ID), ExposeLevel.PUBLIC);
+        return new Walkway(walkwayId, NAME, CREATED_AT, MEMO, createStat(), HASHTAGS, createCourseInfo(), new Author(MEMBER_ID), ExposeLevel.PUBLIC);
     }
 
     public static WalkwayHistory createWalkwayHistory() {
@@ -49,6 +54,11 @@ public class WalkwayFixture {
     }
 
     private static CourseInfo createCourseInfo() {
-        return new CourseInfo(DISTANCE, TIME, null, null, null, IMAGE_URL);
+        GeometryFactory geometryFactory = new GeometryFactory();
+        Point startLocation = geometryFactory.createPoint(new Coordinate(0.0, 0.0));
+        Point endLocation = geometryFactory.createPoint(new Coordinate(0.0, 0.0));
+        Coordinate[] coordinates = {new Coordinate(0.0, 0.0), new Coordinate(0.0, 0.0)};
+        LineString course = geometryFactory.createLineString(coordinates);
+        return new CourseInfo(DISTANCE, TIME, startLocation, endLocation, course, IMAGE_URL);
     }
 }

@@ -64,7 +64,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
 
     @Override
     public boolean existsByMemberIdAndName(Long memberId, String name) {
-        return bookmarkJpaRepository.existsByMemberIdAndName(memberId, name);
+        return bookmarkJpaRepository.existsByMemberEntityIdAndName(memberId, name);
     }
 
     @Override

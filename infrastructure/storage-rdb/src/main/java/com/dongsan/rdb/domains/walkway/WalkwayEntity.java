@@ -10,6 +10,7 @@ import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -70,8 +71,7 @@ public class WalkwayEntity extends BaseEntity {
 
     private String courseImageUrl;
 
-    @Column(columnDefinition = "json")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Convert(converter = ListStringConverter.class)
     private List<String> hashtags;
 
     protected WalkwayEntity() {}

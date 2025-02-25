@@ -149,7 +149,7 @@ public class ReviewCoreRepository implements ReviewRepository {
 
     @Override
     public boolean existsByIdAndMemberId(Long reviewId, Long memberId) {
-        return reviewJpaRepository.existsByIdAndMemberId(reviewId, memberId);
+        return reviewJpaRepository.existsByIdAndMemberEntityId(reviewId, memberId);
     }
 
     @Override
