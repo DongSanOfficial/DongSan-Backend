@@ -26,7 +26,7 @@ public class WalkwayReader {
                 .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_NOT_FOUND));
     }
 
-    public List<Walkway> getUserWalkWay(Long memberId, Integer size, LocalDateTime lastCreatedAt){
+    public List<Walkway> getUserWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt){
         return walkwayRepository.getUserWalkway(memberId, size, lastCreatedAt);
     }
 

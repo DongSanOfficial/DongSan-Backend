@@ -105,7 +105,7 @@ public class WalkwayService {
             walkwayValidator.isOwnerOfWalkway(walkwayId, memberId);
             lastCreatedAt = walkway.createdAt();
         }
-        List<Walkway> walkways = walkwayReader.getUserWalkWay(memberId, size+1, lastCreatedAt);
+        List<Walkway> walkways = walkwayReader.getUserWalkway(memberId, size+1, lastCreatedAt);
         boolean hasNext = walkways.size() > size;
         if(hasNext){
             walkways.remove(walkways.size()-1);

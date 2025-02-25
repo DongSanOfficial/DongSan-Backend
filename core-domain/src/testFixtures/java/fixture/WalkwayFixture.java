@@ -20,13 +20,16 @@ public class WalkwayFixture {
     private static final Integer REVIEW_COUNT = 5;
     private static final Double RATING = 3.8;
     private static final List<String> HASHTAGS = List.of("tag1", "tag2", "tag2");
+    private static final Double DISTANCE = 10.0;
+    private static final Integer TIME = 10;
+    private static final String IMAGE_URL = "TEST URL";
 
     public static Walkway createWalkway() {
-        return new Walkway(ID, NAME, CREATED_AT, MEMO, new Stat(LIKE_COUNT, REVIEW_COUNT, RATING), HASHTAGS, null, new Author(MEMBER_ID), ExposeLevel.PUBLIC);
+        return new Walkway(ID, NAME, CREATED_AT, MEMO, createStat(), HASHTAGS, createCourseInfo(), new Author(MEMBER_ID), ExposeLevel.PUBLIC);
     }
 
     public static Walkway createWalkwayPrivate() {
-        return new Walkway(ID, NAME, CREATED_AT, MEMO, new Stat(LIKE_COUNT, REVIEW_COUNT, RATING), HASHTAGS, null, new Author(MEMBER_ID), ExposeLevel.PRIVATE);
+        return new Walkway(ID, NAME, CREATED_AT, MEMO, createStat(), HASHTAGS, createCourseInfo(), new Author(MEMBER_ID), ExposeLevel.PRIVATE);
     }
 
     public static Walkway createWalkwayWithId(Long walkwayId) {
@@ -39,5 +42,13 @@ public class WalkwayFixture {
 
     public static WalkwayHistory createWalkwayHistory(Double distance) {
         return new WalkwayHistory(ID, MEMBER_ID, createWalkway(), distance, 10, true, CREATED_AT);
+    }
+
+    private static Stat createStat() {
+        return new Stat(LIKE_COUNT, REVIEW_COUNT, RATING);
+    }
+
+    private static CourseInfo createCourseInfo() {
+        return new CourseInfo(DISTANCE, TIME, null, null, null, IMAGE_URL);
     }
 }

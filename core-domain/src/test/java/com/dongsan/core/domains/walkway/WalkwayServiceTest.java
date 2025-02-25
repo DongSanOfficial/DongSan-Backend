@@ -1,7 +1,6 @@
 package com.dongsan.core.domains.walkway;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -80,14 +79,14 @@ class WalkwayServiceTest {
         void it_returns_void() {
             // given
             UpdateWalkway updateWalkway
-                    = new UpdateWalkway(1L, "name", "memmo", ExposeLevel.PUBLIC, List.of("tag"));
+                    = new UpdateWalkway(1L, "name", "memo", ExposeLevel.PUBLIC, List.of("tag"));
             Long memberId = 1L;
 
             // when
             walkwayService.updateWalkway(updateWalkway, memberId);
 
             // when & then
-            verify(walkwayService).updateWalkway(updateWalkway, memberId);
+            verify(walkwayWriter).updateWalkway(updateWalkway);
         }
 
     }
@@ -214,7 +213,7 @@ class WalkwayServiceTest {
             List<Walkway> walkways = List.of(WalkwayFixture.createWalkway());
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
-            when(walkwayReader.getUserLikedWalkway(memberId, size, walkway.createdAt())).thenReturn(walkways);
+            when(walkwayReader.getUserLikedWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
 
             // when
             List<Walkway> result = walkwayService.getUserLikedWalkway(memberId, size, walkwayId);
@@ -238,10 +237,10 @@ class WalkwayServiceTest {
             List<Walkway> walkways = List.of(WalkwayFixture.createWalkway());
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
-            when(walkwayReader.getUserWalkWay(memberId, size, walkway.createdAt())).thenReturn(walkways);
+            when(walkwayReader.getUserWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
 
             // when
-            List<Walkway> result = walkwayService.getUserLikedWalkway(memberId, size, walkwayId);
+            List<Walkway> result = walkwayService.getUserWalkway(memberId, size, walkwayId);
 
             // then
             assertThat(result).hasSize(walkways.size());

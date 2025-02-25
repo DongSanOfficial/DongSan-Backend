@@ -86,7 +86,7 @@ class WalkwayValidatorTest {
         void it_returns_exception() {
             // given
             Walkway walkway = WalkwayFixture.createWalkwayPrivate();
-            Long memberId = 1L;
+            Long memberId = 999L;
 
             // when & then
             assertThatThrownBy(() -> walkwayValidator.validateWalkwayAccess(walkway, memberId))

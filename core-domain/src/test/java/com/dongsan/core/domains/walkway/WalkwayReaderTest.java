@@ -2,7 +2,6 @@ package com.dongsan.core.domains.walkway;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.dongsan.core.support.error.CoreException;
@@ -80,7 +79,7 @@ class WalkwayReaderTest {
             when(walkwayRepository.getUserWalkway(memberId, size, lastCreatedAt)).thenReturn(walkways);
 
             // when
-            List<Walkway> result = walkwayReader.getUserWalkWay(memberId, size, lastCreatedAt);
+            List<Walkway> result = walkwayReader.getUserWalkway(memberId, size, lastCreatedAt);
 
             // then
             assertThat(result).hasSize(walkways.size());
