@@ -1,9 +1,6 @@
-package fixture;
+package image;
 
 import com.dongsan.core.domains.image.Image;
-import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.core.domains.walkway.Walkway;
-import com.dongsan.core.support.util.Author;
 
 public class ImageFixture {
     private static final Long ID = 1L;

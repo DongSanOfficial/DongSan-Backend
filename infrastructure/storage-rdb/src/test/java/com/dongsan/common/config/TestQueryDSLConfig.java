@@ -19,21 +19,6 @@ public class TestQueryDSLConfig {
         return new JPAQueryFactory(em);
     }
 
-//    @Bean
-//    public ReviewQueryDSLRepository reviewQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
-//        return new ReviewQueryDSLRepository(jpaQueryFactory);
-//    }
-//
-//    @Bean
-//    public BookmarkQueryDSLRepository bookmarkQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
-//        return new BookmarkQueryDSLRepository(jpaQueryFactory);
-//    }
-//
-//    @Bean
-//    public HashtagDSLRepository hashtagDSLRepository(JPAQueryFactory jpaQueryFactory){
-//        return new HashtagDSLRepository(jpaQueryFactory);
-//    }
-
     @Bean
     public WalkwayQueryDSLRepository walkwayQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
         return new WalkwayQueryDSLRepository(jpaQueryFactory);
@@ -43,11 +28,6 @@ public class TestQueryDSLConfig {
     public LikedWalkwayQueryDSLRepository likedWalkwayQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
         return new LikedWalkwayQueryDSLRepository(jpaQueryFactory);
     }
-
-//    @Bean
-//    public MarkedWalkwayQueryDSLRepository markedWalkwayQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
-//        return new MarkedWalkwayQueryDSLRepository(jpaQueryFactory);
-//    }
 
     @Bean
     public WalkwayHistoryQueryDSLRepository walkwayHistoryQueryDSLRepository(JPAQueryFactory jpaQueryFactory){

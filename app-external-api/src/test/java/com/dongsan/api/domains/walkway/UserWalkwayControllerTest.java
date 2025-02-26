@@ -1,21 +1,20 @@
 package com.dongsan.api.domains.walkway;
 
-import static fixture.WalkwayFixture.createWalkwayWithId;
+import static member.MemberFixture.createMember;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static walkway.WalkwayFixture.createWalkwayHistory;
+import static walkway.WalkwayFixture.createWalkwayWithId;
 
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
-import com.dongsan.api.domains.walkway.dto.response.WalkwayListResponse;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.domains.walkway.WalkwayService;
-import fixture.MemberFixture;
-import fixture.WalkwayFixture;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +44,7 @@ class UserWalkwayControllerTest {
     @MockBean
     WalkwayService walkwayService;
 
-    final Member member = MemberFixture.createMember();
+    final Member member = createMember();
     final CustomOAuth2User customOAuth2User = new CustomOAuth2User(member);
 
     @BeforeEach
@@ -65,9 +64,9 @@ class UserWalkwayControllerTest {
             Integer size = 5;
             Long walkwayId = 1L;
             List<Walkway> walkways = List.of(
-                    WalkwayFixture.createWalkwayWithId(1L),
-                    WalkwayFixture.createWalkwayWithId(2L),
-                    WalkwayFixture.createWalkwayWithId(3L));
+                    createWalkwayWithId(1L),
+                    createWalkwayWithId(2L),
+                    createWalkwayWithId(3L));
             when(walkwayService.getUserWalkway(customOAuth2User.getMemberId(), size, walkwayId)).thenReturn(walkways);
 
             // when & then
@@ -94,9 +93,9 @@ class UserWalkwayControllerTest {
             Integer size = 5;
             Long walkwayId = 1L;
             List<Walkway> walkways = List.of(
-                    WalkwayFixture.createWalkwayWithId(1L),
-                    WalkwayFixture.createWalkwayWithId(2L),
-                    WalkwayFixture.createWalkwayWithId(3L));
+                    createWalkwayWithId(1L),
+                    createWalkwayWithId(2L),
+                    createWalkwayWithId(3L));
 
             when(walkwayService.getUserLikedWalkway(customOAuth2User.getMemberId(), size, walkwayId)).thenReturn(walkways);
 
@@ -125,9 +124,9 @@ class UserWalkwayControllerTest {
             int size = 10;
             Long lastId = 1L;
             Long memberId = member.id();
-            Walkway walkway = WalkwayFixture.createWalkwayWithId(1L);
+            Walkway walkway = createWalkwayWithId(1L);
 
-            List<WalkwayHistory> histories = List.of(WalkwayFixture.createWalkwayHistory());
+            List<WalkwayHistory> histories = List.of(createWalkwayHistory());
 
             when(walkwayService.getUserCanReviewWalkwayHistory(memberId, lastId, size)).thenReturn(histories);
 

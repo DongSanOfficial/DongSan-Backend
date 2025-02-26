@@ -1,10 +1,9 @@
 package com.dongsan.core.domains.walkway;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static walkway.WalkwayFixture.createWalkwayHistory;
 
 import com.dongsan.core.support.error.CoreException;
-import fixture.WalkwayFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ class WalkwayHistoryValidatorTest {
         @DisplayName("산책기록의 산책로와 회원이 일치 하지 않으면 예외를 발생시킨다.")
         void it_returns_exception() {
             // given
-            WalkwayHistory walkwayHistory = WalkwayFixture.createWalkwayHistory();
+            WalkwayHistory walkwayHistory = createWalkwayHistory();
             Long walkwayId = 999L;
             Long memberId = 999L;
 
@@ -45,7 +44,7 @@ class WalkwayHistoryValidatorTest {
         @DisplayName("산책기록의 산책로와 회원이 일치 하지 않으면 예외를 발생시킨다.")
         void it_returns_exception() {
             // given
-            WalkwayHistory walkwayHistory = WalkwayFixture.createWalkwayHistory(0.0);
+            WalkwayHistory walkwayHistory = createWalkwayHistory(0.0);
 
             // when & then
             assertThatThrownBy(() -> walkwayHistoryValidator.validateDistance(walkwayHistory))
@@ -60,7 +59,7 @@ class WalkwayHistoryValidatorTest {
         @DisplayName("산책 기록의 리뷰가 이미 작성되어 있으면 예외를 발생시킨다.")
         void it_returns_exception() {
             // given
-            WalkwayHistory walkwayHistory = WalkwayFixture.createWalkwayHistory();
+            WalkwayHistory walkwayHistory = createWalkwayHistory();
 
             // when & then
             assertThatThrownBy(() -> walkwayHistoryValidator.validateIsReviewed(walkwayHistory))

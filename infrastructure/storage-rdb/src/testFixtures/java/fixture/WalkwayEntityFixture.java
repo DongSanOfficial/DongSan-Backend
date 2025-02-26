@@ -1,11 +1,8 @@
 package fixture;
 
 import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.walkway.WalkwayEntity;
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -26,43 +23,17 @@ public class WalkwayEntityFixture {
             new Coordinate(1.0, 1.0),
             new Coordinate(2.0, 2.0)
     });
-
     private static final String COURSE_IMAGE_URL = "http://example.com/course-image.png";
+    private static final List<String> HASHTAGS = List.of("happy", "silent");
 
     public static WalkwayEntity createWalkway(MemberEntity memberEntity) {
-        return new WalkwayEntity(NAME, DISTANCE, TIME, EXPOSE_LEVEL, START_LOCATION, END_LOCATION, MEMO, COURSE, COURSE_IMAGE_URL, memberEntity, List.of());
+        return new WalkwayEntity(NAME, DISTANCE, TIME, EXPOSE_LEVEL, START_LOCATION,
+                END_LOCATION, MEMO, COURSE, COURSE_IMAGE_URL, memberEntity, HASHTAGS);
     }
 
     public static WalkwayEntity createPrivateWalkway(MemberEntity memberEntity){
-        return new WalkwayEntity(NAME, DISTANCE, TIME, ExposeLevel.PRIVATE, START_LOCATION, END_LOCATION, MEMO, COURSE, COURSE_IMAGE_URL, memberEntity, List.of());
+        return new WalkwayEntity(NAME, DISTANCE, TIME, ExposeLevel.PRIVATE, START_LOCATION,
+                END_LOCATION, MEMO, COURSE, COURSE_IMAGE_URL, memberEntity, HASHTAGS);
     }
-
-    public static WalkwayEntity createWalkwayWithId(Long id, MemberEntity memberEntity){
-        WalkwayEntity walkwayEntity = createWalkway(memberEntity);
-        reflectId(id, walkwayEntity);
-        reflectCreatedAt(LocalDateTime.now(), walkwayEntity);
-        return walkwayEntity;
-    }
-
-    private static void reflectId(Long id, WalkwayEntity walkwayEntity){
-        try {
-            Field idField = WalkwayEntity.class.getDeclaredField("id");
-            idField.setAccessible(true);
-            idField.set(walkwayEntity, id);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void reflectCreatedAt(LocalDateTime createdAt, WalkwayEntity walkwayEntity){
-        try {
-            Field createdAtField = BaseEntity.class.getDeclaredField("createdAt");
-            createdAtField.setAccessible(true);
-            createdAtField.set(walkwayEntity, createdAt);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

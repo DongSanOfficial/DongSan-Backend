@@ -3,9 +3,9 @@ package com.dongsan.core.domains.walkway;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
+import static walkway.WalkwayFixture.createWalkwayWithId;
 
 import com.dongsan.core.support.error.CoreException;
-import fixture.WalkwayFixture;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import walkway.WalkwayFixture;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("WalkwayReader Unit Test")
@@ -39,7 +40,7 @@ class WalkwayReaderTest {
         void it_returns_walkway() {
             // given
             Long walkwayId = 1L;
-            Walkway walkway = WalkwayFixture.createWalkwayWithId(walkwayId);
+            Walkway walkway = createWalkwayWithId(walkwayId);
 
             when(walkwayRepository.getWalkway(walkwayId)).thenReturn(Optional.of(walkway));
 

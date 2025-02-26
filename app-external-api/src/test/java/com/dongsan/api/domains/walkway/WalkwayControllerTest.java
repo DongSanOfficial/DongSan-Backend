@@ -1,5 +1,7 @@
 package com.dongsan.api.domains.walkway;
 
+import static image.ImageFixture.createImage;
+import static member.MemberFixture.createMember;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -8,16 +10,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static walkway.WalkwayFixture.createWalkwayWithId;
 
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import com.dongsan.api.domains.walkway.dto.WalkwayCoordinate;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
-import com.dongsan.api.domains.walkway.dto.response.BookmarksWithMarkedWalkwayResponse;
-import com.dongsan.api.domains.walkway.dto.response.CreateWalkwayHistoryResponse;
-import com.dongsan.api.domains.walkway.dto.response.GetWalkwayResponse;
-import com.dongsan.api.domains.walkway.dto.response.SearchWalkwayResponse;
 import com.dongsan.api.domains.walkway.mapper.WalkwayMapper;
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.core.domains.bookmark.Bookmark;
@@ -29,16 +28,12 @@ import com.dongsan.core.domains.walkway.CreateWalkway;
 import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
-import com.dongsan.core.domains.walkway.WalkwayReader;
 import com.dongsan.core.domains.walkway.WalkwayService;
 import com.dongsan.core.support.util.Author;
 import com.dongsan.core.support.util.CursorPagingRequest;
 import com.dongsan.core.support.util.CursorPagingResponse;
 import com.dongsan.file.service.S3FileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fixture.ImageFixture;
-import fixture.MemberFixture;
-import fixture.WalkwayFixture;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +57,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import walkway.WalkwayFixture;
 
 @WebMvcTest(controllers = WalkwayController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -87,7 +83,7 @@ class WalkwayControllerTest {
     @MockBean
     ImageService imageService;
 
-    final Member member = MemberFixture.createMember();
+    final Member member = createMember();
     final CustomOAuth2User customOAuth2User = new CustomOAuth2User(member);
 
     @BeforeEach
@@ -118,7 +114,7 @@ class WalkwayControllerTest {
                     ExposeLevel.PUBLIC,
                     course
             );
-            Image image = ImageFixture.createImage();
+            Image image = createImage();
             CreateWalkway createWalkway
                     = WalkwayMapper.toCreateWalkway(createWalkwayRequest, image, customOAuth2User.getMemberId());
             Long walkwayId = 1L;
@@ -208,7 +204,7 @@ class WalkwayControllerTest {
         void it_returns_DTO() throws Exception {
             // Given
             Long walkwayId = 1L;
-            Walkway walkway = WalkwayFixture.createWalkwayWithId(1L);
+            Walkway walkway = createWalkwayWithId(1L);
             boolean isLike = true;
             boolean isMarked = true;
 
@@ -294,7 +290,7 @@ class WalkwayControllerTest {
         @BeforeEach
         void setUp() {
             for (long i = 1; i <= 10; i++) {
-                walkways.add(WalkwayFixture.createWalkwayWithId(i));
+                walkways.add(createWalkwayWithId(i));
                 isLiked.put(i, true);
             }
         }

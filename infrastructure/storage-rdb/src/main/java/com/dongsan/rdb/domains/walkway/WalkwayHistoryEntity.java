@@ -11,8 +11,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "walkway_history")
 public class WalkwayHistoryEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +22,11 @@ public class WalkwayHistoryEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private MemberEntity memberEntity;
+    private MemberEntity member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "walkway_id")
-    private WalkwayEntity walkwayEntity;
+    private WalkwayEntity walkway;
 
     @Column(nullable = false)
     private Double distance;
@@ -37,9 +39,9 @@ public class WalkwayHistoryEntity extends BaseEntity {
 
     protected WalkwayHistoryEntity(){}
 
-    public WalkwayHistoryEntity(MemberEntity memberEntity, WalkwayEntity walkwayEntity, Double distance, Integer time){
-        this.memberEntity = memberEntity;
-        this.walkwayEntity = walkwayEntity;
+    public WalkwayHistoryEntity(MemberEntity member, WalkwayEntity walkway, Double distance, Integer time){
+        this.member = member;
+        this.walkway = walkway;
         this.distance = distance;
         this.time = time;
         this.isReviewed = false;
@@ -54,7 +56,7 @@ public class WalkwayHistoryEntity extends BaseEntity {
     }
 
     public WalkwayHistory toWalkwayHistory() {
-        return new WalkwayHistory(id, memberEntity.getId(), walkwayEntity.toWalkway(), distance, time, isReviewed, getCreatedAt());
+        return new WalkwayHistory(id, member.getId(), walkway.toWalkway(), distance, time, isReviewed, getCreatedAt());
     }
 
     public Double getDistance() {
@@ -62,11 +64,11 @@ public class WalkwayHistoryEntity extends BaseEntity {
     }
 
     public MemberEntity getMemberEntity() {
-        return memberEntity;
+        return member;
     }
 
     public WalkwayEntity getWalkwayEntity() {
-        return walkwayEntity;
+        return walkway;
     }
 
     public Integer getTime() {

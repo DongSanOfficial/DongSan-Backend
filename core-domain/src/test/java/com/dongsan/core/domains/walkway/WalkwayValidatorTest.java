@@ -1,11 +1,10 @@
 package com.dongsan.core.domains.walkway;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static walkway.WalkwayFixture.createWalkwayPrivate;
 
 import com.dongsan.core.support.error.CoreException;
-import fixture.WalkwayFixture;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -68,7 +67,7 @@ class WalkwayValidatorTest {
         void it_returns_exception() {
             // given
             Long walkwayId = 1L;
-            Walkway walkway = WalkwayFixture.createWalkwayPrivate();
+            Walkway walkway = createWalkwayPrivate();
 
             when(walkwayRepository.getWalkway(walkwayId)).thenReturn(Optional.of(walkway));
 
@@ -85,7 +84,7 @@ class WalkwayValidatorTest {
         @DisplayName("산책로가 PRIVATE면 예외를 발생시킨다.")
         void it_returns_exception() {
             // given
-            Walkway walkway = WalkwayFixture.createWalkwayPrivate();
+            Walkway walkway = createWalkwayPrivate();
             Long memberId = 999L;
 
             // when & then

@@ -70,7 +70,7 @@ class WalkwayCoreJpaRepositoryTest {
             CreateWalkway createWalkway
                     = new CreateWalkway("Sample", 2.5, 30, ExposeLevel.PUBLIC, point, point, "walkway.", lineString, null,null, memberId);
             MemberEntity memberEntity = MemberEntityFixture.createMember();
-            WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkwayWithId(walkwayId, memberEntity);
+            WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkway(memberEntity);
 
             when(memberJpaRepository.getReferenceById(memberId)).thenReturn(memberEntity);
             when(walkwayJpaRepository.save(any(WalkwayEntity.class))).thenReturn(walkwayEntity);
@@ -290,7 +290,7 @@ class WalkwayCoreJpaRepositoryTest {
 
             // then
             verify(walkwayJpaRepository).save(walkwayEntity);
-            verify(likedWalkwayJpaRepository).deleteByMemberEntityIdAndWalkwayEntityId(memberId, walkwayId);
+            verify(likedWalkwayJpaRepository).deleteByMemberIdAndWalkwayId(memberId, walkwayId);
         }
     }
 
