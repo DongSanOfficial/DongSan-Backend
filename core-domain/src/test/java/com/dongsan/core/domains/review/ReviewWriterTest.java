@@ -1,18 +1,9 @@
-package com.dongsan.domains.walkway.service;
+package com.dongsan.core.domains.review;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.dongsan.core.domains.member.Member;
-import com.dongsan.core.domains.review.CreateReview;
-import com.dongsan.core.domains.review.Review;
-import com.dongsan.core.domains.review.ReviewRepository;
-import com.dongsan.core.domains.walkway.Walkway;
-import com.dongsan.core.domains.review.ReviewWriter;
-import fixture.MemberFixture;
-import fixture.ReviewFixture;
-import fixture.WalkwayFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

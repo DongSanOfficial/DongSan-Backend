@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dongsan.common.support.RepositoryTest;
 import com.dongsan.core.domains.walkway.ExposeLevel;
+import com.dongsan.core.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import fixture.MemberEntityFixture;
 import java.time.LocalDateTime;
@@ -138,6 +139,172 @@ class WalkwayQueryDSLRepositoryTest extends RepositoryTest {
                 LocalDateTime prev = result.get(i).getCreatedAt();
                 assertThat(prev).isBeforeOrEqualTo(after);
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("searchWalkwaysLiked 메서드는")
+    class Describe_searchWalkwaysLiked {
+        @BeforeEach
+        void setUp() {
+            MemberEntity memberEntity = MemberEntityFixture.createMember();
+            em.persist(memberEntity);
+
+            for (int i = 0; i < 5; i++) {
+                WalkwayEntity walkwayEntity = createWalkway(memberEntity);
+                for(int j = 0; j < i; j++) {
+                    walkwayEntity.increaseLikeCount();
+                }
+                em.persist(walkwayEntity);
+            }
+        }
+
+        @Test
+        @DisplayName("좋아요 순으로 산책로를 반환 한다.")
+        void it_returns_walkway_list() {
+            // given
+            Long memberId = 1L;
+            Double longitude = 0.0;
+            Double latitude = 0.0;
+            Double distance = 1.0;
+            Long lastWalkwayId = null;
+            int size = 5;
+
+            SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(memberId, longitude, latitude, distance, lastWalkwayId, size);
+
+            // when
+            List<WalkwayEntity> result = walkwayQueryDSLRepository.searchWalkwaysLiked(searchWalkwayQuery);
+
+            // then
+            assertThat(result).hasSize(size);
+            int prevLikeCount = result.get(0).getLikeCount();
+            for (int i = 1; i < 5; i++) {
+                int currentLikeCount = result.get(i).getLikeCount();
+                assertThat(currentLikeCount).isLessThanOrEqualTo(prevLikeCount);
+                prevLikeCount = currentLikeCount;
+            }
+        }
+
+        @Test
+        @DisplayName("범위 내에 산책로가 없으면 빈 리스트를 반환 한다.")
+        void it_returns_empty_list() {
+            // given
+            Long memberId = 1L;
+            Double longitude = 1.0;
+            Double latitude = 1.0;
+            Double distance = 0.0;
+            Long lastWalkwayId = null;
+            int size = 5;
+
+            SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(memberId, longitude, latitude, distance, lastWalkwayId, size);
+
+            // when
+            List<WalkwayEntity> result = walkwayQueryDSLRepository.searchWalkwaysLiked(searchWalkwayQuery);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("lastWalkwayId 이전의 산책로를 반환 한다.")
+        void it_returns_before_last() {
+            // given
+            Long memberId = 1L;
+            Double longitude = 0.0;
+            Double latitude = 0.0;
+            Double distance = 0.0;
+            Long lastWalkwayId = 5L;
+            int size = 5;
+
+            SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(memberId, longitude, latitude, distance, lastWalkwayId, size);
+
+            // when
+            List<WalkwayEntity> result = walkwayQueryDSLRepository.searchWalkwaysLiked(searchWalkwayQuery);
+
+            // then
+            assertThat(result).hasSize(size-1);
+        }
+    }
+
+    @Nested
+    @DisplayName("searchWalkwaysRating 메서드는")
+    class Describe_searchWalkwaysRating {
+        @BeforeEach
+        void setUp() {
+            MemberEntity memberEntity = MemberEntityFixture.createMember();
+            em.persist(memberEntity);
+
+            for (int i = 0; i < 5; i++) {
+                WalkwayEntity walkwayEntity = createWalkway(memberEntity);
+                walkwayEntity.updateRatingAndReviewCount((double) i, i);
+                em.persist(walkwayEntity);
+            }
+        }
+
+        @Test
+        @DisplayName("좋아요 순으로 산책로를 반환 한다.")
+        void it_returns_walkway_list() {
+            // given
+            Long memberId = 1L;
+            Double longitude = 0.0;
+            Double latitude = 0.0;
+            Double distance = 1.0;
+            Long lastWalkwayId = null;
+            int size = 5;
+
+            SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(memberId, longitude, latitude, distance, lastWalkwayId, size);
+
+            // when
+            List<WalkwayEntity> result = walkwayQueryDSLRepository.searchWalkwaysRating(searchWalkwayQuery);
+
+            // then
+            assertThat(result).hasSize(size);
+            Double prevRating = result.get(0).getRating();
+            for (int i = 1; i < 5; i++) {
+                Double currentLikeCount = result.get(i).getRating();
+                assertThat(currentLikeCount).isLessThanOrEqualTo(prevRating);
+                prevRating = currentLikeCount;
+            }
+        }
+
+        @Test
+        @DisplayName("범위 내에 산책로가 없으면 빈 리스트를 반환 한다.")
+        void it_returns_empty_list() {
+            // given
+            Long memberId = 1L;
+            Double longitude = 1.0;
+            Double latitude = 1.0;
+            Double distance = 0.0;
+            Long lastWalkwayId = null;
+            int size = 5;
+
+            SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(memberId, longitude, latitude, distance, lastWalkwayId, size);
+
+            // when
+            List<WalkwayEntity> result = walkwayQueryDSLRepository.searchWalkwaysRating(searchWalkwayQuery);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("lastWalkwayId 이전의 산책로를 반환 한다.")
+        void it_returns_before_last() {
+            // given
+            Long memberId = 1L;
+            Double longitude = 0.0;
+            Double latitude = 0.0;
+            Double distance = 0.0;
+            Long lastWalkwayId = 5L;
+            int size = 5;
+
+            SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(memberId, longitude, latitude, distance, lastWalkwayId, size);
+
+            // when
+            List<WalkwayEntity> result = walkwayQueryDSLRepository.searchWalkwaysRating(searchWalkwayQuery);
+
+            // then
+            assertThat(result).hasSize(size-1);
         }
     }
 }
