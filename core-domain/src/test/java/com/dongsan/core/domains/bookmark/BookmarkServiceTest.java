@@ -165,9 +165,9 @@ class BookmarkServiceTest {
             CursorPagingRequest paging = new CursorPagingRequest(null, 10);
             Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
             List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(
-                    createMarkedWalkway(1L),
-                    createMarkedWalkway(2L),
-                    createMarkedWalkway(3L)
+                    createMarkedWalkway(1L, memberId),
+                    createMarkedWalkway(2L, memberId),
+                    createMarkedWalkway(3L, memberId)
             ));
             when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
             when(bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, null, memberId)).thenReturn(markedWalkways);
@@ -193,9 +193,9 @@ class BookmarkServiceTest {
             Walkway walkway =  new Walkway(paging.lastId(), null, null, null, null, null, null, null, null); // TODO : fixture로 추후 변경
             LocalDateTime lastCreatedAt = LocalDateTime.now().minusHours(10);
             List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(
-                    createMarkedWalkway(2L),
-                    createMarkedWalkway(3L),
-                    createMarkedWalkway(4L)
+                    createMarkedWalkway(2L, memberId),
+                    createMarkedWalkway(3L, memberId),
+                    createMarkedWalkway(4L, memberId)
             ));
             when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
             when(walkwayReader.getWalkway(paging.lastId())).thenReturn(walkway);
@@ -223,9 +223,9 @@ class BookmarkServiceTest {
             CursorPagingRequest paging = new CursorPagingRequest(null, 2);
             Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
             List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(
-                    createMarkedWalkway(1L),
-                    createMarkedWalkway(2L),
-                    createMarkedWalkway(3L)
+                    createMarkedWalkway(1L, memberId),
+                    createMarkedWalkway(2L, memberId),
+                    createMarkedWalkway(3L, memberId)
             ));
             when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(bookmark);
             when(bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, null, memberId)).thenReturn(markedWalkways);

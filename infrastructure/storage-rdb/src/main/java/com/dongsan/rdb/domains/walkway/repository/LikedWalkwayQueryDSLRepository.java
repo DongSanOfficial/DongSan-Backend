@@ -39,9 +39,9 @@ public class LikedWalkwayQueryDSLRepository {
     public List<LikedWalkwayEntity> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt){
         return queryFactory
                 .selectFrom(likedWalkway)
-                .join(likedWalkway.walkwayEntity).fetchJoin()
-                .where(likedWalkway.memberEntity.id.eq(memberId), createdAtLt(lastCreatedAt),
-                        likedWalkway.walkwayEntity.memberEntity.id.eq(memberId).or(likedWalkway.walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)))
+                .join(likedWalkway.walkway).fetchJoin()
+                .where(likedWalkway.member.id.eq(memberId), createdAtLt(lastCreatedAt),
+                        likedWalkway.walkway.member.id.eq(memberId).or(likedWalkway.walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
                 .orderBy(likedWalkway.createdAt.desc())
                 .limit(size)
                 .fetch();
@@ -59,9 +59,9 @@ public class LikedWalkwayQueryDSLRepository {
     public Map<Long, Boolean> existsLikedWalkways(Long memberId, List<Long> walkwayIds) {
         return queryFactory.from(likedWalkway)
                 .where(
-                        likedWalkway.memberEntity.id.eq(memberId),
-                        likedWalkway.walkwayEntity.id.in(walkwayIds)
+                        likedWalkway.member.id.eq(memberId),
+                        likedWalkway.walkway.id.in(walkwayIds)
                 )
-                .transform(groupBy(likedWalkway.walkwayEntity.id).as(likedWalkway.isNotNull()));
+                .transform(groupBy(likedWalkway.walkway.id).as(likedWalkway.isNotNull()));
     }
 }

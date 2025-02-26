@@ -235,7 +235,7 @@ class BookmarkControllerTest {
             Long bookmarkId = 1L;
             Integer size = 10;
             Long lastId = 3L;
-            List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(createMarkedWalkway(1L), createMarkedWalkway(2L)));
+            List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(createMarkedWalkway(1L, 3L), createMarkedWalkway(2L, 3L)));
             CursorPagingResponse<MarkedWalkway> pagingResponse = new CursorPagingResponse<>(markedWalkways, false);
             when(bookmarkService.getBookmarkWalkways(customOAuth2User.getMemberId(), bookmarkId, new CursorPagingRequest(lastId, size))).thenReturn(pagingResponse);
             GetBookmarkDetailResponse response = new GetBookmarkDetailResponse(pagingResponse);

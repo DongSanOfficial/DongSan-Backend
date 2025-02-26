@@ -19,6 +19,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.util.List;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -26,6 +27,7 @@ import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 
 @Entity
+@Table(name = "walkway")
 public class WalkwayEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +35,7 @@ public class WalkwayEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private MemberEntity memberEntity;
+    private MemberEntity member;
 
     @Column(nullable = false)
     private String name;
@@ -77,8 +79,8 @@ public class WalkwayEntity extends BaseEntity {
     protected WalkwayEntity() {}
 
     // 연관관계 매핑도 생성 시 매핑합니다.
-    private WalkwayEntity(String name, Double distance, Integer time, ExposeLevel exposeLevel, Point startLocation,
-                          Point endLocation, String memo, LineString course, String courseImageUrl, MemberEntity memberEntity, List<String> hashtags){
+    public WalkwayEntity(String name, Double distance, Integer time, ExposeLevel exposeLevel, Point startLocation,
+                          Point endLocation, String memo, LineString course, String courseImageUrl, MemberEntity member, List<String> hashtags){
         this.name = name;
         this.distance = distance;
         this.time = time;
@@ -91,7 +93,7 @@ public class WalkwayEntity extends BaseEntity {
         this.hashtags = hashtags;
 
         // 연관관계 매핑
-        this.memberEntity = memberEntity;
+        this.member = member;
 
         // 생성 시 default 값
         this.likeCount = 0;
@@ -99,7 +101,7 @@ public class WalkwayEntity extends BaseEntity {
         this.rating = 0.0;
     }
 
-    public WalkwayEntity(CreateWalkway createWalkway, MemberEntity memberEntity){
+    public WalkwayEntity(CreateWalkway createWalkway, MemberEntity member){
         // 경로
         LineString course = createWalkway.course();
         Point startLocation = createWalkway.startLocation();
@@ -121,7 +123,7 @@ public class WalkwayEntity extends BaseEntity {
         this.hashtags = createWalkway.hashtags();
 
         // 연관관계 매핑
-        this.memberEntity = memberEntity;
+        this.member = member;
 
         // 생성 시 default 값
         this.likeCount = 0;
@@ -131,7 +133,7 @@ public class WalkwayEntity extends BaseEntity {
 
     public Walkway toWalkway() {
         CourseInfo courseInfo = new CourseInfo(distance, time, startLocation, endLocation, course, courseImageUrl);
-        Author author = new Author(memberEntity.getId());
+        Author author = new Author(member.getId());
         Stat stat = new Stat(likeCount, reviewCount, rating);
         return new Walkway(id, name, getCreatedAt(), memo, stat, hashtags, courseInfo, author, exposeLevel);
     }
@@ -186,5 +188,9 @@ public class WalkwayEntity extends BaseEntity {
 
     public List<String> getHashtags() {
         return hashtags;
+    }
+
+    public ExposeLevel getExposeLevel() {
+        return exposeLevel;
     }
 }

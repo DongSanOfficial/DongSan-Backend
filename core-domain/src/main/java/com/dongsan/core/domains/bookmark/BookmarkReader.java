@@ -41,11 +41,11 @@ public class BookmarkReader {
         return bookmarkRepository.getBookmarksWithMarkedWalkway(walkwayId, memberId, createdAt, size);
     }
 
-    public boolean existsByMemberIdAndWalkwayId(Long memberId, Long walkwayId) {
-        return bookmarkRepository.existsByMemberIdAndWalkwayId(memberId, walkwayId);
-    }
-
     public Map<Long, Boolean> existsMarkedWalkway(Long walkwayId, List<Long> bookmarkIds) {
         return bookmarkRepository.existsMarkedWalkway(walkwayId, bookmarkIds);
+    }
+
+    public boolean existsByMemberIdAndWalkwayId(Long memberId, Long walkwayId) {
+        return bookmarkRepository.existsByMemberIdAndWalkwayId(memberId, walkwayId);
     }
 }

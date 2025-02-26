@@ -1,7 +1,6 @@
 package com.dongsan.rdb.domains.review;
 
 import com.dongsan.core.domains.review.Review;
-import com.dongsan.core.domains.review.ReviewedWalkway;
 import com.dongsan.core.domains.review.Reviewer;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
@@ -10,6 +9,7 @@ import com.dongsan.rdb.domains.walkway.entity.WalkwayHistoryEntity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "review")
 public class ReviewEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +17,11 @@ public class ReviewEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private MemberEntity memberEntity;
+    private MemberEntity member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "walkway_id")
-    private WalkwayEntity walkwayEntity;
+    private WalkwayEntity walkway;
 
     @Column(nullable = false)
     private Integer rating;
@@ -31,22 +31,22 @@ public class ReviewEntity extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "history_id")
-    private WalkwayHistoryEntity walkwayHistoryEntity;
+    private WalkwayHistoryEntity walkwayHistory;
 
     protected ReviewEntity() {}
 
-    public ReviewEntity(Integer rating, String content, MemberEntity memberEntity, WalkwayEntity walkwayEntity, WalkwayHistoryEntity walkwayHistoryEntity){
+    public ReviewEntity(Integer rating, String content, MemberEntity member, WalkwayEntity walkway, WalkwayHistoryEntity walkwayHistory){
         this.rating = rating;
         this.content = content;
 
         // 연관관계 매핑
-        this.memberEntity = memberEntity;
-        this.walkwayEntity = walkwayEntity;
-        this.walkwayHistoryEntity = walkwayHistoryEntity;
+        this.member = member;
+        this.walkway = walkway;
+        this.walkwayHistory = walkwayHistory;
     }
 
     public Review toReview() {
-        return new Review(id, new Reviewer(memberEntity.getId(), memberEntity.getNickname()), walkwayEntity.toReviewedWalkway(), rating, content, getCreatedAt());
+        return new Review(id, new Reviewer(member.getId(), member.getNickname()), walkway.toReviewedWalkway(), rating, content, getCreatedAt());
     }
 
     public Long getId() {

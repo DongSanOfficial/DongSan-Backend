@@ -1,7 +1,5 @@
 package com.dongsan.rdb.domains.bookmark;
 
-import static com.querydsl.core.group.GroupBy.groupBy;
-
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkRepository;
 import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
@@ -12,10 +10,12 @@ import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
 import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
 import com.dongsan.rdb.domains.walkway.repository.WalkwayJpaRepository;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -93,16 +93,15 @@ public class BookmarkCoreRepository implements BookmarkRepository {
 
     @Override
     public void deleteById(Long bookmarkId) {
-        bookmarkJpaRepository.deleteById(bookmarkId);
         markedWalkwayJpaRepository.deleteAllByBookmarkId(bookmarkId);
+        bookmarkJpaRepository.deleteById(bookmarkId);
     }
 
     @Override
     public Optional<LocalDateTime> getBookmarkedDate(Long bookmarkId, Long walkwayId) {
-        return markedWalkwayJpaRepository.findByBookmarkIdAndWalkwayId(bookmarkId, walkwayId).map(
-                BaseEntity::getCreatedAt);
+        return markedWalkwayJpaRepository.findByBookmarkIdAndWalkwayId(bookmarkId, walkwayId)
+                .map(BaseEntity::getCreatedAt);
     }
-
 
     @Override
     public List<MarkedWalkway> getBookmarkWalkways(Long bookmarkId, int size,
@@ -111,7 +110,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
                 .from(markedWalkway)
                 .join(markedWalkway.walkway).fetchJoin()
                 .where(markedWalkway.bookmark.id.eq(bookmarkId), markedBookmarkCreatedAtLt(lastCreatedAt),
-                        markedWalkway.walkway.memberEntity.id.eq(memberId)
+                        markedWalkway.walkway.member.id.eq(memberId)
                                 .or(markedWalkway.walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
                 .orderBy(markedWalkway.createdAt.desc())
                 .limit(size)
@@ -131,7 +130,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
     @Override
     public List<Bookmark> getUserBookmarks(Integer size, LocalDateTime lastCreatedAt, Long memberId) {
         List<BookmarkEntity> bookmarkEntities = queryFactory.selectFrom(bookmark)
-                .where(bookmark.memberEntity.id.eq(memberId),
+                .where(bookmark.member.id.eq(memberId),
                         bookmarkCreatedAtLt(lastCreatedAt))
                 .limit(size)
                 .orderBy(bookmark.createdAt.desc())
@@ -152,7 +151,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
                 .from(bookmark)
                 .leftJoin(markedWalkway)
                 .on(markedWalkway.walkway.id.eq(walkwayId).and(markedWalkway.bookmark.id.eq(bookmark.id)))
-                .where(bookmark.memberEntity.id.eq(memberId),
+                .where(bookmark.member.id.eq(memberId),
                         bookmarkCreatedAtLt(lastCreatedAt))
                 .limit(size)
                 .orderBy(bookmark.createdAt.desc())
@@ -165,13 +164,29 @@ public class BookmarkCoreRepository implements BookmarkRepository {
         return lastCreatedAt == null ? null : bookmark.createdAt.lt(lastCreatedAt);
     }
 
+    // 산책로가 북마크에 추가되었는지 유무
     public Map<Long, Boolean> existsMarkedWalkway(Long walkwayId, List<Long> bookmarkIds) {
-        return queryFactory.from(markedWalkway)
-                .where(
-                        markedWalkway.walkway.id.eq(walkwayId),
-                        markedWalkway.bookmark.id.in(bookmarkIds)
-                )
-                .transform(groupBy(markedWalkway.bookmark.id).as(markedWalkway.isNotNull()));
+        List<Tuple> result = queryFactory
+            .select(
+                bookmark.id,
+                markedWalkway.id.isNotNull()
+            )
+            .from(bookmark)
+            .leftJoin(markedWalkway)
+            .on(markedWalkway.walkway.id.eq(walkwayId))
+            .on(markedWalkway.bookmark.id.eq(bookmark.id))
+            .where(bookmark.id.in(bookmarkIds))
+            .fetch();
+
+        // 결과를 Map<Long, Boolean>으로 변환
+        Map<Long, Boolean> resultMap = new HashMap<>();
+        for (Tuple tuple : result) {
+            Long bookmarkId = tuple.get(bookmark.id);
+            Boolean marked = tuple.get(markedWalkway.id.isNotNull());
+            resultMap.put(bookmarkId, marked);
+        }
+
+        return resultMap;
     }
 
     @Override
@@ -181,7 +196,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
                 .from(markedWalkway)
                 .where(
                         markedWalkway.walkway.id.eq(walkwayId),
-                        markedWalkway.bookmark.memberEntity.id.eq(memberId)
+                        markedWalkway.bookmark.member.id.eq(memberId)
                 )
                 .fetchFirst() != null;
     }

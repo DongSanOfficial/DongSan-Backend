@@ -21,11 +21,11 @@ public class WalkwayHistoryQueryDSLRepository {
 
     public List<WalkwayHistoryEntity> getCanReviewWalkwayHistories(Long walkwayId, Long memberId) {
         return queryFactory.selectFrom(walkwayHistory)
-                .join(walkwayHistory.walkwayEntity).fetchJoin()
+                .join(walkwayHistory.walkway).fetchJoin()
                 .where(
-                        walkwayHistory.memberEntity.id.eq(memberId),
-                        walkwayHistory.walkwayEntity.id.eq(walkwayId),
-                        walkwayHistory.distance.goe(walkwayHistory.walkwayEntity.distance.multiply(2.0/3.0)),
+                        walkwayHistory.member.id.eq(memberId),
+                        walkwayHistory.walkway.id.eq(walkwayId),
+                        walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0/3.0)),
                         walkwayHistory.isReviewed.eq(false)
                 )
                 .orderBy(walkwayHistory.createdAt.desc())
@@ -34,12 +34,12 @@ public class WalkwayHistoryQueryDSLRepository {
 
     public List<WalkwayHistoryEntity> getUserCanReviewWalkwayHistories(Long memberId, int size, LocalDateTime lastCreatedAt) {
         return queryFactory.selectFrom(walkwayHistory)
-                .join(walkwayHistory.walkwayEntity).fetchJoin()
+                .join(walkwayHistory.walkway).fetchJoin()
                 .where(
-                        walkwayHistory.memberEntity.id.eq(memberId),
-                        walkwayHistory.distance.goe(walkwayHistory.walkwayEntity.distance.multiply(2.0/3.0)),
+                        walkwayHistory.member.id.eq(memberId),
+                        walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0/3.0)),
                         walkwayHistory.isReviewed.eq(false),
-                        walkwayHistory.walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC),
+                        walkwayHistory.walkway.exposeLevel.eq(ExposeLevel.PUBLIC),
                         createdAtLt(lastCreatedAt)
                 )
                 .limit(size)

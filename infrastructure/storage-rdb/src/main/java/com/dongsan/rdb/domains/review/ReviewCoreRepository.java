@@ -58,12 +58,12 @@ public class ReviewCoreRepository implements ReviewRepository {
     @Override
     public List<Review> getUserReviews(Integer size, LocalDateTime lastCreatedAt, Long memberId) {
         List<ReviewEntity> reviewEntities = queryFactory.selectFrom(review)
-                .join(review.walkwayEntity).fetchJoin()
-                .join(review.memberEntity).fetchJoin()
-                .where(review.memberEntity.id.eq(memberId),
+                .join(review.walkway).fetchJoin()
+                .join(review.member).fetchJoin()
+                .where(review.member.id.eq(memberId),
                         createdAtLt(lastCreatedAt),
-                        review.walkwayEntity.memberEntity.id.eq(memberId)
-                                .or(review.walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)))
+                        review.walkway.member.id.eq(memberId)
+                                .or(review.walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
                 .limit(size)
                 .orderBy(review.createdAt.desc())
                 .fetch();
@@ -93,9 +93,9 @@ public class ReviewCoreRepository implements ReviewRepository {
     @Override
     public List<Review> getWalkwayReviewsLatest(Integer size, Long walkwayId, LocalDateTime lastCreatedAt) {
         List<ReviewEntity> reviewEntities = queryFactory.selectFrom(review)
-                .join(review.walkwayEntity).fetchJoin()
-                .join(review.memberEntity).fetchJoin()
-                .where(review.walkwayEntity.id.eq(walkwayId),
+                .join(review.walkway).fetchJoin()
+                .join(review.member).fetchJoin()
+                .where(review.walkway.id.eq(walkwayId),
                         createdAtLt(lastCreatedAt)
                 )
                 .limit(size)
@@ -109,9 +109,9 @@ public class ReviewCoreRepository implements ReviewRepository {
     @Override
     public List<Review> getWalkwayReviewsRating(Integer size, Long walkwayId, LocalDateTime lastCreatedAt, Integer lastRating) {
         List<ReviewEntity> reviewEntities = queryFactory.selectFrom(review)
-                .join(review.walkwayEntity).fetchJoin()
-                .join(review.memberEntity).fetchJoin()
-                .where(review.walkwayEntity.id.eq(walkwayId),
+                .join(review.walkway).fetchJoin()
+                .join(review.member).fetchJoin()
+                .where(review.walkway.id.eq(walkwayId),
                         lastRating == null
                                 ? null
                                 : review.rating.lt(lastRating)
@@ -131,7 +131,7 @@ public class ReviewCoreRepository implements ReviewRepository {
     @Override
     public Map<Integer, Long> getWalkwayRating(Long walkwayId) {
         return queryFactory.from(review)
-                .where(review.walkwayEntity.id.eq(walkwayId))
+                .where(review.walkway.id.eq(walkwayId))
                 .groupBy(review.rating)
                 .transform(groupBy(review.rating).as(review.rating.count()));
     }

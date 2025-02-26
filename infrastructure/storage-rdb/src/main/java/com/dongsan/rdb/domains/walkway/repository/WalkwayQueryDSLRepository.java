@@ -27,11 +27,11 @@ public class WalkwayQueryDSLRepository {
     public List<WalkwayEntity> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
         return queryFactory.selectFrom(walkwayEntity)
                 .join(likedWalkwayEntity)
-                .on(likedWalkwayEntity.walkwayEntity.eq(walkwayEntity))
+                .on(likedWalkwayEntity.walkway.eq(walkwayEntity))
                 .where(
-                        likedWalkwayEntity.memberEntity.id.eq(memberId),
+                        likedWalkwayEntity.member.id.eq(memberId),
                         walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-                                .or(walkwayEntity.memberEntity.id.eq(memberId)),
+                                .or(walkwayEntity.member.id.eq(memberId)),
                         createdAtLt(lastCreatedAt)
                 )
                 .orderBy(walkwayEntity.createdAt.desc())
@@ -41,7 +41,7 @@ public class WalkwayQueryDSLRepository {
 
     public List<WalkwayEntity> getUserWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
         return queryFactory.selectFrom(walkwayEntity)
-                .where(walkwayEntity.memberEntity.id.eq(memberId), createdAtLt(lastCreatedAt))
+                .where(walkwayEntity.member.id.eq(memberId), createdAtLt(lastCreatedAt))
                 .orderBy(walkwayEntity.createdAt.desc())
                 .limit(size)
                 .fetch();
@@ -90,7 +90,7 @@ public class WalkwayQueryDSLRepository {
                 .where(
                         this.searchFilterDistance(query.longitude(), query.latitude(), query.distance()),
                         walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-                                .or(walkwayEntity.memberEntity.id.eq(query.userId())),
+                                .or(walkwayEntity.member.id.eq(query.userId())),
                         lastWalkwayEntity == null
                                 ? null
                                 : walkwayEntity.likeCount.lt(lastWalkwayEntity.getLikeCount())
@@ -115,7 +115,7 @@ public class WalkwayQueryDSLRepository {
                 .where(
                         this.searchFilterDistance(query.longitude(), query.latitude(), query.distance()),
                         walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-                                .or(walkwayEntity.memberEntity.id.eq(query.userId())),
+                                .or(walkwayEntity.member.id.eq(query.userId())),
                         lastWalkwayEntity == null
                                 ? null
                                 : walkwayEntity.rating.lt(lastWalkwayEntity.getRating())
