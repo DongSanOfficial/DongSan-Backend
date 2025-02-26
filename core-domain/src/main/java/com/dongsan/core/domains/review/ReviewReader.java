@@ -24,8 +24,8 @@ public class ReviewReader {
                 .orElseThrow(() -> new CoreException(CoreErrorCode.REVIEW_NOT_FOUND));
     }
 
-    public List<Review> getUserReviews(Integer limit, LocalDateTime lastCreatedAt, Long memberId) {
-        return reviewRepository.getUserReviews(limit, lastCreatedAt, memberId);
+    public List<Review> getUserReviews(Integer size, LocalDateTime lastCreatedAt, Long memberId) {
+        return reviewRepository.getUserReviews(size, lastCreatedAt, memberId);
     }
 
     public boolean existsByReviewId(Long reviewId){
