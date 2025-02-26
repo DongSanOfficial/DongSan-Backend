@@ -26,7 +26,6 @@
 //import com.dongsan.core.domains.walkway.WalkwayWriter;
 //import com.dongsan.core.domains.walkway.WalkwayReader;
 //import fixture.ImageFixture;
-//import fixture.MemberFixture;
 //import fixture.WalkwayFixture;
 //import java.util.ArrayList;
 //import java.util.List;

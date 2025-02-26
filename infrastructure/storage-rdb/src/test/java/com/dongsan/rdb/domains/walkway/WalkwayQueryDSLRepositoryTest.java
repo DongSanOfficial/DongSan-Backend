@@ -51,7 +51,7 @@ class WalkwayQueryDSLRepositoryTest extends RepositoryTest {
 
             // then
             for (WalkwayEntity walkwayEntity : result) {
-                assertThat(walkwayEntity.getMemberEntity().getId()).isEqualTo(memberId);
+                assertThat(walkwayEntity.getMember().getId()).isEqualTo(memberId);
             }
             for(int i=1; i<result.size(); i++){
                 LocalDateTime after = result.get(i-1).getCreatedAt();
@@ -73,7 +73,7 @@ class WalkwayQueryDSLRepositoryTest extends RepositoryTest {
 
             // then
             for (WalkwayEntity walkwayEntity : result) {
-                assertThat(walkwayEntity.getMemberEntity()
+                assertThat(walkwayEntity.getMember()
                         .getId()).isEqualTo(memberId);
                 assertThat(walkwayEntity.getCreatedAt()).isBefore(lastCreateAt);
             }

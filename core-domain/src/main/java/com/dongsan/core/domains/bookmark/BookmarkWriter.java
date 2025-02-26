@@ -14,13 +14,12 @@ public class BookmarkWriter {
         return bookmarkRepository.save(memberId, name);
     }
 
-    public void renameBookmark(Bookmark bookmark, String name) {
-        bookmarkRepository.rename(bookmark.bookmarkId(), name);
+    public void renameBookmark(Long bookmarkId, String name) {
+        bookmarkRepository.rename(bookmarkId, name);
     }
 
     public void includeWalkway(Long bookmarkId, Long walkwayId) {
         bookmarkRepository.includeWalkway(bookmarkId, walkwayId);
-
     }
 
     public void excludeWalkway(Long bookmarkId, Long walkwayId) {
@@ -30,6 +29,5 @@ public class BookmarkWriter {
     public void deleteBookmark(Long bookmarkId) {
         bookmarkRepository.deleteById(bookmarkId);
     }
-
 
 }

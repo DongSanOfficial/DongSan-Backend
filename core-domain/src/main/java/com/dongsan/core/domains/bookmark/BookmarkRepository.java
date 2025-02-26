@@ -34,7 +34,7 @@ public interface BookmarkRepository {
 
     List<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long walkwayId, Long memberId, LocalDateTime createdAt, Integer size);
 
-    boolean existsByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
-
     Map<Long, Boolean> existsMarkedWalkway(Long walkwayId, List<Long> bookmarkIds);
+
+    boolean existsByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
 }

@@ -1,12 +1,12 @@
 package com.dongsan.core.domains.walkway;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static walkway.WalkwayFixture.createWalkway;
+import static walkway.WalkwayFixture.createWalkwayHistory;
 
 import com.dongsan.core.support.util.CursorPagingResponse;
-import fixture.WalkwayFixture;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +59,7 @@ class WalkwayServiceTest {
         void it_returns_walkway() {
             // given
             Long walkwayId = 1L;
-            Walkway walkway = WalkwayFixture.createWalkway();
+            Walkway walkway = createWalkway();
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
 
@@ -101,7 +101,7 @@ class WalkwayServiceTest {
             String sortType = "rating";
             SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(1L, 123.0, 123.0, 10.0, 1L, 10);
             WalkwaySort sort = WalkwaySort.typeOf(sortType);
-            List<Walkway> walkways = List.of(WalkwayFixture.createWalkway());
+            List<Walkway> walkways = List.of(createWalkway());
 
             when(walkwayReader.searchWalkway(searchWalkwayQuery, sort)).thenReturn(walkways);
 
@@ -209,8 +209,8 @@ class WalkwayServiceTest {
             Long memberId = 1L;
             Integer size = 10;
             Long walkwayId = 1L;
-            Walkway walkway = WalkwayFixture.createWalkway();
-            List<Walkway> walkways = List.of(WalkwayFixture.createWalkway());
+            Walkway walkway = createWalkway();
+            List<Walkway> walkways = List.of(createWalkway());
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
             when(walkwayReader.getUserLikedWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
@@ -233,8 +233,8 @@ class WalkwayServiceTest {
             Long memberId = 1L;
             Integer size = 10;
             Long walkwayId = 1L;
-            Walkway walkway = WalkwayFixture.createWalkway();
-            List<Walkway> walkways = List.of(WalkwayFixture.createWalkway());
+            Walkway walkway = createWalkway();
+            List<Walkway> walkways = List.of(createWalkway());
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
             when(walkwayReader.getUserWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
@@ -276,7 +276,7 @@ class WalkwayServiceTest {
             // given
             Long walkwayId = 1L;
             Long memberId = 1L;
-            List<WalkwayHistory> walkwayHistories = List.of(WalkwayFixture.createWalkwayHistory());
+            List<WalkwayHistory> walkwayHistories = List.of(createWalkwayHistory());
 
             when(walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId)).thenReturn(walkwayHistories);
 
@@ -298,8 +298,8 @@ class WalkwayServiceTest {
             Long lastWalkwayHistoryId = 1L;
             Long memberId = 1L;
             int size = 10;
-            WalkwayHistory walkwayHistory = WalkwayFixture.createWalkwayHistory();
-            List<WalkwayHistory> walkwayHistories = List.of(WalkwayFixture.createWalkwayHistory());
+            WalkwayHistory walkwayHistory = createWalkwayHistory();
+            List<WalkwayHistory> walkwayHistories = List.of(createWalkwayHistory());
 
             when(walkwayReader.getWalkwayHistory(lastWalkwayHistoryId)).thenReturn(walkwayHistory);
             when(walkwayReader.getUserCanReviewWalkwayHistory(memberId, size, walkwayHistory.createdAt())).thenReturn(walkwayHistories);
@@ -320,7 +320,7 @@ class WalkwayServiceTest {
         void it_returns_can_review() {
             // given
             Long walkwayHistoryId = 1L;
-            WalkwayHistory walkwayHistory = WalkwayFixture.createWalkwayHistory(0.0);
+            WalkwayHistory walkwayHistory = createWalkwayHistory(0.0);
 
             when(walkwayReader.getWalkwayHistory(walkwayHistoryId)).thenReturn(walkwayHistory);
 

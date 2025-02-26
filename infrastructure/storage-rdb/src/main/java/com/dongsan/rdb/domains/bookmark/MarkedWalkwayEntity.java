@@ -10,8 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "marked_bookmark")
 public class MarkedWalkwayEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +35,8 @@ public class MarkedWalkwayEntity extends BaseEntity {
     }
 
     public MarkedWalkway toMarkedWalkway(){
-        return new MarkedWalkway(walkway.getId(), walkway.getName(), getCreatedAt(), walkway.getDistance(), walkway.getHashtags(),
-                walkway.getCourseImageUrl());
+        return new MarkedWalkway(walkway.getId(), bookmark.getMember().getId() , walkway.getName(), getCreatedAt(), walkway.getDistance(), walkway.getHashtags(),
+                walkway.getCourseImageUrl(), walkway.getExposeLevel());
     }
 
 }

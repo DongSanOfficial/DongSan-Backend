@@ -1,4 +1,4 @@
-package fixture;
+package walkway;
 
 import com.dongsan.core.domains.walkway.CourseInfo;
 import com.dongsan.core.domains.walkway.ExposeLevel;
@@ -9,7 +9,6 @@ import com.dongsan.core.support.util.Author;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Coordinates;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;

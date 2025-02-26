@@ -292,7 +292,7 @@ class ReviewCoreRepositoryTest extends RepositoryTest {
             Long reviewId = 1L;
             Long memberId = 1L;
             boolean exists = true;
-            when(reviewJpaRepository.existsByIdAndMemberEntityId(reviewId, memberId)).thenReturn(exists);
+            when(reviewJpaRepository.existsByIdAndMemberId(reviewId, memberId)).thenReturn(exists);
 
             // when
             boolean result = reviewCoreRepository.existsByIdAndMemberId(reviewId, memberId);
@@ -312,7 +312,7 @@ class ReviewCoreRepositoryTest extends RepositoryTest {
             Long reviewId = 1L;
             Long memberId = 1L;
             boolean exists = true;
-            when(reviewJpaRepository.existsByIdAndMemberEntityId(reviewId, memberId)).thenReturn(exists);
+            when(reviewJpaRepository.existsByIdAndMemberId(reviewId, memberId)).thenReturn(exists);
 
             // when
             boolean result = reviewCoreRepository.existsByIdAndMemberId(reviewId, memberId);

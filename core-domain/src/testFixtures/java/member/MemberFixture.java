@@ -1,4 +1,4 @@
-package fixture;
+package member;
 
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberRole;

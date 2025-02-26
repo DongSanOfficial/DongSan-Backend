@@ -66,7 +66,7 @@ class LikedWalkwayQueryDSLRepositoryTest extends  RepositoryTest {
             for(int i=0; i<result.size(); i++){
                 WalkwayEntity walkwayEntity = result.get(i).getWalkwayEntity();
                 // 타인이 등록한 산책로 일 때
-                if(!walkwayEntity.getMemberEntity().getId().equals(memberId)){
+                if(!walkwayEntity.getMember().getId().equals(memberId)){
                     assertThat(walkwayEntity.getExposeLevel()).isEqualTo(ExposeLevel.PUBLIC);
                 }
             }

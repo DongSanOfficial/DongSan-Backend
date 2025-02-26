@@ -1,5 +1,6 @@
 package com.dongsan.api.domains.walkway;
 
+import static member.MemberFixture.createMember;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -8,7 +9,6 @@ import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.walkway.WalkwayService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fixture.MemberFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,7 +38,7 @@ class LikedWalkwayControllerTest {
     ObjectMapper objectMapper;
     @MockBean
     WalkwayService walkwayService;
-    final Member member = MemberFixture.createMember();
+    final Member member = createMember();
     final CustomOAuth2User customOAuth2User = new CustomOAuth2User(member);
 
     @BeforeEach

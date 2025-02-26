@@ -2,9 +2,8 @@ package com.dongsan.core.domains.walkway;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static walkway.WalkwayFixture.createWalkway;
 
-
-import fixture.WalkwayFixture;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +42,7 @@ class SearchWalkwayRatingTest {
         @BeforeEach
         void setUp() {
             for (long i = 1; i <= 10; i++) {
-                Walkway result = WalkwayFixture.createWalkway();
+                Walkway result = createWalkway();
                 results.add(result);
             }
         }

@@ -1,6 +1,5 @@
 package com.dongsan.core.domains.walkway;
 
-
 import com.dongsan.core.support.error.CoreErrorCode;
 import com.dongsan.core.support.error.CoreException;
 import java.time.LocalDateTime;

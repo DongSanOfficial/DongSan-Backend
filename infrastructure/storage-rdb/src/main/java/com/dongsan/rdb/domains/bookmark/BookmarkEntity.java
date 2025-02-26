@@ -12,8 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "bookmark")
 public class BookmarkEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +23,7 @@ public class BookmarkEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private MemberEntity memberEntity;  // 북마크 생성자
+    private MemberEntity member;  // 북마크 생성자
 
     @Column(nullable = false)
     private String name;
@@ -29,10 +31,10 @@ public class BookmarkEntity extends BaseEntity {
     protected BookmarkEntity() {
     }
 
-    public BookmarkEntity(String name, MemberEntity memberEntity){
+    public BookmarkEntity(String name, MemberEntity member){
         this.name = name;
         // 연관관계 매핑
-        this.memberEntity = memberEntity;
+        this.member = member;
     }
 
     public Long getId() {
@@ -44,7 +46,14 @@ public class BookmarkEntity extends BaseEntity {
     }
 
     public Bookmark toBookmark(){
-        return new Bookmark(id, name, new Author(memberEntity.getId()), getCreatedAt());
+        return new Bookmark(id, name, new Author(member.getId()), getCreatedAt());
     }
 
+    public MemberEntity getMember() {
+        return member;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
