@@ -310,7 +310,6 @@ class WalkwayCoreJpaRepositoryTest {
 
             when(memberJpaRepository.getReferenceById(memberId)).thenReturn(memberEntity);
             when(walkwayJpaRepository.getReferenceById(walkwayId)).thenReturn(walkwayEntity);
-//            when(walkwayHistoryJpaRepository.save(historyEntity)).thenReturn(historyEntity);
 
             // when
             Long result = walkwayCoreJpaRepository.saveWalkwayHistory(createHistory);
@@ -389,7 +388,7 @@ class WalkwayCoreJpaRepositoryTest {
             Optional<WalkwayHistory> result = walkwayCoreJpaRepository.getWalkwayHistory(walkwayHistoryId);
 
             // then
-            assertThat(result).isNotNull();
+            assertThat(result).isPresent();
         }
     }
 
