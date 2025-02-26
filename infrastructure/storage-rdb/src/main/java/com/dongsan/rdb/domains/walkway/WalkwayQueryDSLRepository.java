@@ -78,9 +78,12 @@ public class WalkwayQueryDSLRepository {
 
     // 좋아요 순 검색
     public List<WalkwayEntity> searchWalkwaysLiked(SearchWalkwayQuery query) {
-        WalkwayEntity lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
-                .where(walkwayEntity.id.eq(query.lastWalkwayId()))
-                .fetchOne();
+        WalkwayEntity lastWalkwayEntity = null;
+        if(query.lastWalkwayId() != null) {
+            lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
+                    .where(walkwayEntity.id.eq(query.lastWalkwayId()))
+                    .fetchOne();
+        }
 
         return queryFactory.select(walkwayEntity)
                 .from(walkwayEntity)
@@ -102,9 +105,12 @@ public class WalkwayQueryDSLRepository {
 
     // 별점 순 검색
     public List<WalkwayEntity> searchWalkwaysRating(SearchWalkwayQuery query) {
-        WalkwayEntity lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
-                .where(walkwayEntity.id.eq(query.lastWalkwayId()))
-                .fetchOne();
+        WalkwayEntity lastWalkwayEntity = null;
+        if(query.lastWalkwayId() != null) {
+            lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
+                    .where(walkwayEntity.id.eq(query.lastWalkwayId()))
+                    .fetchOne();
+        }
 
         return queryFactory.select(walkwayEntity)
                 .from(walkwayEntity)

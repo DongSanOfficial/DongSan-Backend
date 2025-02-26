@@ -61,14 +61,18 @@ class WalkwayCoreJpaRepositoryTest {
         void it_returns_id() {
             // given
             GeometryFactory geometryFactory = new GeometryFactory();
+
             Coordinate coordinate = new Coordinate(0.0, 0.0);
             Point point = geometryFactory.createPoint(coordinate);
+
             Coordinate[] coordinates = {coordinate, coordinate};
             LineString lineString = geometryFactory.createLineString(coordinates);
+
             Long memberId = 1L;
             Long walkwayId = 1L;
             CreateWalkway createWalkway
                     = new CreateWalkway("Sample", 2.5, 30, ExposeLevel.PUBLIC, point, point, "walkway.", lineString, null,null, memberId);
+
             MemberEntity memberEntity = MemberEntityFixture.createMember();
             WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkway(memberEntity);
 
@@ -79,7 +83,7 @@ class WalkwayCoreJpaRepositoryTest {
             Long result = walkwayCoreJpaRepository.saveWalkway(createWalkway);
 
             // then
-            assertThat(result).isEqualTo(walkwayId);
+            assertThat(result).isEqualTo(walkwayEntity.getId());
         }
     }
 
@@ -310,7 +314,6 @@ class WalkwayCoreJpaRepositoryTest {
 
             when(memberJpaRepository.getReferenceById(memberId)).thenReturn(memberEntity);
             when(walkwayJpaRepository.getReferenceById(walkwayId)).thenReturn(walkwayEntity);
-//            when(walkwayHistoryJpaRepository.save(historyEntity)).thenReturn(historyEntity);
 
             // when
             Long result = walkwayCoreJpaRepository.saveWalkwayHistory(createHistory);
@@ -389,7 +392,7 @@ class WalkwayCoreJpaRepositoryTest {
             Optional<WalkwayHistory> result = walkwayCoreJpaRepository.getWalkwayHistory(walkwayHistoryId);
 
             // then
-            assertThat(result).isNotNull();
+            assertThat(result).isPresent();
         }
     }
 

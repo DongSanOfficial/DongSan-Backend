@@ -16,13 +16,13 @@ public class WalkwayEntityFixture {
     private static final ExposeLevel EXPOSE_LEVEL = ExposeLevel.PUBLIC;
     private static final String MEMO = "A beautiful walkway.";
     private static final GeometryFactory GEOMETRY_FACTORY = new GeometryFactory();
-    private static final Point START_LOCATION = GEOMETRY_FACTORY.createPoint(new Coordinate(0.0, 0.0));
-    private static final Point END_LOCATION = GEOMETRY_FACTORY.createPoint(new Coordinate(1.0, 1.0));
-    private static final LineString COURSE = GEOMETRY_FACTORY.createLineString(new Coordinate[]{
+    private static final Point START_LOCATION = createPoint(0.0, 0.0, 4326);
+    private static final Point END_LOCATION = createPoint(1.0, 1.0, 4326);
+    private static final LineString COURSE = createLineString(new Coordinate[]{
             new Coordinate(0.0, 0.0),
             new Coordinate(1.0, 1.0),
             new Coordinate(2.0, 2.0)
-    });
+    }, 4326);
     private static final String COURSE_IMAGE_URL = "http://example.com/course-image.png";
     private static final List<String> HASHTAGS = List.of("happy", "silent");
 
@@ -36,4 +36,16 @@ public class WalkwayEntityFixture {
                 END_LOCATION, MEMO, COURSE, COURSE_IMAGE_URL, memberEntity, HASHTAGS);
     }
 
+    private static Point createPoint(double x, double y, int srid) {
+        Point point = GEOMETRY_FACTORY.createPoint(new Coordinate(x, y));
+        point.setSRID(srid);
+        return point;
+    }
+
+    // LineString 생성 및 SRID 설정
+    private static LineString createLineString(Coordinate[] coordinates, int srid) {
+        LineString lineString = GEOMETRY_FACTORY.createLineString(coordinates);
+        lineString.setSRID(srid);
+        return lineString;
+    }
 }

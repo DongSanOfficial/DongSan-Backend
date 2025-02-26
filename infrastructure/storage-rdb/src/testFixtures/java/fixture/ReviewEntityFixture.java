@@ -20,40 +20,4 @@ public class ReviewEntityFixture {
     public static ReviewEntity createReview(MemberEntity memberEntity, WalkwayEntity walkwayEntity, WalkwayHistoryEntity walkwayHistory, Integer rating, String content){
         return new ReviewEntity(rating, content, memberEntity, walkwayEntity, walkwayHistory);
     }
-
-    public static ReviewEntity createReviewWithId(Long id, MemberEntity memberEntity, WalkwayEntity walkwayEntity, WalkwayHistoryEntity walkwayHistory){
-        ReviewEntity reviewEntity = createReview(memberEntity, walkwayEntity, walkwayHistory);
-        reflectId(id, reviewEntity);
-        reflectCreatedAt(LocalDateTime.now(), reviewEntity);
-        return reviewEntity;
-    }
-
-    public static ReviewEntity createReviewWithId(Long id, MemberEntity memberEntity, WalkwayEntity walkwayEntity, WalkwayHistoryEntity walkwayHistory, Integer rating, String content){
-        ReviewEntity reviewEntity = createReview(memberEntity, walkwayEntity, walkwayHistory, rating, content);
-        reflectId(id, reviewEntity);
-        reflectCreatedAt(LocalDateTime.now(), reviewEntity);
-        return reviewEntity;
-    }
-
-    private static void reflectId(Long id, ReviewEntity reviewEntity){
-        try {
-            Field idField = ReviewEntity.class.getDeclaredField("id");
-            idField.setAccessible(true);
-            idField.set(reviewEntity, id);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void reflectCreatedAt(LocalDateTime createdAt, ReviewEntity reviewEntity){
-        try {
-            Field createdAtField = BaseEntity.class.getDeclaredField("createdAt");
-            createdAtField.setAccessible(true);
-            createdAtField.set(reviewEntity, createdAt);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }
