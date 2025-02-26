@@ -28,8 +28,6 @@
 //import com.dongsan.domains.walkway.service.WalkwayHistoryCommandService;
 //import com.dongsan.domains.walkway.service.WalkwayHistoryQueryService;
 //import com.dongsan.domains.walkway.service.WalkwayQueryService;
-//>>>>>>> 496a334bff8928cf4a3a20bc45dce34b0046eae7:core-domain/src/test/java/com/dongsan/domains/walkway/usecase/WalkwayReviewUseCaseTest.java
-//import member.MemberFixture;
 //import fixture.ReviewFixture;
 //import fixture.WalkwayFixture;
 //import fixture.WalkwayHistoryFixture;

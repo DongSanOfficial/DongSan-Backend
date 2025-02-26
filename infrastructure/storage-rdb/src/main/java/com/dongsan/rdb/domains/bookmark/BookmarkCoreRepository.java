@@ -8,8 +8,8 @@ import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
-import com.dongsan.rdb.domains.walkway.repository.WalkwayJpaRepository;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayJpaRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -109,7 +109,8 @@ public class BookmarkCoreRepository implements BookmarkRepository {
         List<MarkedWalkwayEntity> markedWalkwayEntities = queryFactory.select(markedWalkway)
                 .from(markedWalkway)
                 .join(markedWalkway.walkway).fetchJoin()
-                .where(markedWalkway.bookmark.id.eq(bookmarkId), markedBookmarkCreatedAtLt(lastCreatedAt),
+                .where(markedWalkway.bookmark.id.eq(bookmarkId),
+                        markedBookmarkCreatedAtLt(lastCreatedAt),
                         markedWalkway.walkway.member.id.eq(memberId)
                                 .or(markedWalkway.walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
                 .orderBy(markedWalkway.createdAt.desc())

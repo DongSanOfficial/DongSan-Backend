@@ -15,7 +15,6 @@
 //import com.dongsan.domains.walkway.service.WalkwayHistoryQueryService;
 //import com.dongsan.domains.walkway.service.WalkwayQueryService;
 //import com.dongsan.domains.walkway.usecase.WalkwayHistoryUseCase;
-//import member.MemberFixture;
 //import fixture.WalkwayFixture;
 //import fixture.WalkwayHistoryFixture;
 //import java.util.ArrayList;

@@ -3,7 +3,6 @@ package com.dongsan.rdb.domains.bookmark;
 import static fixture.BookmarkEntityFixture.createBookmark;
 import static fixture.MarkedWalkwayEntityFixture.createMarkedWalkway;
 import static fixture.MemberEntityFixture.createMember;
-import static fixture.WalkwayEntityFixture.createPrivateWalkway;
 import static fixture.WalkwayEntityFixture.createWalkway;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +12,8 @@ import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.domains.bookmark.MarkedWalkway;
 import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.member.MemberEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
+import fixture.WalkwayEntityFixture;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -334,7 +334,7 @@ class BookmarkCoreRepositoryTest extends RepositoryTest {
             // given
             MemberEntity other = createMember();
             WalkwayEntity otherPublicWalkway = createWalkway(other);
-            WalkwayEntity otherPrivateWalkway = createPrivateWalkway(other);
+            WalkwayEntity otherPrivateWalkway = WalkwayEntityFixture.createPrivateWalkway(other);
             em.persist(other);
             em.persist(otherPublicWalkway);
             em.persist(otherPrivateWalkway);

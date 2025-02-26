@@ -1,4 +1,4 @@
-package com.dongsan.rdb.domains.walkway.entity;
+package com.dongsan.rdb.domains.walkway;
 
 import com.dongsan.core.domains.review.ReviewedWalkway;
 import com.dongsan.core.support.util.Author;
@@ -10,6 +10,7 @@ import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,8 +22,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.List;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 
@@ -72,8 +71,7 @@ public class WalkwayEntity extends BaseEntity {
 
     private String courseImageUrl;
 
-    @Column(columnDefinition = "json")
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Convert(converter = ListStringConverter.class)
     private List<String> hashtags;
 
     protected WalkwayEntity() {}
@@ -188,6 +186,11 @@ public class WalkwayEntity extends BaseEntity {
 
     public List<String> getHashtags() {
         return hashtags;
+    }
+
+
+    public MemberEntity getMember() {
+        return member;
     }
 
     public ExposeLevel getExposeLevel() {

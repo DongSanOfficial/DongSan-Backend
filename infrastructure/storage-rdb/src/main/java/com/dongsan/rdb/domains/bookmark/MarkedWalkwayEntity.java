@@ -2,7 +2,7 @@ package com.dongsan.rdb.domains.bookmark;
 
 import com.dongsan.core.domains.bookmark.MarkedWalkway;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

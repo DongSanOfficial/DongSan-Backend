@@ -1,10 +1,22 @@
-package com.dongsan.rdb.domains.walkway;
-
-import com.dongsan.common.support.RepositoryTest;
-import org.junit.jupiter.api.DisplayName;
-
-@DisplayName("WalkwayHistoryQueryDSLRepository Unit Test")
-class WalkwayHistoryQueryDSLRepositoryTest extends RepositoryTest {
+//package com.dongsan.rdb.domains.walkway;
+//
+//import static org.assertj.core.api.Assertions.assertThat;
+//
+//import com.dongsan.common.support.RepositoryTest;
+//import com.dongsan.rdb.domains.member.MemberEntity;
+//import fixture.MemberEntityFixture;
+//import fixture.WalkwayEntityFixture;
+//import fixture.WalkwayHistoryFixture;
+//import java.util.List;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Nested;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+//
+//@DisplayName("WalkwayHistoryQueryDSLRepository Unit Test")
+//class WalkwayHistoryQueryDSLRepositoryTest extends RepositoryTest {
 //    @Autowired
 //    TestEntityManager em;
 //    @Autowired
@@ -13,16 +25,16 @@ class WalkwayHistoryQueryDSLRepositoryTest extends RepositoryTest {
 //    @Nested
 //    @DisplayName("getCanReviewWalkwayHistories 메서드는")
 //    class Describe_getCanReviewWalkwayHistories {
-//        Member member;
-//        Walkway walkway;
+//        MemberEntity member;
+//        WalkwayEntity walkway;
 //        @BeforeEach
 //        void setUp() {
-//            member = MemberFixture.createMember();
-//            walkway = WalkwayFixture.createWalkway(member);
+//            member = MemberEntityFixture.createMember();
+//            walkway = WalkwayEntityFixture.createWalkway(member);
 //            em.persist(member);
 //            em.persist(walkway);
 //            for (int i = 0; i < 5; i++) {
-//                WalkwayHistory history = WalkwayHistoryFixture.createWalkwayHistory(member, walkway, 1.8, 10);
+//                WalkwayHistoryEntity history = WalkwayHistoryFixture.createWalkwayHistory(member, walkway, 1.8, 10);
 //                em.persist(history);
 //            }
 //        }
@@ -35,15 +47,15 @@ class WalkwayHistoryQueryDSLRepositoryTest extends RepositoryTest {
 //            Long walkwayId = walkway.getId();
 //
 //            // when
-//            List<WalkwayHistory> result = walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId);
+//            List<WalkwayHistoryEntity> result = walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId);
 //
 //            // then
 //            assertThat(result).hasSize(5);
 //
-//            for (WalkwayHistory history : result) {
+//            for (WalkwayHistoryEntity history : result) {
 //                assertThat(history.getDistance()).isGreaterThanOrEqualTo(walkway.getDistance() * (2.0 / 3.0));
 //                assertThat(history.getIsReviewed()).isFalse();
 //            }
 //        }
 //    }
-}
+//}

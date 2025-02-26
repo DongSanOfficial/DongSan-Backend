@@ -2,7 +2,7 @@ package fixture;
 
 import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.rdb.domains.member.MemberEntity;
-import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 import java.util.List;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;

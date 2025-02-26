@@ -1,7 +1,8 @@
 package com.dongsan.common.config;
 
-import com.dongsan.rdb.domains.walkway.repository.LikedWalkwayQueryDSLRepository;
-import com.dongsan.rdb.domains.walkway.repository.WalkwayQueryDSLRepository;
+import com.dongsan.rdb.domains.walkway.WalkwayHistoryQueryDSLRepository;
+import com.dongsan.rdb.domains.walkway.LikedWalkwayQueryDSLRepository;
+import com.dongsan.rdb.domains.walkway.WalkwayQueryDSLRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -28,4 +29,8 @@ public class TestQueryDSLConfig {
         return new LikedWalkwayQueryDSLRepository(jpaQueryFactory);
     }
 
+    @Bean
+    public WalkwayHistoryQueryDSLRepository walkwayHistoryQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
+        return new WalkwayHistoryQueryDSLRepository(jpaQueryFactory);
+    }
 }

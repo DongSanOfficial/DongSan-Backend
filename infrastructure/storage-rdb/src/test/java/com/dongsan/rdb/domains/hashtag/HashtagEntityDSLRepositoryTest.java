@@ -4,7 +4,7 @@
 //import com.dongsan.rdb.domains.walkway.repository.HashtagDSLRepository;
 //import com.dongsan.rdb.domains.walkway.repository.HashtagEntity;
 //import com.dongsan.rdb.domains.member.MemberEntity;
-//import com.dongsan.rdb.domains.walkway.entity.WalkwayEntity;
+//import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Nested;
 //import org.junit.jupiter.api.Test;
