@@ -38,6 +38,10 @@ public class MemberEntity extends BaseEntity {
         this.role = role;
     }
 
+    public Member toMember(){
+        return new Member(id, email, nickname, profileImageUrl, role);
+    }
+
     public Long getId() {
         return id;
     }
@@ -46,7 +50,7 @@ public class MemberEntity extends BaseEntity {
         return nickname;
     }
 
-    public Member toMember(){
-        return new Member(id, email, nickname, profileImageUrl, role);
+    public String getEmail() {
+        return email;
     }
 }

@@ -1,15 +1,10 @@
-package com.dongsan.domains.user.usecase;
+package com.dongsan.core.domains.member;
 
 import static com.dongsan.core.domains.member.MemberRole.ROLE_USER;
 import static member.MemberFixture.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import com.dongsan.core.domains.member.Member;
-import com.dongsan.core.domains.member.MemberReader;
-import com.dongsan.core.domains.member.MemberRole;
-import com.dongsan.core.domains.member.MemberService;
-import com.dongsan.core.domains.member.MemberWriter;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
