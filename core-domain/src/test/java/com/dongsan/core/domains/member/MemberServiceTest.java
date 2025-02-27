@@ -1,106 +1,105 @@
-//package com.dongsan.domains.user.usecase;
-//
-//import static fixture.BookmarkFixture.createBookmark;
-//import static fixture.MemberFixture.createMemberWithId;
-//import static org.mockito.Mockito.when;
-//
-//import com.dongsan.domains.bookmark.entity.Bookmark;
-//import com.dongsan.core.domains.bookmark.BookmarkReader;
-//import com.dongsan.domains.member.entity.Member;
-//import com.dongsan.core.domains.member.MemberService;
-//import com.dongsan.core.domains.member.MemberReader;
-//import com.dongsan.core.domains.member.UserProfileMapper;
-//import com.dongsan.core.domains.bookmark.GetBookmarksResponse;
-//import com.dongsan.core.domains.member.GetProfileResponse;
-//import fixture.BookmarkFixture;
-//import fixture.MemberFixture;
-//import java.util.ArrayList;
-//import java.util.List;
-//import org.assertj.core.api.Assertions;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Nested;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//
-//@ExtendWith(MockitoExtension.class)
-//@DisplayName("UserProfileUseCase Unit Test")
-//class MemberServiceTest {
-//
-//    @Mock
-//    private MemberReader memberReader;
-//
-//    @Mock
-//    private BookmarkReader bookmarkReader;
-//
-//    @InjectMocks
-//    private MemberService userProfileUsecase;
-//
-//    @Nested
-//    @DisplayName("getUserProfile 메서드는")
-//    class Describe_getUserProfile {
-//        @Test
-//        @DisplayName("유저가 존재하면 유저 프로필을 DTO로 반환한다.")
-//        void it_returns_responseDTO() {
-//            // Given
-//            Long memberId = 1L;
-//
-//            Member member = createMemberWithId(memberId);
-//
-//            GetProfileResponse getProfileResponse = UserProfileMapper.toGetProfileResponse(member);
-//
-//            when(memberReader.getMember(memberId)).thenReturn(member);
-//
-//            // When
-//            GetProfileResponse result = userProfileUsecase.getUserProfile(memberId);
-//
-//            // Then
-//            Assertions.assertThat(result)
-//                    .isNotNull()
-//                    .isEqualTo(getProfileResponse);
-//        }
-//    }
-//
-//
-//    @Nested
-//    @DisplayName("getUserBookmarks 메서드는")
-//    class Describe_getUserBookmarks {
-//        @Test
-//        @DisplayName("북마크가 존재하면 북마크 리스트를 DTO로 반환한다.")
-//        void getUserBookmarks() {
-//
-//            // Given
-//            Long userId = 1L;
-//            Long bookmarkId = 3L;
-//            Integer limit = 2;
-//
-//            Member member = MemberFixture.createMember();
-//
-//            List<Bookmark> bookmarkList = new ArrayList<>();
-//
-//            for(long id = 2L; id != 0L; id--) {
-//                Bookmark bookmark = createBookmark(member, "test"+id);
-//
-//                bookmarkList.add(bookmark);
-//            }
-//
-//            Bookmark lastBookmark = BookmarkFixture.createBookmarkWithId(bookmarkId, null);
-//
-//            when(bookmarkReader.getBookmark(bookmarkId)).thenReturn(lastBookmark);
-//            when(bookmarkReader.getUserBookmarks(lastBookmark, userId, limit)).thenReturn(bookmarkList);
-//
-//            // When
-//            GetBookmarksResponse result =
-//                    userProfileUsecase.getUserBookmarks(userId, bookmarkId, limit);
-//
-//            // Then
-//            Assertions.assertThat(result.bookmarks()).hasSize(limit);
-//            Assertions.assertThat(result.bookmarks().get(0).title()).isEqualTo(bookmarkList.get(0).getName());
-//            Assertions.assertThat(result.bookmarks().get(1).title()).isEqualTo(bookmarkList.get(1).getName());
-//
-//        }
-//
-//    }
-//}
+package com.dongsan.domains.user.usecase;
+
+import static com.dongsan.core.domains.member.MemberRole.ROLE_USER;
+import static member.MemberFixture.createMember;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import com.dongsan.core.domains.member.Member;
+import com.dongsan.core.domains.member.MemberReader;
+import com.dongsan.core.domains.member.MemberRole;
+import com.dongsan.core.domains.member.MemberService;
+import com.dongsan.core.domains.member.MemberWriter;
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+@DisplayName("MemberService Unit Test")
+class MemberServiceTest {
+    @InjectMocks
+    MemberService memberService;
+
+    @Mock
+    MemberReader memberReader;
+
+    @Mock
+    MemberWriter memberWriter;
+
+    @Nested
+    @DisplayName("getMember 메서드는")
+    class Describe_getMember{
+        @Test
+        void Member를_반환한다(){
+            // given
+            Long memberId = 1L;
+            Member member = createMember(memberId);
+            when(memberReader.readMember(memberId)).thenReturn(member);
+
+            // when
+            Member result = memberService.getMember(memberId);
+
+            // then
+            assertThat(result).isEqualTo(member);
+            assertThat(result.id()).isEqualTo(memberId);
+        }
+    }
+
+    @Nested
+    @DisplayName("getOptionalMemberByEmail 메서드는")
+    class Describe_getOptionalMemberByEmail{
+        @Test
+        void Member가_존재하면_Member를_반환한다(){
+            // given
+            String existEmail = "dongsan@gmail.com";
+            Member member = createMember(existEmail, "haha", "dongsan.png", ROLE_USER);
+            when(memberReader.readOptionalMemberByEmail(existEmail)).thenReturn(Optional.of(member));
+
+            // when
+            Optional<Member> result = memberService.getOptionalMemberByEmail(existEmail);
+
+            // then
+            assertThat(result).isPresent();
+            assertThat(result.get()).isEqualTo(member);
+        }
+
+        @Test
+        void Member가_존재하지_않으면_빈_Optional을_반환한다(){
+            // given
+            String notExistEmail = "notExistEmail@gmail.com";
+            when(memberReader.readOptionalMemberByEmail(notExistEmail)).thenReturn(Optional.empty());
+
+            // when
+            Optional<Member> result = memberService.getOptionalMemberByEmail(notExistEmail);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("save 메서드는")
+    class Describe_save{
+        @Test
+        void Member를_저장한다(){
+            // given
+            String email = "dongsan@gmail.com";
+            String nickname = "haha";
+            String profileImageUrl = "dongsan.png";
+            MemberRole role = ROLE_USER;
+            Member member = createMember(email, nickname, profileImageUrl, role);
+            when(memberWriter.save(email, nickname, profileImageUrl, role)).thenReturn(member);
+
+            // when
+            Member result = memberService.save(email, nickname, profileImageUrl, role);
+
+            // then
+            assertThat(result).isEqualTo(member);
+        }
+    }
+}
