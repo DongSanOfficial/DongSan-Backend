@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import fixture.ReviewFixture;
+import review.ReviewFixture;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("ReviewQueryServiceTest Unit Test")
+@DisplayName("ReviewReader Unit Test")
 class ReviewReaderTest {
     @InjectMocks
     private ReviewReader reviewReader;

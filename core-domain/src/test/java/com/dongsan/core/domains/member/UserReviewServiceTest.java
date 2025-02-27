@@ -3,7 +3,7 @@
 //import static fixture.MemberFixture.createMemberWithId;
 //import static fixture.ReflectFixture.reflectCreatedAt;
 //import static fixture.ReflectFixture.reflectField;
-//import static fixture.ReviewFixture.createReview;
+//import static review.ReviewFixture.createReview;
 //import static fixture.WalkwayFixture.createWalkwayWithId;
 //import static org.assertj.core.api.Assertions.assertThat;
 //import static org.mockito.Mockito.when;
@@ -15,7 +15,7 @@
 //import com.dongsan.core.domains.review.GetReviewResponse;
 //import com.dongsan.core.domains.review.GetReviewResponse.ReviewInfo;
 //import com.dongsan.domains.walkway.entity.Walkway;
-//import fixture.ReviewFixture;
+//import review.ReviewFixture;
 //import java.time.LocalDateTime;
 //import java.util.List;
 //import java.util.stream.IntStream;

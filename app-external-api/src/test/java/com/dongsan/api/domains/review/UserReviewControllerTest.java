@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.review;
 
-import static fixture.ReviewFixture.createReviewWithId;
+import static review.ReviewFixture.createReviewWithId;
 import static member.MemberFixture.createMember;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -18,7 +18,6 @@ import com.dongsan.core.domains.review.UserReviewService;
 import com.dongsan.core.support.util.CursorPagingRequest;
 import com.dongsan.core.support.util.CursorPagingResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

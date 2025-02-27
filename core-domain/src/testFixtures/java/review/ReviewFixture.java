@@ -1,4 +1,4 @@
-package fixture;
+package review;
 
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewedWalkway;
