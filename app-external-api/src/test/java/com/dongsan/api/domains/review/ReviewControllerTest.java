@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.review;
 
-import static fixture.ReviewFixture.createReviewWithId;
+import static review.ReviewFixture.createReviewWithId;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,8 +12,6 @@ import com.dongsan.api.domains.walkway.dto.request.CreateReviewRequest;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.review.CreateReview;
 import com.dongsan.core.domains.review.Review;
-import com.dongsan.core.domains.walkway.Walkway;
-import com.dongsan.core.domains.walkway.WalkwayReader;
 import com.dongsan.core.domains.review.ReviewService;
 import com.dongsan.core.support.util.CursorPagingRequest;
 import com.dongsan.core.support.util.CursorPagingResponse;
@@ -40,7 +38,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import walkway.WalkwayFixture;
 
 @WebMvcTest(ReviewController.class)
 @AutoConfigureMockMvc(addFilters = false)
