@@ -124,7 +124,7 @@ public class WalkwayService {
         return walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId);
     }
 
-    public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long lastWalkwayHistoryId, Long memberId, int size) {
+    public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, Long lastWalkwayHistoryId, int size) {
         LocalDateTime lastCreatedAt = null;
         if (lastWalkwayHistoryId != null) {
             WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(lastWalkwayHistoryId);
