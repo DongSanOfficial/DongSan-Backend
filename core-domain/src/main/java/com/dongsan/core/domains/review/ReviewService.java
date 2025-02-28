@@ -1,6 +1,5 @@
 package com.dongsan.core.domains.review;
 
-import com.dongsan.core.domains.member.MemberReader;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.domains.walkway.WalkwayHistoryValidator;

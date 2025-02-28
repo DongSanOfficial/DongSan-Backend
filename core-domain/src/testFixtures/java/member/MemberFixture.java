@@ -14,4 +14,12 @@ public class MemberFixture {
         return new Member(ID, EMAIL, NICKNAME, PROFILE_IMAGE_URL, ROLE);
     }
 
+    public static Member createMember(Long memberId){
+        return new Member(memberId, EMAIL, NICKNAME, PROFILE_IMAGE_URL, ROLE);
+    }
+
+    public static Member createMember(String email, String nickname, String profileImageUrl, MemberRole role){
+        return new Member(ID, email, nickname, profileImageUrl, role);
+    }
+
 }
