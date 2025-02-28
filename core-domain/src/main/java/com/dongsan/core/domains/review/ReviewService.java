@@ -1,6 +1,5 @@
 package com.dongsan.core.domains.review;
 
-import com.dongsan.core.domains.member.MemberReader;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.domains.walkway.WalkwayHistoryValidator;
@@ -56,16 +55,10 @@ public class ReviewService {
 
         // 산책로 별점 수정
         Map<Integer, Long> ratingCounts = reviewReader.getWalkwaysRating(createReview.walkwayId());
-        Double totalRating = ratingCounts.entrySet().stream()
-                .mapToDouble(entry -> entry.getKey() * entry.getValue())
-                .sum();
-        Integer totalReviewCount = (int) ratingCounts.values().stream()
-                .mapToLong(Long::longValue)
-                .sum();
-        Double avgRating = 0.0;
-        if (totalReviewCount > 0) {
-            avgRating = Math.round(totalRating / totalReviewCount * 10.0) / 10.0;
-        }
+        Integer totalReviewCount = RatingCalculator.calculateTotalReviewCount(ratingCounts);
+        Double avgRating = totalReviewCount > 0
+                ? Math.round(RatingCalculator.calculateAverageRating(ratingCounts) * 10.0) / 10.0
+                : 0.0;
 
         walkwayWriter.updateWalkwayRating(totalReviewCount, avgRating, createReview.walkwayId());
 

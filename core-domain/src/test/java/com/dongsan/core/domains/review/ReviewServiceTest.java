@@ -13,7 +13,7 @@ import com.dongsan.core.domains.walkway.WalkwayWriter;
 import com.dongsan.core.support.error.CoreException;
 import com.dongsan.core.support.util.CursorPagingRequest;
 import com.dongsan.core.support.util.CursorPagingResponse;
-import fixture.ReviewFixture;
+import review.ReviewFixture;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import walkway.WalkwayFixture;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("WalkwayReviewUseCase Unit Test")
+@DisplayName("ReviewService Unit Test")
 class ReviewServiceTest {
     @Mock
     WalkwayReader walkwayReader;

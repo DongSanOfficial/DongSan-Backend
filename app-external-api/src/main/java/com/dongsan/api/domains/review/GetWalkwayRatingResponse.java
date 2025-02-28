@@ -1,5 +1,6 @@
 package com.dongsan.api.domains.review;
 
+import com.dongsan.core.domains.review.RatingCalculator;
 import java.util.Map;
 
 public record GetWalkwayRatingResponse(
@@ -12,18 +13,11 @@ public record GetWalkwayRatingResponse(
         Long one
 ) {
     public static GetWalkwayRatingResponse from(Map<Integer, Long> ratingCounts) {
-        double totalRating = ratingCounts.entrySet().stream()
-                .mapToDouble(entry -> entry.getKey() * entry.getValue())
-                .sum();
 
-        int totalReviewCount = (int) ratingCounts.values().stream()
-                .mapToLong(Long::longValue)
-                .sum();
-
-        double avgRating = 0.0;
-        if (totalReviewCount > 0) {
-            avgRating = Math.round(totalRating / totalReviewCount * 10.0) / 10.0;
-        }
+        Integer totalReviewCount = RatingCalculator.calculateTotalReviewCount(ratingCounts);
+        Double avgRating = totalReviewCount > 0
+                ? Math.round(RatingCalculator.calculateAverageRating(ratingCounts) * 10.0) / 10.0
+                : 0.0;
 
         Long fiveRate = ratingCounts.getOrDefault(5, 0L) * 100 / totalReviewCount;
         Long fourRate = ratingCounts.getOrDefault(4, 0L) * 100 / totalReviewCount;
