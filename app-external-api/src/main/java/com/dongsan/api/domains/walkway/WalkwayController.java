@@ -15,6 +15,7 @@ import com.dongsan.api.domains.walkway.mapper.WalkwayMapper;
 import com.dongsan.api.support.response.ApiResponse;
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
+import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.domains.image.Image;
 import com.dongsan.core.domains.image.ImageService;
 import com.dongsan.core.domains.walkway.CreateWalkway;
@@ -95,7 +96,7 @@ public class WalkwayController {
             @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        Walkway walkway = walkwayService.getWalkway(walkwayId);
+        Walkway walkway = walkwayService.getWalkway(customOAuth2User.getMemberId(), walkwayId);
         boolean isLike = walkwayService.existsLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
         boolean isMarked = bookmarkService.existsMarkedWalkway(customOAuth2User.getMemberId(), walkwayId);
         return ApiResponse.success(new GetWalkwayResponse(walkway, isLike, isMarked));
@@ -109,15 +110,10 @@ public class WalkwayController {
             @RequestParam(required = false, defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        CursorPagingResponse<Bookmark> response =
-                bookmarkService.getUserBookmarksName(customOAuth2User.getMemberId(), new CursorPagingRequest(lastId, size));
+        CursorPagingResponse<BookmarkWithMarkedStatus> response
+                = bookmarkService.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorPagingRequest(lastId, size));
 
-        List<Long> ids = response.data().stream()
-                .map(Bookmark::bookmarkId)
-                .toList();
-
-        Map<Long, Boolean> isMarked = bookmarkService.existsMarkedWalkways(walkwayId, ids);
-        return ApiResponse.success(new BookmarksWithMarkedWalkwayResponse(response, isMarked));
+        return ApiResponse.success(new BookmarksWithMarkedWalkwayResponse(response));
     }
 
     @Operation(summary = "산책로 수정")

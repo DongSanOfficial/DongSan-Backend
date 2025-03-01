@@ -208,7 +208,7 @@ class WalkwayControllerTest {
             boolean isLike = true;
             boolean isMarked = true;
 
-            when(walkwayService.getWalkway(walkwayId)).thenReturn(walkway);
+            when(walkwayService.getWalkway(customOAuth2User.getMemberId(), walkwayId)).thenReturn(walkway);
             when(walkwayService.existsLikedWalkway(customOAuth2User.getMemberId(), walkwayId)).thenReturn(isLike);
             when(bookmarkService.existsMarkedWalkway(customOAuth2User.getMemberId(), walkwayId)).thenReturn(isMarked);
 

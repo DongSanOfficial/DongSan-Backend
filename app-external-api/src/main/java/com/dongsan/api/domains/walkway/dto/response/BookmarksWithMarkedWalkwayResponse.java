@@ -10,10 +10,10 @@ public record BookmarksWithMarkedWalkwayResponse(
         List<BookmarkWithMarkedWalkway> bookmarks,
         Boolean hasNext
 ) {
-    public BookmarksWithMarkedWalkwayResponse(CursorPagingResponse<Bookmark> response, Map<Long, Boolean> isMarked) {
+    public BookmarksWithMarkedWalkwayResponse(CursorPagingResponse<BookmarkWithMarkedStatus> response) {
         this(
                 response.data().stream()
-                        .map(bookmark -> new BookmarkWithMarkedWalkway(bookmark.bookmarkId(), bookmark.title(), isMarked.get(bookmark.bookmarkId())))
+                        .map(bookmark -> new BookmarkWithMarkedWalkway(bookmark.bookmarkId(), bookmark.title(), bookmark.marked()))
                         .toList(),
                 response.hasNext()
         );
