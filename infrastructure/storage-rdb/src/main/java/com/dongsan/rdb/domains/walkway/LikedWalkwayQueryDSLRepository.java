@@ -1,13 +1,17 @@
 package com.dongsan.rdb.domains.walkway;
 
+import static com.dongsan.rdb.domains.walkway.QWalkwayEntity.walkwayEntity;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -55,11 +59,13 @@ public class LikedWalkwayQueryDSLRepository {
     }
 
     public Map<Long, Boolean> existsLikedWalkways(Long memberId, List<Long> walkwayIds) {
-        return queryFactory.from(likedWalkway)
+        return queryFactory.from(walkwayEntity)
+                .leftJoin(likedWalkway)
+                .on(likedWalkway.walkway.id.eq(walkwayEntity.id)
+                        .and(likedWalkway.member.id.eq(memberId)))
                 .where(
-                        likedWalkway.member.id.eq(memberId),
-                        likedWalkway.walkway.id.in(walkwayIds)
+                        walkwayEntity.id.in(walkwayIds)
                 )
-                .transform(groupBy(likedWalkway.walkway.id).as(likedWalkway.isNotNull()));
+                .transform(groupBy(walkwayEntity.id).as(likedWalkway.isNotNull()));
     }
 }
