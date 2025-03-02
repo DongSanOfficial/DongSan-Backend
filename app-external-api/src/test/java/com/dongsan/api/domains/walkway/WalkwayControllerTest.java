@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static walkway.WalkwayFixture.createWalkwayWithId;
 
+import bookmark.BookmarkFixture;
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import com.dongsan.api.domains.walkway.dto.WalkwayCoordinate;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
@@ -21,6 +22,7 @@ import com.dongsan.api.domains.walkway.mapper.WalkwayMapper;
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
+import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.domains.image.Image;
 import com.dongsan.core.domains.image.ImageService;
 import com.dongsan.core.domains.member.Member;
@@ -231,19 +233,15 @@ class WalkwayControllerTest {
             // Given
             Long walkwayId = 1L;
             Integer size = 5;
-            List<Bookmark> bookmarks = new ArrayList<>();
-            Map<Long, Boolean> isMarked = new HashMap<>();
+            List<BookmarkWithMarkedStatus> bookmarks = new ArrayList<>();
 
             for(long i = 0; i < 5; i++) {
-                Bookmark bookmark = new Bookmark(i, "test", new Author(1L), LocalDateTime.now());
-                bookmarks.add(bookmark);
-                isMarked.put(i, true);
+                bookmarks.add(BookmarkFixture.createBookmarkWithMarkedStatus());
             }
-            CursorPagingResponse<Bookmark> cursorPagingResponse = CursorPagingResponse.from(bookmarks, size);
+            CursorPagingResponse<BookmarkWithMarkedStatus> cursorPagingResponse = CursorPagingResponse.from(bookmarks, size);
 
-            when(bookmarkService.getUserBookmarksName(customOAuth2User.getMemberId(), new CursorPagingRequest(null, size)))
+            when(bookmarkService.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorPagingRequest(null, size)))
                     .thenReturn(cursorPagingResponse);
-            when(bookmarkService.existsMarkedWalkways(any(), any())).thenReturn(isMarked);
 
             // When
             ResultActions response = mockMvc.perform(get("/walkways/" + walkwayId + "/bookmarks")
