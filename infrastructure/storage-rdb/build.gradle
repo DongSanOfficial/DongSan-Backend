@@ -1,16 +1,17 @@
 plugins {
-    // test fixture
     id "java-test-fixtures"
-    id "maven-publish"
+//    id "maven-publish"
 }
 
 dependencies {
+    compileOnly project(':core-domain')
+    testImplementation project(':core-domain')
 
     // LineString
-    api 'org.hibernate:hibernate-spatial:6.2.2.Final'
+    implementation'org.hibernate:hibernate-spatial:6.2.2.Final'
 
     // JPA
-    api 'org.springframework.boot:spring-boot-starter-data-jpa'  // external-api 의 OauthSecurity에서 사용됨... 추후 수정
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // querydsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -24,16 +25,17 @@ dependencies {
     // p6spy
     implementation "p6spy:p6spy:3.9.1"
 
-    // h2
-    testRuntimeOnly 'com.h2database:h2'
+    // List<String> <-> JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
+    // testContainer
+    testImplementation 'org.testcontainers:testcontainers:1.20.1'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.1'
+    testImplementation 'org.testcontainers:mysql:1.20.1'
 
     // testFixtures
-    testFixturesImplementation 'org.junit.jupiter:junit-jupiter-api'
     testFixturesImplementation 'org.locationtech.jts:jts-core:1.20.0'
-
-    // 응답 통일
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testFixturesCompileOnly project(':core-domain') // enum 때문에 필요
 }
 
 // application.yml 설정 파일 복사

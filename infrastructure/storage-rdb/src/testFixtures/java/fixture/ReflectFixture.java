@@ -1,6 +1,6 @@
 package fixture;
 
-import com.dongsan.domains.common.entity.BaseEntity;
+import com.dongsan.rdb.domains.common.entity.BaseEntity;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 

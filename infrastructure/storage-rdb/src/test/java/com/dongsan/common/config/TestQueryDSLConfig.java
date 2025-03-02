@@ -1,12 +1,14 @@
 package com.dongsan.common.config;
 
-import com.dongsan.domains.bookmark.repository.BookmarkQueryDSLRepository;
-import com.dongsan.domains.bookmark.repository.MarkedWalkwayQueryDSLRepository;
-import com.dongsan.domains.hashtag.repository.HashtagDSLRepository;
-import com.dongsan.domains.review.repository.ReviewQueryDSLRepository;
-import com.dongsan.domains.walkway.repository.LikedWalkwayQueryDSLRepository;
-import com.dongsan.domains.walkway.repository.WalkwayHistoryQueryDSLRepository;
-import com.dongsan.domains.walkway.repository.WalkwayQueryDSLRepository;
+import com.dongsan.rdb.domains.member.MemberJpaRepository;
+import com.dongsan.rdb.domains.review.ReviewCoreRepository;
+import com.dongsan.rdb.domains.review.ReviewJpaRepository;
+import com.dongsan.rdb.domains.walkway.WalkwayHistoryJpaRepository;
+import com.dongsan.rdb.domains.walkway.WalkwayHistoryQueryDSLRepository;
+import com.dongsan.rdb.domains.walkway.LikedWalkwayQueryDSLRepository;
+import com.dongsan.rdb.domains.walkway.WalkwayJpaRepository;
+import com.dongsan.rdb.domains.walkway.WalkwayQueryDSLRepository;
+import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,22 +22,17 @@ public class TestQueryDSLConfig {
 
     @Bean
     public JPAQueryFactory jpaQueryFactory() {
-        return new JPAQueryFactory(em);
+        return new JPAQueryFactory(JPQLTemplates.DEFAULT, em);
     }
 
     @Bean
-    public ReviewQueryDSLRepository reviewQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
-        return new ReviewQueryDSLRepository(jpaQueryFactory);
-    }
-
-    @Bean
-    public BookmarkQueryDSLRepository bookmarkQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
-        return new BookmarkQueryDSLRepository(jpaQueryFactory);
-    }
-
-    @Bean
-    public HashtagDSLRepository hashtagDSLRepository(JPAQueryFactory jpaQueryFactory){
-        return new HashtagDSLRepository(jpaQueryFactory);
+    public ReviewCoreRepository reviewCoreRepository(ReviewJpaRepository reviewJpaRepository,
+                                                     MemberJpaRepository memberJpaRepository,
+                                                     WalkwayJpaRepository walkwayJpaRepository,
+                                                     WalkwayHistoryJpaRepository walkwayHistoryJpaRepository,
+                                                     JPAQueryFactory jpaQueryFactory) {
+        return new ReviewCoreRepository(reviewJpaRepository, memberJpaRepository, walkwayJpaRepository,
+                walkwayHistoryJpaRepository, jpaQueryFactory);
     }
 
     @Bean
@@ -46,11 +43,6 @@ public class TestQueryDSLConfig {
     @Bean
     public LikedWalkwayQueryDSLRepository likedWalkwayQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
         return new LikedWalkwayQueryDSLRepository(jpaQueryFactory);
-    }
-
-    @Bean
-    public MarkedWalkwayQueryDSLRepository markedWalkwayQueryDSLRepository(JPAQueryFactory jpaQueryFactory){
-        return new MarkedWalkwayQueryDSLRepository(jpaQueryFactory);
     }
 
     @Bean

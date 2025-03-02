@@ -1,8 +1,9 @@
-dependencies {
-    implementation project(":infrastructure:storage-rdb") // 수정 예정
-    implementation project(":infrastructure:storage-cache") // 수정 예정
-    testImplementation(testFixtures(project(":infrastructure:storage-rdb")))  // 수정 예정
+plugins {
+    id "java-test-fixtures"
+}
 
-    // validation
-    implementation 'org.springframework.boot:spring-boot-starter-validation'  // 삭제 예정
+dependencies {
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-tx'
+    testFixturesImplementation 'org.locationtech.jts:jts-core:1.19.0'
 }

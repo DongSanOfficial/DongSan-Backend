@@ -1,16 +1,13 @@
 package fixture;
 
-import com.dongsan.domains.member.entity.Member;
-import com.dongsan.domains.walkway.entity.LikedWalkway;
-import com.dongsan.domains.walkway.entity.Walkway;
+import com.dongsan.rdb.domains.member.MemberEntity;
+import com.dongsan.rdb.domains.walkway.LikedWalkwayEntity;
+import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 
 public class LikedWalkwayFixture {
 
-    public static LikedWalkway createLikedWalkway(Member member, Walkway walkway) {
-        return LikedWalkway.builder()
-                .member(member)
-                .walkway(walkway)
-                .build();
+    public static LikedWalkwayEntity createLikedWalkway(MemberEntity memberEntity, WalkwayEntity walkwayEntity) {
+        return new LikedWalkwayEntity(memberEntity, walkwayEntity);
     }
 
 }
