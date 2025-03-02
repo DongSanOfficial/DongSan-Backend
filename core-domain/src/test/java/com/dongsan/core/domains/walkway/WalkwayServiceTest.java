@@ -59,12 +59,13 @@ class WalkwayServiceTest {
         void it_returns_walkway() {
             // given
             Long walkwayId = 1L;
+            Long memberId = 1L;
             Walkway walkway = createWalkway();
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
 
             // when
-            Walkway result = walkwayService.getWalkway(walkwayId);
+            Walkway result = walkwayService.getWalkway(memberId, walkwayId);
 
             // then
             assertThat(result).isEqualTo(walkway);

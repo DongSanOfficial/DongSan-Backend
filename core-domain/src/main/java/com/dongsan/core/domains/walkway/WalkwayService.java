@@ -27,9 +27,11 @@ public class WalkwayService {
         return walkwayWriter.saveWalkway(createWalkway);
     }
 
-    public Walkway getWalkway(Long walkwayId) {
+    public Walkway getWalkway(Long memberId, Long walkwayId) {
         walkwayValidator.validateWalkwayExists(walkwayId);
-        return walkwayReader.getWalkway(walkwayId);
+        Walkway walkway = walkwayReader.getWalkway(walkwayId);
+        walkwayValidator.validateWalkwayAccess(walkway, memberId);
+        return walkway;
     }
 
     @Transactional
@@ -59,6 +61,7 @@ public class WalkwayService {
 
     @Transactional
     public void createLikedWalkway(Long memberId, Long walkwayId) {
+        walkwayValidator.validateWalkwayPrivate(walkwayId);
         boolean isLiked = walkwayReader.existsLikedWalkway(memberId, walkwayId);
 
         if (!isLiked) {
@@ -68,6 +71,7 @@ public class WalkwayService {
 
     @Transactional
     public void deleteLikedWalkway(Long memberId, Long walkwayId) {
+        walkwayValidator.validateWalkwayPrivate(walkwayId);
         boolean isLiked = walkwayReader.existsLikedWalkway(memberId, walkwayId);
 
         if (isLiked) {
@@ -124,7 +128,7 @@ public class WalkwayService {
         return walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId);
     }
 
-    public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long lastWalkwayHistoryId, Long memberId, int size) {
+    public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, Long lastWalkwayHistoryId, int size) {
         LocalDateTime lastCreatedAt = null;
         if (lastWalkwayHistoryId != null) {
             WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(lastWalkwayHistoryId);
