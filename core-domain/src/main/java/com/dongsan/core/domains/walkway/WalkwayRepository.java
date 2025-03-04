@@ -25,7 +25,6 @@ public interface WalkwayRepository {
     Map<Long, Boolean> existsLikedWalkways(Long memberId, List<Long> walkwayIds);
     Long saveLikedWalkway(Long memberId, Long walkwayId);
     void deleteLikedWalkway(Long memberId, Long walkwayId);
-//    LikedWalkway getLikedWalkway(Long memberId, Long walkwayId);
 
     // 산책 기록
     Long saveWalkwayHistory(CreateWalkwayHistory createWalkwayHistory);

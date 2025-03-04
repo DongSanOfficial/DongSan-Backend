@@ -3,6 +3,8 @@ package com.dongsan.core.domains.review;
 import java.util.Map;
 
 public class RatingCalculator {
+    private RatingCalculator() {}
+
     public static Double calculateAverageRating(Map<Rating, Long> ratingCounts) {
         Double totalRating = calculateTotalRating(ratingCounts);
         Integer totalReviewCount = calculateTotalReviewCount(ratingCounts);

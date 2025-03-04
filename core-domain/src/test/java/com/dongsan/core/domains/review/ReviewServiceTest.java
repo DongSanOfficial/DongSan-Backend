@@ -13,6 +13,7 @@ import com.dongsan.core.domains.walkway.WalkwayWriter;
 import com.dongsan.core.support.error.CoreException;
 import com.dongsan.core.support.util.CursorRequest;
 import com.dongsan.core.support.util.PagingResponse;
+import java.util.EnumMap;
 import review.ReviewFixture;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +59,7 @@ class ReviewServiceTest {
             Long walkwayHistoryId = 1L;
             Rating rating = Rating.FIVE;
             CreateReview createReview = new CreateReview(memberId, walkwayId, walkwayHistoryId, rating, "content");
-            Map<Rating, Long> ratingCounts = new HashMap<>();
+            Map<Rating, Long> ratingCounts = new EnumMap<>(Rating.class);
 
             WalkwayHistory walkwayHistory = WalkwayFixture.createWalkwayHistory();
 
@@ -165,7 +166,7 @@ class ReviewServiceTest {
             Walkway walkway = WalkwayFixture.createWalkway();
             Long count = 20L;
 
-            Map<Rating, Long> ratingCounts = new HashMap<>();
+            Map<Rating, Long> ratingCounts = new EnumMap<>(Rating.class);
             for(int i = 1; i <= 5; i++) {
                 ratingCounts.put(Rating.numOf(i), count);
             }
@@ -177,11 +178,11 @@ class ReviewServiceTest {
             Map<Rating, Long> result = reviewService.getWalkwayRating(walkwayId, memberId);
 
             // Then
-            assertThat(result.get(Rating.FIVE)).isEqualTo(count);
-            assertThat(result.get(Rating.FOUR)).isEqualTo(count);
-            assertThat(result.get(Rating.THREE)).isEqualTo(count);
-            assertThat(result.get(Rating.TWO)).isEqualTo(count);
-            assertThat(result.get(Rating.ONE)).isEqualTo(count);
+            assertThat(result).containsEntry(Rating.FIVE, count);
+            assertThat(result).containsEntry(Rating.FOUR, count);
+            assertThat(result).containsEntry(Rating.THREE, count);
+            assertThat(result).containsEntry(Rating.TWO, count);
+            assertThat(result).containsEntry(Rating.ONE, count);
         }
     }
 }

@@ -17,6 +17,7 @@ import com.dongsan.core.support.util.CursorRequest;
 import com.dongsan.core.support.util.PagingResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +130,7 @@ class ReviewControllerTest {
             // Given
             Long walkwayId = 1L;
 
-            Map<Rating, Long> ratingCounts = new HashMap<>();
+            Map<Rating, Long> ratingCounts = new EnumMap<>(Rating.class);
             for(Integer i = 1; i <= 5; i++) {
                 ratingCounts.put(Rating.numOf(i), 10L);
             }

@@ -1,8 +1,6 @@
 package com.dongsan.api.domains.review;
 
 import com.dongsan.api.support.validation.annotation.ValidRating;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;

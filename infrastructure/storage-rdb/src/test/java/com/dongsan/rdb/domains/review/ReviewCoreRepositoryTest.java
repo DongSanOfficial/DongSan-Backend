@@ -236,7 +236,7 @@ class ReviewCoreRepositoryTest extends RepositoryTest {
 
             // Then
             for(Rating rating : result.keySet()) {
-                assertThat(result.get(rating)).isEqualTo(1L);
+                assertThat(result).containsEntry(rating, 1L);
             }
         }
     }

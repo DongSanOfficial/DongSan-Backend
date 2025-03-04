@@ -296,7 +296,6 @@ class WalkwayControllerTest {
             Double latitude = 1.0;
             Double longitude = 1.0;
             Double distance = 1.3;
-            Long lastId = null;
             Integer size = 10;
             PagingResponse<Walkway> cursorPagingResponse = PagingResponse.from(walkways, size);
 
@@ -327,7 +326,6 @@ class WalkwayControllerTest {
             Double latitude = 1.0;
             Double longitude = 1.0;
             Double distance = 1.3;
-            Long lastId = null;
             Integer size = 10;
 
             PagingResponse<Walkway> cursorPagingResponse = PagingResponse.from(walkways, size);

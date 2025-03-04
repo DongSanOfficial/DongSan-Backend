@@ -101,7 +101,7 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
         List<WalkwayEntity> walkwayEntities = walkwayQueryDSLRepository.getUserLikedWalkway(memberId, size, lastCreatedAt);
         return walkwayEntities.stream()
                 .map(WalkwayEntity::toWalkway)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -109,7 +109,7 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
         List<WalkwayEntity> walkwayEntities = walkwayQueryDSLRepository.getUserWalkway(memberId, size, lastCreatedAt);
         return walkwayEntities.stream()
                 .map(WalkwayEntity::toWalkway)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.EnumMap;
 import review.ReviewFixture;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -38,8 +39,6 @@ class ReviewReaderTest {
         @DisplayName("리뷰가 존재하면 리뷰 목록을 반환한다.")
         void it_returns_review(){
             // given
-            Integer limit = 5;
-            LocalDateTime lastCreatedAt = LocalDateTime.now();
             Long reviewId = 1L;
             Long memberId = 1L;
             Long walkwayId = 1L;
@@ -120,7 +119,7 @@ class ReviewReaderTest {
         void it_returns_review_count() {
             // given
             Long walkwayId = 1L;
-            Map<Rating, Long> reviewCount = new HashMap<>();
+            Map<Rating, Long> reviewCount = new EnumMap<>(Rating.class);
             Rating rating = Rating.FIVE;
             Long ratingCount = 10L;
             reviewCount.put(rating, ratingCount);
@@ -131,7 +130,7 @@ class ReviewReaderTest {
             Map<Rating, Long> result = reviewReader.getWalkwaysRating(walkwayId);
 
             // then
-            assertThat(result.get(rating)).isEqualTo(ratingCount);
+            assertThat(result).containsEntry(rating, ratingCount);
         }
     }
 

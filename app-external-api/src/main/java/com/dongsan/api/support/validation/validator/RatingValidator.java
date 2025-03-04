@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RatingValidator implements ConstraintValidator<ValidRating, Integer> {
-    public RatingValidator() {}
     @Override
     public boolean isValid(Integer inputRating, ConstraintValidatorContext context) {
         for(Rating rating : Rating.values()) {

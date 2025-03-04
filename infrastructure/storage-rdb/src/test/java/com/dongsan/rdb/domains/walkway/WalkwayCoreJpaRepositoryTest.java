@@ -69,7 +69,6 @@ class WalkwayCoreJpaRepositoryTest {
             LineString lineString = geometryFactory.createLineString(coordinates);
 
             Long memberId = 1L;
-            Long walkwayId = 1L;
             CreateWalkway createWalkway
                     = new CreateWalkway("Sample", 2.5, 30, ExposeLevel.PUBLIC, point, point, "walkway.", lineString, null,null, memberId);
 
