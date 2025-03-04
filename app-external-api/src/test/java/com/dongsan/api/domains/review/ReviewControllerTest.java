@@ -13,8 +13,8 @@ import com.dongsan.core.domains.review.CreateReview;
 import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewService;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +82,7 @@ class ReviewControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.reviewId").value(reviewId));
+                    .andExpect(jsonPath("$.reviewId").value(reviewId));
         }
     }
 
@@ -102,9 +102,9 @@ class ReviewControllerTest {
             for (int i = 0; i < 5; i++) {
                 reviews.add(createReviewWithId(1L, member.id(), walkwayId));
             }
-            CursorPagingResponse<Review> cursorPagingResponse = CursorPagingResponse.from(reviews, size);
+            PagingResponse<Review> cursorPagingResponse = PagingResponse.from(reviews, size);
 
-            when(reviewService.getWalkwayReviews(type, walkwayId, member.id(), new CursorPagingRequest(lastId, size)))
+            when(reviewService.getWalkwayReviews(type, walkwayId, member.id(), new CursorRequest(lastId, size)))
                     .thenReturn(cursorPagingResponse);
 
             // When
@@ -114,9 +114,9 @@ class ReviewControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.reviews").isNotEmpty())
-                    .andExpect(jsonPath("$.data.reviews").isArray())
-                    .andExpect(jsonPath("$.data.reviews.size()").value(5));
+                    .andExpect(jsonPath("$.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.size()").value(5));
         }
     }
 
@@ -140,11 +140,11 @@ class ReviewControllerTest {
             ResultActions response = mockMvc.perform(get("/walkways/1/review/rating")
                     .contentType(MediaType.APPLICATION_JSON));
 
-            response.andExpect(jsonPath("$.data.five").value(20L))
-                    .andExpect(jsonPath("$.data.four").value(20L))
-                    .andExpect(jsonPath("$.data.three").value(20L))
-                    .andExpect(jsonPath("$.data.two").value(20L))
-                    .andExpect(jsonPath("$.data.one").value(20L));
+            response.andExpect(jsonPath("$.five").value(20L))
+                    .andExpect(jsonPath("$.four").value(20L))
+                    .andExpect(jsonPath("$.three").value(20L))
+                    .andExpect(jsonPath("$.two").value(20L))
+                    .andExpect(jsonPath("$.one").value(20L));
         }
     }
 }

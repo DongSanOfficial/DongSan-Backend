@@ -1,6 +1,6 @@
 package com.dongsan.core.support.util;
 
-public record CursorPagingRequest(
+public record CursorRequest(
         Long lastId,
         Integer size
 ) {

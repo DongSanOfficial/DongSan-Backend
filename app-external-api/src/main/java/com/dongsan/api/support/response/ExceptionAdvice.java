@@ -28,7 +28,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionAdvice.class);
 
     @ExceptionHandler(value = CoreException.class)
-    public ResponseEntity<ApiResponse> handleCoreException(CoreException e) {
+    public ResponseEntity<ErrorResponse> handleCoreException(CoreException e) {
         CoreErrorCode errorCode = e.getErrorCode();
         CoreErrorStatus status = e.getErrorCode().getHttpStatus();
         HttpStatus httpStatus = switch (status){
@@ -38,33 +38,40 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             case CONFLICT -> HttpStatus.CONFLICT;
         };
         log.error("[CoreException] cause: {}, message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
-        return ResponseEntity.status(httpStatus).body(ApiResponse.error(errorCode.getCode(), errorCode.getMessage()));
+        return ResponseEntity
+                .status(httpStatus)
+                .body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage()));
     }
 
     @ExceptionHandler(value = ApiException.class)
-    public ResponseEntity<ApiResponse> handleApiException(ApiException e){
+    public ResponseEntity<ErrorResponse> handleApiException(ApiException e){
         ApiErrorCode errorCode = e.getErrorCode();
         log.error("[ApiException] cause: {}, message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.error(errorCode.getCode(),
-                errorCode.getMessage()));
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage()));
     }
 
     // exception 을 상속받는 모든 예외 처리
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<ApiResponse> handleException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
         SystemErrorCode errorCode = SystemErrorCode.INTERNAL_SERVER_ERROR;
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.error(errorCode.getCode(), errorCode.getMessage()));
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage()));
     }
 
 
     // 메소드가 잘못되었거나 부적절한 인수를 전달했을 때 -> 필수 파라미터가 없을 때
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse> handleIllegalArgumentException(IllegalArgumentException e){
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e){
         log.error("[IlleagalArgumentException] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e),e.getMessage());
         ApiErrorCode errorCode = ApiErrorCode.ILLEGAL_ARGUMENT_ERROR;
         String errorMessage = String.format("%s %s", errorCode.getMessage(), NestedExceptionUtils.getMostSpecificCause(e).getMessage());
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.error(errorCode.getCode(), errorMessage));
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ErrorResponse.from(errorCode.getCode(), errorMessage));
     }
 
     // 컨트롤러 인자(@PathVariable, @RequestParam) 예외 처리
@@ -77,7 +84,9 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 .map(violation -> new ValidationError(violation.getPropertyPath()
                         .toString(), violation.getMessage()))
                 .toList();
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.error(errorCode.getCode(), errorCode.getMessage(), errors));
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage(), errors));
     }
 
     // DTO 유효성(@RequestBody) 관련 예외 처리
@@ -91,7 +100,9 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         List<ValidationError> errors = fieldErrors.stream()
                 .map(fieldError -> new ValidationError(fieldError.getField(), fieldError.getDefaultMessage()))
                 .toList();
-        return ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.error(errorCode.getCode(), errorCode.getMessage(), errors));
+        return ResponseEntity
+                .status(errorCode.getHttpStatus())
+                .body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage(), errors));
     }
 
 }

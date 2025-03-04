@@ -41,13 +41,13 @@ public class DevService {
         tokenWriter.saveRefreshToken(memberId, refreshToken);
     }
 
-    public GetMemberInfoResponse getMemberInfo(HttpServletRequest request){
+    public MemberInfoResponse getMemberInfo(HttpServletRequest request){
         String accessToken = cookieService.getAccessTokenFromCookie(request);
         if(jwtService.isAccessTokenExpired(accessToken)){
             throw new ApiException(ApiErrorCode.ACCESS_TOKEN_EXPIRED);
         }
         Member member = jwtService.getMemberFromAccessToken(accessToken);
-        return new GetMemberInfoResponse(member);
+        return new MemberInfoResponse(member);
     }
 
     public String uploadImage(MultipartFile image) throws IOException {

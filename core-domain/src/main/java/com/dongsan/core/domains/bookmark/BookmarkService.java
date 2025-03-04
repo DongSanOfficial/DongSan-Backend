@@ -2,8 +2,8 @@ package com.dongsan.core.domains.bookmark;
 
 import com.dongsan.core.domains.walkway.WalkwayReader;
 import com.dongsan.core.domains.walkway.WalkwayValidator;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -67,27 +67,27 @@ public class BookmarkService {
         bookmarkWriter.deleteBookmark(bookmarkId);
     }
 
-    public CursorPagingResponse<MarkedWalkway> getBookmarkWalkways(Long memberId, Long bookmarkId, CursorPagingRequest paging) {
+    public PagingResponse<MarkedWalkway> getBookmarkWalkways(Long memberId, Long bookmarkId, CursorRequest paging) {
         Bookmark bookmark = bookmarkReader.getBookmark(bookmarkId);
         bookmarkValidator.validateBookmarkOwner(memberId, bookmark);
         // 마지막 markedBookmark의 생성시간 조회
         LocalDateTime lastCreatedAt = paging.lastId() == null ? null : bookmarkReader.getBookmarkedDate(bookmarkId, walkwayReader.getWalkway(paging.lastId()).walkwayId());
         List<MarkedWalkway> markedWalkways = bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, lastCreatedAt, memberId);
-        return CursorPagingResponse.from(markedWalkways, paging.size());
+        return PagingResponse.from(markedWalkways, paging.size());
     }
 
-    public CursorPagingResponse<Bookmark> getUserBookmarksName(Long memberId, CursorPagingRequest paging) {
+    public PagingResponse<Bookmark> getUserBookmarksName(Long memberId, CursorRequest paging) {
         LocalDateTime createdAt = paging.lastId() == null ? null : bookmarkReader.getBookmark(paging.lastId()).createdAt();
         List<Bookmark> bookmarks = bookmarkReader.getUserBookmarkNames(createdAt, memberId, paging.size());
-        return CursorPagingResponse.from(bookmarks, paging.size());
+        return PagingResponse.from(bookmarks, paging.size());
     }
 
-    public CursorPagingResponse<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long memberId, Long walkwayId, CursorPagingRequest paging) {
+    public PagingResponse<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long memberId, Long walkwayId, CursorRequest paging) {
         walkwayValidator.validateWalkwayExists(walkwayId);
         LocalDateTime createdAt = paging.lastId() == null ? null : bookmarkReader.getBookmark(paging.lastId()).createdAt();
         List<BookmarkWithMarkedStatus> bookmarks = bookmarkReader.getBookmarksWithMarkedStatus(walkwayId, memberId, createdAt,
                 paging.size());
-        return CursorPagingResponse.from(bookmarks, paging.size());
+        return PagingResponse.from(bookmarks, paging.size());
     }
 
     public boolean existsMarkedWalkway(Long memberId, Long walkwayId) {

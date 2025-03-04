@@ -1,17 +1,18 @@
 package com.dongsan.api.domains.review;
 
-import com.dongsan.api.support.response.ApiResponse;
+import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.core.domains.review.CreateReview;
 import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import com.dongsan.core.domains.review.ReviewService;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,7 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 작성")
     @PostMapping("/{walkwayId}/review")
-    public ApiResponse<CreateReviewResponse> createReview(
+    public ResponseEntity<CreateReviewResponse> createReview(
             @PathVariable Long walkwayId,
             @Validated @RequestBody CreateReviewRequest request,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
@@ -45,30 +46,30 @@ public class ReviewController {
         CreateReview createReview
                 = new CreateReview(customOAuth2User.getMemberId(), walkwayId, request.walkwayHistoryId(), Rating.numOf(request.rating()), request.content());
         Long reviewId = reviewService.createReview(createReview);
-        return ApiResponse.success(new CreateReviewResponse(reviewId));
+        return ResponseEntity.ok(new CreateReviewResponse(reviewId));
     }
 
     @Operation(summary = "리뷰 내용 보기")
     @GetMapping("/{walkwayId}/review/content")
-    public ApiResponse<GetWalkwayReviewsResponse> getWalkwayReviews(
+    public ResponseEntity<CursorResponse<WalkwayReviewsResponse>> getWalkwayReviews(
             @PathVariable Long walkwayId,
             @RequestParam String sort,
             @RequestParam(required = false) Long lastId,
             @RequestParam(required = false, defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        CursorPagingResponse<Review> cursorPagingResponse
-                = reviewService.getWalkwayReviews(sort, walkwayId, customOAuth2User.getMemberId(), new CursorPagingRequest(lastId, size));
-        return ApiResponse.success(new GetWalkwayReviewsResponse(cursorPagingResponse));
+        PagingResponse<Review> response
+                = reviewService.getWalkwayReviews(sort, walkwayId, customOAuth2User.getMemberId(), new CursorRequest(lastId, size));
+        return ResponseEntity.ok(new CursorResponse<>(WalkwayReviewsResponse.from(response.data()), response.hasNext()));
     }
 
     @Operation(summary = "리뷰 별점 보기")
     @GetMapping("/{walkwayId}/review/rating")
-    public ApiResponse<GetWalkwayRatingResponse> getWalkwaysRating(
+    public ResponseEntity<WalkwayRatingResponse> getWalkwaysRating(
             @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
         Map<Rating, Long> ratingCounts = reviewService.getWalkwayRating(walkwayId, customOAuth2User.getMemberId());
-        return ApiResponse.success(GetWalkwayRatingResponse.from(ratingCounts));
+        return ResponseEntity.ok(WalkwayRatingResponse.from(ratingCounts));
     }
 }

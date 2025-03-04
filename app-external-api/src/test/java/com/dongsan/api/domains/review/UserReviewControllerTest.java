@@ -15,8 +15,8 @@ import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewReader;
 import com.dongsan.core.domains.review.UserReviewService;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,9 +70,9 @@ class UserReviewControllerTest {
             for (int i = 0; i < 5; i++) {
                 reviews.add(createReviewWithId(1L, member.id(), walkwayId));
             }
-            CursorPagingResponse<Review> cursorPagingResponse = CursorPagingResponse.from(reviews, size);
+            PagingResponse<Review> cursorPagingResponse = PagingResponse.from(reviews, size);
 
-            when(userReviewService.getReviews(new CursorPagingRequest(lastId, size), customOAuth2User.getMemberId())).thenReturn(cursorPagingResponse);
+            when(userReviewService.getReviews(new CursorRequest(lastId, size), customOAuth2User.getMemberId())).thenReturn(cursorPagingResponse);
 
             // when & then
             mockMvc.perform(get("/users/reviews")
@@ -81,8 +81,8 @@ class UserReviewControllerTest {
                             .contentType("application/json;charset=UTF-8")
                     )
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.reviews", hasSize(5)))
-                    .andExpect(jsonPath("$.data.hasNext", is(false)))
+                    .andExpect(jsonPath("$.data", hasSize(5)))
+                    .andExpect(jsonPath("$.hasNext", is(false)))
                     .andDo(print())
                     .andReturn();
         }
