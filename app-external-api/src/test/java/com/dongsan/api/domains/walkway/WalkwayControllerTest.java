@@ -18,7 +18,6 @@ import com.dongsan.api.domains.walkway.dto.WalkwayCoordinate;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
-import com.dongsan.api.domains.walkway.mapper.WalkwayMapper;
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
@@ -117,8 +116,7 @@ class WalkwayControllerTest {
                     course
             );
             Image image = createImage();
-            CreateWalkway createWalkway
-                    = WalkwayMapper.toCreateWalkway(createWalkwayRequest, image, customOAuth2User.getMemberId());
+            CreateWalkway createWalkway = createWalkwayRequest.toCreateWalkway(image, customOAuth2User.getMemberId());
             Long walkwayId = 1L;
 
             when(imageService.getImage(createWalkwayRequest.courseImageId())).thenReturn(image);

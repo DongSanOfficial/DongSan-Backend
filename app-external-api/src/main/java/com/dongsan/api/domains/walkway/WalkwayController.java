@@ -11,9 +11,7 @@ import com.dongsan.api.domains.walkway.dto.response.CreateWalkwayResponse;
 import com.dongsan.api.domains.walkway.dto.response.GetWalkwayHistoriesResponse;
 import com.dongsan.api.domains.walkway.dto.response.GetWalkwayResponse;
 import com.dongsan.api.domains.walkway.dto.response.SearchWalkwayResponse;
-import com.dongsan.api.domains.walkway.mapper.WalkwayMapper;
 import com.dongsan.api.support.response.ApiResponse;
-import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
 import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.domains.image.Image;
@@ -74,7 +72,7 @@ public class WalkwayController {
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
         Image image = imageService.getImage(createWalkwayRequest.courseImageId());
-        CreateWalkway createWalkway = WalkwayMapper.toCreateWalkway(createWalkwayRequest, image, customOAuth2User.getMemberId());
+        CreateWalkway createWalkway = createWalkwayRequest.toCreateWalkway(image, customOAuth2User.getMemberId());
         Long walkwayId = walkwayService.createWalkway(createWalkway);
         return ApiResponse.success(new CreateWalkwayResponse(walkwayId));
     }
@@ -123,7 +121,7 @@ public class WalkwayController {
             @Validated @RequestBody UpdateWalkwayRequest updateWalkwayRequest,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        UpdateWalkway updateWalkway = WalkwayMapper.toUpdateWalkway(updateWalkwayRequest, walkwayId);
+        UpdateWalkway updateWalkway = updateWalkwayRequest.toUpdateWalkway(walkwayId);
         walkwayService.updateWalkway(updateWalkway, customOAuth2User.getMemberId());
         return ApiResponse.success(null);
     }

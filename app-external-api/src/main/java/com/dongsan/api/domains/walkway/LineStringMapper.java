@@ -1,4 +1,4 @@
-package com.dongsan.api.domains.walkway.mapper;
+package com.dongsan.api.domains.walkway;
 
 import com.dongsan.api.domains.walkway.dto.WalkwayCoordinate;
 import java.util.ArrayList;
