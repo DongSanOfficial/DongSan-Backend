@@ -156,8 +156,8 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
     }
 
     @Override
-    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId) {
-        List<WalkwayHistoryEntity> walkwayHistoryEntities = walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId);
+    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size, LocalDateTime lastCreatedAt) {
+        List<WalkwayHistoryEntity> walkwayHistoryEntities = walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId, size, lastCreatedAt);
         return walkwayHistoryEntities.stream()
                 .map(WalkwayHistoryEntity::toWalkwayHistory)
                 .toList();

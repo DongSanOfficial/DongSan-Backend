@@ -123,9 +123,15 @@ public class WalkwayService {
         return walkwayWriter.saveWalkwayHistory(createWalkwayHistory);
     }
 
-    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId) {
+    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size, Long lastWalkwayHistoryId) {
         walkwayValidator.validateWalkwayPrivate(walkwayId);
-        return walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId);
+        LocalDateTime lastCreatedAt = null;
+        if (lastWalkwayHistoryId != null) {
+            WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(lastWalkwayHistoryId);
+            lastCreatedAt = walkwayHistory.createdAt();
+        }
+
+        return walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
     }
 
     public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, Long lastWalkwayHistoryId, int size) {

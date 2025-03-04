@@ -29,7 +29,7 @@ public interface WalkwayRepository {
 
     // 산책 기록
     Long saveWalkwayHistory(CreateWalkwayHistory createWalkwayHistory);
-    List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId);
+    List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size, LocalDateTime lastCreatedAt);
     List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt);
     Optional<WalkwayHistory> getWalkwayHistory(Long walkwayHistoryId);
     void updateWalkwayHistoryIsReviewed(Long walkwayHistoryId, boolean isReviewed);

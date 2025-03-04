@@ -17,15 +17,17 @@ public class WalkwayHistoryQueryDSLRepository {
 
     private QWalkwayHistoryEntity walkwayHistory = QWalkwayHistoryEntity.walkwayHistoryEntity;
 
-    public List<WalkwayHistoryEntity> getCanReviewWalkwayHistories(Long walkwayId, Long memberId) {
+    public List<WalkwayHistoryEntity> getCanReviewWalkwayHistories(Long walkwayId, Long memberId, int size, LocalDateTime lastCreatedAt) {
         return queryFactory.selectFrom(walkwayHistory)
                 .join(walkwayHistory.walkway).fetchJoin()
                 .where(
                         walkwayHistory.member.id.eq(memberId),
                         walkwayHistory.walkway.id.eq(walkwayId),
                         walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0/3.0)),
-                        walkwayHistory.isReviewed.eq(false)
+                        walkwayHistory.isReviewed.eq(false),
+                        createdAtLt(lastCreatedAt)
                 )
+                .limit(size)
                 .orderBy(walkwayHistory.createdAt.desc())
                 .fetch();
     }

@@ -33,11 +33,6 @@ public class WalkwayReader {
         return walkwayRepository.existsWalkway(walkwayId);
     }
 
-//    public List<Walkway> getBookmarkWalkway(Bookmark bookmark, Integer size, LocalDateTime lastCreatedAt, Long memberId) {
-//        return markedWalkwayQueryDSLRepository.getBookmarkWalkway(bookmark.getId(), size, lastCreatedAt, memberId)
-//                .stream().map(MarkedWalkway::getWalkway).toList();
-//    }
-
     public List<Walkway> searchWalkway(SearchWalkwayQuery searchWalkwayQuery, WalkwaySort sort) {
         return searchWalkwayFactory.getService(sort).search(searchWalkwayQuery);
     }
@@ -50,26 +45,17 @@ public class WalkwayReader {
         return walkwayRepository.existsLikedWalkways(memberId, walkwayIds);
     }
 
-//    public LikedWalkway getLikedWalkway(Long memberId, Long walkwayId) {
-//        return walkwayRepository.getLikedWalkway(memberId, walkwayId);
-//    }
-
     public List<Walkway> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
         return walkwayRepository.getUserLikedWalkway(memberId, size, lastCreatedAt);
     }
-
-
-//    public boolean isMarkedWalkway(Long walkwayId, Long memberId) {
-//        return markedWalkwayQueryDSLRepository.existsMarkedWalkwayByMemberAndWalkway(walkwayId, memberId);
-//    }
 
     public WalkwayHistory getWalkwayHistory(Long walkwayHistoryId) {
         return walkwayRepository.getWalkwayHistory(walkwayHistoryId)
                 .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_HISTORY_NOT_FOUND));
     }
 
-    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId) {
-        return walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId);
+    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size, LocalDateTime lastCreatedAt) {
+        return walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
     }
 
     public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt) {

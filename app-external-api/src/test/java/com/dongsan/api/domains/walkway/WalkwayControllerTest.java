@@ -390,13 +390,17 @@ class WalkwayControllerTest {
             // Given
             Long walkwayId = 1L;
             Long memberId = member.id();
+            Integer size = 1;
+            Long lastHistoryId = 1L;
 
             List<WalkwayHistory> histories = List.of(WalkwayFixture.createWalkwayHistory());
 
-            when(walkwayService.getCanReviewWalkwayHistory(memberId, walkwayId)).thenReturn(histories);
+            when(walkwayService.getCanReviewWalkwayHistory(memberId, walkwayId, size, lastHistoryId)).thenReturn(histories);
 
             // When
             ResultActions response = mockMvc.perform(get("/walkways/{walkwayId}/history", walkwayId)
+                    .param("size", size.toString())
+                    .param("lastId", lastHistoryId.toString())
                     .contentType(MediaType.APPLICATION_JSON));
 
             // Then
