@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.auth.security.handler;
 
 import com.dongsan.api.support.error.ApiErrorCode;
-import com.dongsan.api.support.response.ApiResponse;
+import com.dongsan.api.support.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +28,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.warn("[AUTH_WARNING] 권한이 없는 경로 {} 에 대한 요청 {}", request.getRequestURI(), accessDeniedException.getMessage());
         ApiErrorCode errorCode = ApiErrorCode.ACCESS_DENIED;
-        ResponseEntity<ApiResponse> errorResponse = ResponseEntity.status(errorCode.getHttpStatus()).body(ApiResponse.error(errorCode.getCode(), errorCode.getMessage()));
+        var errorResponse = ResponseEntity.status(errorCode.getHttpStatus()).body(
+                ErrorResponse.from(errorCode.getCode(), errorCode.getMessage()));
         response.setContentType("application/json");
         // charset=UTF-8 을 붙이지 않으면 message 가 ??? 로 깨져서 표시된다.
         response.setCharacterEncoding("UTF-8");

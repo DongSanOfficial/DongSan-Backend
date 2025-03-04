@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record GetWalkwayHistoriesResponse(
-        List<CanReviewWalkwayHistory> walkwayHistories
+        List<CanReviewWalkwayHistory> data
 ) {
     public static GetWalkwayHistoriesResponse from(List<WalkwayHistory> walkwayHistories) {
         return new GetWalkwayHistoriesResponse(

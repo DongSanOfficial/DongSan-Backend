@@ -3,7 +3,7 @@ package com.dongsan.api.domains.review;
 import com.dongsan.core.domains.review.RatingCalculator;
 import java.util.Map;
 
-public record GetWalkwayRatingResponse(
+public record WalkwayRatingResponse(
         Double rating,
         Integer reviewCount,
         Long five,
@@ -12,7 +12,7 @@ public record GetWalkwayRatingResponse(
         Long two,
         Long one
 ) {
-    public static GetWalkwayRatingResponse from(Map<Integer, Long> ratingCounts) {
+    public static WalkwayRatingResponse from(Map<Integer, Long> ratingCounts) {
 
         Integer totalReviewCount = RatingCalculator.calculateTotalReviewCount(ratingCounts);
         Double avgRating = totalReviewCount > 0
@@ -25,6 +25,6 @@ public record GetWalkwayRatingResponse(
         Long twoRate = totalReviewCount == 0.0 ? 0L : ratingCounts.getOrDefault(2, 0L) * 100 / totalReviewCount;
         Long oneRate = totalReviewCount == 0.0 ? 0L : ratingCounts.getOrDefault(1, 0L) * 100 / totalReviewCount;
 
-        return new GetWalkwayRatingResponse(avgRating, totalReviewCount, fiveRate, fourRate, threeRate, twoRate, oneRate);
+        return new WalkwayRatingResponse(avgRating, totalReviewCount, fiveRate, fourRate, threeRate, twoRate, oneRate);
     }
 }

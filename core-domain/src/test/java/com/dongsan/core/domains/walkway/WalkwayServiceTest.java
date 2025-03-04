@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import static walkway.WalkwayFixture.createWalkway;
 import static walkway.WalkwayFixture.createWalkwayHistory;
 
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.PagingResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +107,7 @@ class WalkwayServiceTest {
             when(walkwayReader.searchWalkway(searchWalkwayQuery, sort)).thenReturn(walkways);
 
             // when
-            CursorPagingResponse<Walkway> result = walkwayService.searchWalkway(sortType, searchWalkwayQuery);
+            PagingResponse<Walkway> result = walkwayService.searchWalkway(sortType, searchWalkwayQuery);
 
             // when & then
             assertThat(result.data()).hasSize(walkways.size());

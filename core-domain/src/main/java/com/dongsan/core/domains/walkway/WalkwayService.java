@@ -1,7 +1,7 @@
 package com.dongsan.core.domains.walkway;
 
 
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.PagingResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -41,14 +41,14 @@ public class WalkwayService {
         walkwayWriter.updateWalkway(updateWalkway);
     }
 
-    public CursorPagingResponse<Walkway> searchWalkway(String sortType, SearchWalkwayQuery searchWalkwayQuery) {
+    public PagingResponse<Walkway> searchWalkway(String sortType, SearchWalkwayQuery searchWalkwayQuery) {
         if (searchWalkwayQuery.lastWalkwayId() != null) {
             walkwayValidator.validateWalkwayExists(searchWalkwayQuery.lastWalkwayId());
         }
 
         WalkwaySort sort = WalkwaySort.typeOf(sortType);
         List<Walkway> walkways = walkwayReader.searchWalkway(searchWalkwayQuery, sort);
-        return CursorPagingResponse.from(walkways, searchWalkwayQuery.size());
+        return PagingResponse.from(walkways, searchWalkwayQuery.size());
     }
 
     public boolean existsLikedWalkway(Long memberId, Long walkwayId) {

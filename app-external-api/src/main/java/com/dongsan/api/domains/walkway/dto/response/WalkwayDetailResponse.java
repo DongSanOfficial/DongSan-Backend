@@ -7,7 +7,7 @@ import com.dongsan.core.domains.walkway.ExposeLevel;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public record GetWalkwayResponse(
+public record WalkwayDetailResponse(
         String date,
         Integer time,
         Double distance,
@@ -22,7 +22,7 @@ public record GetWalkwayResponse(
         List<WalkwayCoordinate> course,
         boolean marked
 ) {
-    public GetWalkwayResponse(Walkway walkway, boolean isLiked, boolean isMarked) {
+    public WalkwayDetailResponse(Walkway walkway, boolean isLiked, boolean isMarked) {
         this (
                 walkway.createdAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
                 walkway.courseInfo().time(),

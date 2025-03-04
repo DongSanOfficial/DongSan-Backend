@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
 
-public record CreateWalkwayCourseImageRequest(
+public record CourseImageIdResponse(
         Long courseImageId
 ) {
 }

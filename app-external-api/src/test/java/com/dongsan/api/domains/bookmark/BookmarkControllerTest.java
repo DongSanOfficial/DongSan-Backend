@@ -12,12 +12,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
 import com.dongsan.core.domains.bookmark.MarkedWalkway;
 import com.dongsan.core.domains.member.Member;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +106,7 @@ class BookmarkControllerTest {
                             .content(requestBody)
                             .contentType("application/json;charset=UTF-8"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.bookmarkId").value(response.bookmarkId()))
+                    .andExpect(jsonPath("$.bookmarkId").value(response.bookmarkId()))
                     .andReturn();
         }
     }
@@ -236,9 +237,9 @@ class BookmarkControllerTest {
             Integer size = 10;
             Long lastId = 3L;
             List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(createMarkedWalkway(1L, 3L), createMarkedWalkway(2L, 3L)));
-            CursorPagingResponse<MarkedWalkway> pagingResponse = new CursorPagingResponse<>(markedWalkways, false);
-            when(bookmarkService.getBookmarkWalkways(customOAuth2User.getMemberId(), bookmarkId, new CursorPagingRequest(lastId, size))).thenReturn(pagingResponse);
-            GetBookmarkDetailResponse response = new GetBookmarkDetailResponse(pagingResponse);
+            PagingResponse<MarkedWalkway> response = new PagingResponse<>(markedWalkways, false);
+            when(bookmarkService.getBookmarkWalkways(customOAuth2User.getMemberId(), bookmarkId, new CursorRequest(lastId, size))).thenReturn(response);
+            CursorResponse<BookmarkWalkwaysResponse> result = new CursorResponse<>(BookmarkWalkwaysResponse.from(response.data()), response.hasNext());
 
             // when & then
             mockMvc.perform(get("/bookmarks/{bookmarkId}/walkways", bookmarkId)
@@ -246,8 +247,8 @@ class BookmarkControllerTest {
                             .param("lastId", lastId.toString())
                             .contentType("application/json;charset=UTF-8"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkways.size()", CoreMatchers.is(response.walkways().size())))
-                    .andExpect(jsonPath("$.data.walkways[0].name").value(response.walkways().get(0).name()))
+                    .andExpect(jsonPath("$.data.size()", CoreMatchers.is(result.data().size())))
+                    .andExpect(jsonPath("$.data[0].name").value(result.data().get(0).name()))
                     .andReturn();
         }
     }
@@ -264,9 +265,9 @@ class BookmarkControllerTest {
                     createBookmark(1L, "북마크1"),
                     createBookmark(2L, "북마크2")
                     ));
-            CursorPagingResponse<Bookmark> pagingResponse = new CursorPagingResponse<>(bookmarks, false);
-            when(bookmarkService.getUserBookmarksName(customOAuth2User.getMemberId(), new CursorPagingRequest(lastId, size))).thenReturn(pagingResponse);
-            GetBookmarksNameResponse response = new GetBookmarksNameResponse(pagingResponse);
+            PagingResponse<Bookmark> response = new PagingResponse<>(bookmarks, false);
+            when(bookmarkService.getUserBookmarksName(customOAuth2User.getMemberId(), new CursorRequest(lastId, size))).thenReturn(response);
+            CursorResponse<BookmarksNameResponse> result = new CursorResponse<>(BookmarksNameResponse.from(response.data()), response.hasNext());
 
             // when & then
             mockMvc.perform(get("/users/bookmarks/title")
@@ -274,9 +275,9 @@ class BookmarkControllerTest {
                             .param("lastId", lastId.toString())
                             .param("size", size.toString()))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.bookmarks.size()", CoreMatchers.is(response.bookmarks().size())))
-                    .andExpect(jsonPath("$.data.bookmarks[0].title").value(response.bookmarks().get(0).title()))
-                    .andExpect(jsonPath("$.data.bookmarks[1].title").value(response.bookmarks().get(1).title()));
+                    .andExpect(jsonPath("$.data.size()", CoreMatchers.is(response.data().size())))
+                    .andExpect(jsonPath("$.data[0].title").value(response.data().get(0).title()))
+                    .andExpect(jsonPath("$.data[1].title").value(response.data().get(1).title()));
         }
     }
 

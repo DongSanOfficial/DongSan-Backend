@@ -75,9 +75,9 @@ class UserWalkwayControllerTest {
                             .param("lastId", String.valueOf(walkwayId))
                             .contentType("application/json;charset=UTF-8"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkways", hasSize(walkways.size())))
-                    .andExpect(jsonPath("$.data.walkways[0].name", is(walkways.get(0).name())))
-                    .andExpect(jsonPath("$.data.walkways[0].hashtags", hasSize(walkways.get(0).hashtags().size())))
+                    .andExpect(jsonPath("$.data", hasSize(walkways.size())))
+                    .andExpect(jsonPath("$.data[0].name", is(walkways.get(0).name())))
+                    .andExpect(jsonPath("$.data[0].hashtags", hasSize(walkways.get(0).hashtags().size())))
                     .andReturn();
         }
 
@@ -105,9 +105,9 @@ class UserWalkwayControllerTest {
                             .param("lastId", String.valueOf(walkwayId))
                             .contentType("application/json;charset=UTF-8"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkways", hasSize(walkways.size())))
-                    .andExpect(jsonPath("$.data.walkways[0].name", is(walkways.get(0).name())))
-                    .andExpect(jsonPath("$.data.walkways[0].hashtags", hasSize(walkways.get(0).hashtags().size())))
+                    .andExpect(jsonPath("$.data", hasSize(walkways.size())))
+                    .andExpect(jsonPath("$.data[0].name", is(walkways.get(0).name())))
+                    .andExpect(jsonPath("$.data[0].hashtags", hasSize(walkways.get(0).hashtags().size())))
                     .andReturn();
         }
 
@@ -138,7 +138,7 @@ class UserWalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkwayHistories.size()").value(histories.size()));
+                    .andExpect(jsonPath("$.data.size()").value(histories.size()));
         }
     }
 }

@@ -52,14 +52,14 @@ class MemberControllerTest {
         void it_returns_userProfile() throws Exception {
             // given
             when(memberService.getMember(member.id())).thenReturn(member);
-            GetProfileResponse response = new GetProfileResponse(member);
+            MemberProfileResponse response = new MemberProfileResponse(member);
 
             // when & then
             mockMvc.perform(get("/users/profile"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.profileImageUrl").value(response.profileImageUrl()))
-                    .andExpect(jsonPath("$.data.email").value(response.email()))
-                    .andExpect(jsonPath("$.data.nickname").value(response.nickname()))
+                    .andExpect(jsonPath("$.profileImageUrl").value(response.profileImageUrl()))
+                    .andExpect(jsonPath("$.email").value(response.email()))
+                    .andExpect(jsonPath("$.nickname").value(response.nickname()))
                     .andReturn();
         }
 
