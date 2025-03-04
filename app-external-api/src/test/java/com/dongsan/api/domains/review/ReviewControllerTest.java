@@ -11,6 +11,7 @@ import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import com.dongsan.api.domains.walkway.dto.request.CreateReviewRequest;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.review.CreateReview;
+import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewService;
 import com.dongsan.core.support.util.CursorPagingRequest;
@@ -71,7 +72,7 @@ class ReviewControllerTest {
             Long reviewId = 1L;
             Integer rating = 5;
             CreateReviewRequest request = new CreateReviewRequest(1L, rating, "test content");
-            CreateReview createReview = new CreateReview(customOAuth2User.getMemberId(), walkwayId, request.walkwayHistoryId(), request.rating(), request.content());
+            CreateReview createReview = new CreateReview(customOAuth2User.getMemberId(), walkwayId, request.walkwayHistoryId(), Rating.numOf(request.rating()), request.content());
 
             when(reviewService.createReview(createReview)).thenReturn(reviewId);
 
@@ -129,9 +130,9 @@ class ReviewControllerTest {
             // Given
             Long walkwayId = 1L;
 
-            Map<Integer, Long> ratingCounts = new HashMap<>();
+            Map<Rating, Long> ratingCounts = new HashMap<>();
             for(Integer i = 1; i <= 5; i++) {
-                ratingCounts.put(i, 10L);
+                ratingCounts.put(Rating.numOf(i), 10L);
             }
 
             when(reviewService.getWalkwayRating(walkwayId, member.id())).thenReturn(ratingCounts);

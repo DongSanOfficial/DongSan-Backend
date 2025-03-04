@@ -69,7 +69,7 @@ public class ReviewController {
             @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        Map<Integer, Long> ratingCounts = reviewService.getWalkwayRating(walkwayId, customOAuth2User.getMemberId());
+        Map<Rating, Long> ratingCounts = reviewService.getWalkwayRating(walkwayId, customOAuth2User.getMemberId());
         return ApiResponse.success(GetWalkwayRatingResponse.from(ratingCounts));
     }
 }
