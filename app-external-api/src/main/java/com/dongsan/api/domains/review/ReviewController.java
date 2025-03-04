@@ -3,6 +3,7 @@ package com.dongsan.api.domains.review;
 import com.dongsan.api.domains.walkway.dto.request.CreateReviewRequest;
 import com.dongsan.api.support.response.ApiResponse;
 import com.dongsan.core.domains.review.CreateReview;
+import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import com.dongsan.core.domains.review.ReviewService;
@@ -43,7 +44,7 @@ public class ReviewController {
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
         CreateReview createReview
-                = new CreateReview(customOAuth2User.getMemberId(), walkwayId, request.walkwayHistoryId(), request.rating(), request.content());
+                = new CreateReview(customOAuth2User.getMemberId(), walkwayId, request.walkwayHistoryId(), Rating.numOf(request.rating()), request.content());
         Long reviewId = reviewService.createReview(createReview);
         return ApiResponse.success(new CreateReviewResponse(reviewId));
     }

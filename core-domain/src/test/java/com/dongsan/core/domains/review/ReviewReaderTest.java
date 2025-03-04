@@ -120,15 +120,15 @@ class ReviewReaderTest {
         void it_returns_review_count() {
             // given
             Long walkwayId = 1L;
-            Map<Integer, Long> reviewCount = new HashMap<>();
-            Integer rating = 5;
+            Map<Rating, Long> reviewCount = new HashMap<>();
+            Rating rating = Rating.FIVE;
             Long ratingCount = 10L;
             reviewCount.put(rating, ratingCount);
 
             when(reviewRepository.getWalkwayRating(walkwayId)).thenReturn(reviewCount);
 
             // when
-            Map<Integer, Long> result = reviewReader.getWalkwaysRating(walkwayId);
+            Map<Rating, Long> result = reviewReader.getWalkwaysRating(walkwayId);
 
             // then
             assertThat(result.get(rating)).isEqualTo(ratingCount);

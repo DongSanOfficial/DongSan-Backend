@@ -37,7 +37,7 @@ public class ReviewEntity extends BaseEntity {
     protected ReviewEntity() {}
 
     public ReviewEntity(Rating rating, String content, MemberEntity member, WalkwayEntity walkway, WalkwayHistoryEntity walkwayHistory){
-        this.rating = rating.getValue();
+        this.rating = rating.getNum();
         this.content = content;
 
         // 연관관계 매핑
@@ -47,7 +47,7 @@ public class ReviewEntity extends BaseEntity {
     }
 
     public Review toReview() {
-        return new Review(id, new Reviewer(member.getId(), member.getNickname()), walkway.toReviewedWalkway(), Rating.valueOf(rating), content, getCreatedAt());
+        return new Review(id, new Reviewer(member.getId(), member.getNickname()), walkway.toReviewedWalkway(), Rating.numOf(rating), content, getCreatedAt());
     }
 
     public Long getId() {

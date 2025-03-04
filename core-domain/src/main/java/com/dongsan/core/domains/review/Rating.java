@@ -12,19 +12,19 @@ public enum Rating {
     FIVE(5)
     ;
 
-    private final Integer value;
+    private final Integer num;
 
-    Rating(Integer value) {
-        this.value = value;
+    Rating(Integer num) {
+        this.num = num;
     }
 
-    public Integer getValue() {
-        return this.value;
+    public Integer getNum() {
+        return this.num;
     }
 
-    public static Rating valueOf(Integer value) {
+    public static Rating numOf(Integer num) {
         return Arrays.stream(Rating.values())
-                .filter(rating -> rating.value.equals(value))
+                .filter(rating -> rating.num.equals(num))
                 .findFirst()
                 .orElseThrow(() -> new CoreException(CoreErrorCode.INVALID_RATING_VALUE));
     }

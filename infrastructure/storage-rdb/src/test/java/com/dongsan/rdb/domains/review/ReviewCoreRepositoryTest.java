@@ -1,7 +1,6 @@
 package com.dongsan.rdb.domains.review;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.dongsan.common.support.RepositoryTest;
@@ -26,7 +25,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -199,9 +197,9 @@ class ReviewCoreRepositoryTest extends RepositoryTest {
             List<Review> result = reviewCoreRepository.getWalkwayReviewsRating(size, walkwayId, null, null);
 
             // Then
-            Integer beforeRating = result.get(0).rating().getValue();
+            Integer beforeRating = result.get(0).rating().getNum();
             for(int count = 1; count < 5; count++) {
-                Integer currentRating = result.get(count).rating().getValue();
+                Integer currentRating = result.get(count).rating().getNum();
                 assertThat(currentRating).isLessThanOrEqualTo(beforeRating);
                 beforeRating = currentRating;
             }
@@ -224,7 +222,7 @@ class ReviewCoreRepositoryTest extends RepositoryTest {
                 WalkwayHistoryEntity walkwayHistoryEntity = WalkwayHistoryFixture.createWalkwayHistory(memberEntity,
                         walkwayEntity);
                 em.persist(walkwayHistoryEntity);
-                ReviewEntity reviewEntity = ReviewEntityFixture.createReview(memberEntity, walkwayEntity, walkwayHistoryEntity, Rating.valueOf(i), "test");
+                ReviewEntity reviewEntity = ReviewEntityFixture.createReview(memberEntity, walkwayEntity, walkwayHistoryEntity, Rating.numOf(i), "test");
                 reviewEntities.add(reviewEntity);
                 em.persist(reviewEntity);
             }
@@ -234,11 +232,12 @@ class ReviewCoreRepositoryTest extends RepositoryTest {
         @DisplayName("각 별점의 개수를 저장한 튜플 리스트를 반환한다.")
         void it_returns_rating_tuple_list() {
             // When
-            Map<Integer, Long> result = reviewCoreRepository.getWalkwayRating(walkwayEntity.getId());
+            Map<Rating, Long> result = reviewCoreRepository.getWalkwayRating(walkwayEntity.getId());
 
             // Then
-            for(Integer ratingCount : result.keySet()) {
-                assertThat(result.get(ratingCount)).isEqualTo(1L);           }
+            for(Rating rating : result.keySet()) {
+                assertThat(result.get(rating)).isEqualTo(1L);
+            }
         }
     }
 

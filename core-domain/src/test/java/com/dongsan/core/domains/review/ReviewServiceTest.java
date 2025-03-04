@@ -58,7 +58,7 @@ class ReviewServiceTest {
             Long walkwayHistoryId = 1L;
             Rating rating = Rating.FIVE;
             CreateReview createReview = new CreateReview(memberId, walkwayId, walkwayHistoryId, rating, "content");
-            Map<Integer, Long> ratingCounts = new HashMap<>();
+            Map<Rating, Long> ratingCounts = new HashMap<>();
 
             WalkwayHistory walkwayHistory = WalkwayFixture.createWalkwayHistory();
 
@@ -165,23 +165,23 @@ class ReviewServiceTest {
             Walkway walkway = WalkwayFixture.createWalkway();
             Long count = 20L;
 
-            Map<Integer, Long> ratingCounts = new HashMap<>();
+            Map<Rating, Long> ratingCounts = new HashMap<>();
             for(int i = 1; i <= 5; i++) {
-                ratingCounts.put(i, count);
+                ratingCounts.put(Rating.numOf(i), count);
             }
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
             when(reviewReader.getWalkwaysRating(walkwayId)).thenReturn(ratingCounts);
 
             // When
-            Map<Integer, Long> result = reviewService.getWalkwayRating(walkwayId, memberId);
+            Map<Rating, Long> result = reviewService.getWalkwayRating(walkwayId, memberId);
 
             // Then
-            assertThat(result.get(5)).isEqualTo(count);
-            assertThat(result.get(4)).isEqualTo(count);
-            assertThat(result.get(3)).isEqualTo(count);
-            assertThat(result.get(2)).isEqualTo(count);
-            assertThat(result.get(1)).isEqualTo(count);
+            assertThat(result.get(Rating.FIVE)).isEqualTo(count);
+            assertThat(result.get(Rating.FOUR)).isEqualTo(count);
+            assertThat(result.get(Rating.THREE)).isEqualTo(count);
+            assertThat(result.get(Rating.TWO)).isEqualTo(count);
+            assertThat(result.get(Rating.ONE)).isEqualTo(count);
         }
     }
 }

@@ -32,7 +32,7 @@ public class ReviewReader {
         return reviewRepository.existsById(reviewId);
     }
 
-    public Map<Integer, Long> getWalkwaysRating(Long walkwayId) {
+    public Map<Rating, Long> getWalkwaysRating(Long walkwayId) {
         return reviewRepository.getWalkwayRating(walkwayId);
     }
 

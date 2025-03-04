@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -115,8 +116,8 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .where(review.walkway.id.eq(walkwayId),
                         lastRating == null
                                 ? null
-                                : review.rating.lt(lastRating.getValue())
-                                        .or(review.rating.eq(lastRating.getValue())
+                                : review.rating.lt(lastRating.getNum())
+                                        .or(review.rating.eq(lastRating.getNum())
                                                 .and(createdAtLt(lastCreatedAt))
                                         )
                 )
@@ -130,11 +131,14 @@ public class ReviewCoreRepository implements ReviewRepository {
     }
 
     @Override
-    public Map<Integer, Long> getWalkwayRating(Long walkwayId) {
-        return queryFactory.from(review)
+    public Map<Rating, Long> getWalkwayRating(Long walkwayId) {
+        Map<Integer, Long> rawResult = queryFactory.from(review)
                 .where(review.walkway.id.eq(walkwayId))
                 .groupBy(review.rating)
                 .transform(groupBy(review.rating).as(review.rating.count()));
+
+        return rawResult.entrySet().stream()
+                .collect(Collectors.toMap(entry -> Rating.numOf(entry.getKey()), Map.Entry::getValue));
     }
 
     @Override
