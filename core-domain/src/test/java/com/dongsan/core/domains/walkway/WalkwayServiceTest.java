@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import walkway.WalkwayFixture;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("WalkwayService Unit Test")
@@ -169,7 +170,9 @@ class WalkwayServiceTest {
             Long memberId = 1L;
             Long walkwayId = 1L;
             boolean isLiked = false;
+            Walkway walkway = WalkwayFixture.createWalkway();
 
+            when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
             when(walkwayReader.existsLikedWalkway(memberId, walkwayId)).thenReturn(isLiked);
 
             // when
@@ -189,7 +192,9 @@ class WalkwayServiceTest {
             Long memberId = 1L;
             Long walkwayId = 1L;
             boolean isLiked = true;
+            Walkway walkway = WalkwayFixture.createWalkway();
 
+            when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
             when(walkwayReader.existsLikedWalkway(memberId, walkwayId)).thenReturn(isLiked);
 
             // when

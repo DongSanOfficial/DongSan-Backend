@@ -61,9 +61,9 @@ public class WalkwayService {
 
     @Transactional
     public void createLikedWalkway(Long memberId, Long walkwayId) {
-        walkwayValidator.validateWalkwayPrivate(walkwayId);
+        Walkway walkway = walkwayReader.getWalkway(walkwayId);
+        walkwayValidator.validateWalkwayAccess(walkway, memberId);
         boolean isLiked = walkwayReader.existsLikedWalkway(memberId, walkwayId);
-
         if (!isLiked) {
             walkwayWriter.saveLikedWalkway(memberId, walkwayId);
         }
@@ -71,9 +71,9 @@ public class WalkwayService {
 
     @Transactional
     public void deleteLikedWalkway(Long memberId, Long walkwayId) {
-        walkwayValidator.validateWalkwayPrivate(walkwayId);
+        Walkway walkway = walkwayReader.getWalkway(walkwayId);
+        walkwayValidator.validateWalkwayAccess(walkway, memberId);
         boolean isLiked = walkwayReader.existsLikedWalkway(memberId, walkwayId);
-
         if (isLiked) {
             walkwayWriter.deleteLikedWalkway(memberId, walkwayId);
         }
