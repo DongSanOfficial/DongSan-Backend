@@ -167,9 +167,9 @@ public class WalkwayController {
     @Operation(summary = "리뷰 작성 가능한 산책로 이용 기록 보기")
     @GetMapping("/{walkwayId}/history")
     public ResponseEntity<GetWalkwayHistoriesResponse> getHistories(
+            @PathVariable Long walkwayId,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
-            @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
         List<WalkwayHistory> walkwayHistories

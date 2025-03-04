@@ -146,6 +146,6 @@ public class WalkwayService {
 
     public boolean isCanReview(Long walkwayHistoryId) {
         WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(walkwayHistoryId);
-        return walkwayHistory.distance() >= walkwayHistory.walkway().courseInfo().distance();
+        return walkwayHistory.distance() >= (walkwayHistory.walkway().courseInfo().distance()) * 2/3;
     }
 }
