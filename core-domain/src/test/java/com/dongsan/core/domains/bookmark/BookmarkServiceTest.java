@@ -234,7 +234,7 @@ class BookmarkServiceTest {
             PagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
 
             // then
-            assertThat(result.data()).hasSize(markedWalkways.size());
+            assertThat(result.data()).hasSize(2);
             assertThat(result.hasNext()).isTrue();
             verify(bookmarkReader).getBookmark(bookmarkId);
             verify(bookmarkValidator).validateBookmarkOwner(memberId, bookmark);
