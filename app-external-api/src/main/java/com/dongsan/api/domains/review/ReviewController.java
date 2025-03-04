@@ -1,6 +1,5 @@
 package com.dongsan.api.domains.review;
 
-import com.dongsan.api.domains.walkway.dto.request.CreateReviewRequest;
 import com.dongsan.api.support.response.ApiResponse;
 import com.dongsan.core.domains.review.CreateReview;
 import com.dongsan.core.domains.review.Rating;

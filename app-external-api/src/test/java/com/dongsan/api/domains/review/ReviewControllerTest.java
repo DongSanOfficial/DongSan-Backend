@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
-import com.dongsan.api.domains.walkway.dto.request.CreateReviewRequest;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.review.CreateReview;
 import com.dongsan.core.domains.review.Rating;
