@@ -18,7 +18,6 @@ import com.dongsan.core.support.util.PagingResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import member.MemberFixture;

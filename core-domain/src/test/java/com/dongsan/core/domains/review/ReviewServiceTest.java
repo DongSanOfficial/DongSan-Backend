@@ -16,7 +16,6 @@ import com.dongsan.core.support.util.PagingResponse;
 import java.util.EnumMap;
 import review.ReviewFixture;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -178,11 +177,11 @@ class ReviewServiceTest {
             Map<Rating, Long> result = reviewService.getWalkwayRating(walkwayId, memberId);
 
             // Then
-            assertThat(result).containsEntry(Rating.FIVE, count);
-            assertThat(result).containsEntry(Rating.FOUR, count);
-            assertThat(result).containsEntry(Rating.THREE, count);
-            assertThat(result).containsEntry(Rating.TWO, count);
-            assertThat(result).containsEntry(Rating.ONE, count);
+            assertThat(result).containsEntry(Rating.FIVE, count)
+                    .containsEntry(Rating.FOUR, count)
+                    .containsEntry(Rating.THREE, count)
+                    .containsEntry(Rating.TWO, count)
+                    .containsEntry(Rating.ONE, count);
         }
     }
 }

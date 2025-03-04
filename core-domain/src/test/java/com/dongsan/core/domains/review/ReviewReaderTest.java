@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.util.EnumMap;
 import review.ReviewFixture;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
