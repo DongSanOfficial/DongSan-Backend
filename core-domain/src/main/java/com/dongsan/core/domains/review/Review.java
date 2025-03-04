@@ -6,7 +6,7 @@ public record Review(
         Long reviewId,
         Reviewer reviewer,
         ReviewedWalkway reviewedWalkway,
-        Integer rating,
+        Rating rating,
         String content,
         LocalDateTime createdAt
 ) {

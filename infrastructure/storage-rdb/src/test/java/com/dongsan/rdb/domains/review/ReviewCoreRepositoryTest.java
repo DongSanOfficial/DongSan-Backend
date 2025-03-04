@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.dongsan.common.support.RepositoryTest;
+import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
@@ -198,9 +199,9 @@ class ReviewCoreRepositoryTest extends RepositoryTest {
             List<Review> result = reviewCoreRepository.getWalkwayReviewsRating(size, walkwayId, null, null);
 
             // Then
-            Integer beforeRating = result.get(0).rating();
+            Integer beforeRating = result.get(0).rating().getValue();
             for(int count = 1; count < 5; count++) {
-                Integer currentRating = result.get(count).rating();
+                Integer currentRating = result.get(count).rating().getValue();
                 assertThat(currentRating).isLessThanOrEqualTo(beforeRating);
                 beforeRating = currentRating;
             }
@@ -223,7 +224,7 @@ class ReviewCoreRepositoryTest extends RepositoryTest {
                 WalkwayHistoryEntity walkwayHistoryEntity = WalkwayHistoryFixture.createWalkwayHistory(memberEntity,
                         walkwayEntity);
                 em.persist(walkwayHistoryEntity);
-                ReviewEntity reviewEntity = ReviewEntityFixture.createReview(memberEntity, walkwayEntity, walkwayHistoryEntity, i, "test");
+                ReviewEntity reviewEntity = ReviewEntityFixture.createReview(memberEntity, walkwayEntity, walkwayHistoryEntity, Rating.valueOf(i), "test");
                 reviewEntities.add(reviewEntity);
                 em.persist(reviewEntity);
             }

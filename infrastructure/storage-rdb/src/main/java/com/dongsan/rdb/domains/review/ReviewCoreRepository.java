@@ -3,6 +3,7 @@ package com.dongsan.rdb.domains.review;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 import com.dongsan.core.domains.review.CreateReview;
+import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewRepository;
 import com.dongsan.core.domains.walkway.ExposeLevel;
@@ -107,15 +108,15 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .toList();
     }
     @Override
-    public List<Review> getWalkwayReviewsRating(Integer size, Long walkwayId, LocalDateTime lastCreatedAt, Integer lastRating) {
+    public List<Review> getWalkwayReviewsRating(Integer size, Long walkwayId, LocalDateTime lastCreatedAt, Rating lastRating) {
         List<ReviewEntity> reviewEntities = queryFactory.selectFrom(review)
                 .join(review.walkway).fetchJoin()
                 .join(review.member).fetchJoin()
                 .where(review.walkway.id.eq(walkwayId),
                         lastRating == null
                                 ? null
-                                : review.rating.lt(lastRating)
-                                        .or(review.rating.eq(lastRating)
+                                : review.rating.lt(lastRating.getValue())
+                                        .or(review.rating.eq(lastRating.getValue())
                                                 .and(createdAtLt(lastCreatedAt))
                                         )
                 )

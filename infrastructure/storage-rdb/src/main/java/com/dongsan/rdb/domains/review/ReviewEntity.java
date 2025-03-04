@@ -1,5 +1,6 @@
 package com.dongsan.rdb.domains.review;
 
+import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.Reviewer;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
@@ -35,8 +36,8 @@ public class ReviewEntity extends BaseEntity {
 
     protected ReviewEntity() {}
 
-    public ReviewEntity(Integer rating, String content, MemberEntity member, WalkwayEntity walkway, WalkwayHistoryEntity walkwayHistory){
-        this.rating = rating;
+    public ReviewEntity(Rating rating, String content, MemberEntity member, WalkwayEntity walkway, WalkwayHistoryEntity walkwayHistory){
+        this.rating = rating.getValue();
         this.content = content;
 
         // 연관관계 매핑
@@ -46,7 +47,7 @@ public class ReviewEntity extends BaseEntity {
     }
 
     public Review toReview() {
-        return new Review(id, new Reviewer(member.getId(), member.getNickname()), walkway.toReviewedWalkway(), rating, content, getCreatedAt());
+        return new Review(id, new Reviewer(member.getId(), member.getNickname()), walkway.toReviewedWalkway(), Rating.valueOf(rating), content, getCreatedAt());
     }
 
     public Long getId() {

@@ -40,6 +40,7 @@ public enum CoreErrorCode {
     INVALID_SORT_TYPE(BAD_REQUEST, "REVIEW-02", "유효하지 않은 정렬 타입 입니다."),
     NOT_REVIEW_OWNER(FORBIDDEN, "REVIEW-03", "리뷰의 작성자가 아닙니다."),
     CANT_CREATE_REVIEW(BAD_REQUEST, "REVIEW-04", "리뷰를 생성할 수 없습니다."),
+    INVALID_RATING_VALUE(BAD_REQUEST, "REVIEW-05", "유효하지 않은 별점 값 입니다."),
 
     // walkway history
     WALKWAY_HISTORY_NOT_FOUND(NOT_FOUND, "WALKWAY-HISTORY-01", "존재하지 않는 산책로 이용 기록입니다."),
