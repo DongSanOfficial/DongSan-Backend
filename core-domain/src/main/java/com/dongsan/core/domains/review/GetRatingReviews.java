@@ -24,7 +24,7 @@ public class GetRatingReviews implements GetReviews {
     @Transactional(readOnly = true)
     public List<Review> search(Integer size, Review review, Long walkwayId) {
         LocalDateTime lastCreatedAt = null;
-        Integer rating = null;
+        Rating rating = null;
         if (review != null) {
             lastCreatedAt = review.createdAt();
             rating = review.rating();

@@ -56,7 +56,7 @@ class ReviewServiceTest {
             Long walkwayId = 1L;
             Long reviewId = 1L;
             Long walkwayHistoryId = 1L;
-            Integer rating = 5;
+            Rating rating = Rating.FIVE;
             CreateReview createReview = new CreateReview(memberId, walkwayId, walkwayHistoryId, rating, "content");
             Map<Integer, Long> ratingCounts = new HashMap<>();
 
