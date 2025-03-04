@@ -20,7 +20,6 @@ import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
 import com.dongsan.api.domains.walkway.mapper.WalkwayMapper;
 import com.dongsan.api.support.error.ApiErrorCode;
-import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
 import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.domains.image.Image;
@@ -31,12 +30,10 @@ import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.domains.walkway.WalkwayService;
-import com.dongsan.core.support.util.Author;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import com.dongsan.file.service.S3FileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +128,7 @@ class WalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkwayId").value(walkwayId));
+                    .andExpect(jsonPath("$.walkwayId").value(walkwayId));
         }
 
         @Test
@@ -193,7 +190,7 @@ class WalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").exists());
+                    .andExpect(jsonPath("$.courseImageId").exists());
         }
     }
 
@@ -220,7 +217,7 @@ class WalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.name").value(walkway.name()));
+                    .andExpect(jsonPath("$.name").value(walkway.name()));
         }
     }
 
@@ -238,9 +235,9 @@ class WalkwayControllerTest {
             for(long i = 0; i < 5; i++) {
                 bookmarks.add(BookmarkFixture.createBookmarkWithMarkedStatus());
             }
-            CursorPagingResponse<BookmarkWithMarkedStatus> cursorPagingResponse = CursorPagingResponse.from(bookmarks, size);
+            PagingResponse<BookmarkWithMarkedStatus> cursorPagingResponse = PagingResponse.from(bookmarks, size);
 
-            when(bookmarkService.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorPagingRequest(null, size)))
+            when(bookmarkService.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorRequest(null, size)))
                     .thenReturn(cursorPagingResponse);
 
             // When
@@ -250,8 +247,8 @@ class WalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.bookmarks").isArray())
-                    .andExpect(jsonPath("$.data.bookmarks.size()").value(5));
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.size()").value(5));
         }
     }
 
@@ -303,7 +300,7 @@ class WalkwayControllerTest {
             Double distance = 1.3;
             Long lastId = null;
             Integer size = 10;
-            CursorPagingResponse<Walkway> cursorPagingResponse = CursorPagingResponse.from(walkways, size);
+            PagingResponse<Walkway> cursorPagingResponse = PagingResponse.from(walkways, size);
 
             when(walkwayService.searchWalkway(any(), any())).thenReturn(cursorPagingResponse);
             when(walkwayService.existsLikedWalkways(any(), any())).thenReturn(isLiked);
@@ -319,9 +316,9 @@ class WalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkways").isArray())
-                    .andExpect(jsonPath("$.data.walkways").isNotEmpty())
-                    .andExpect(jsonPath("$.data.walkways.size()").value(size));
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.size()").value(size));
         }
 
         @Test
@@ -335,7 +332,7 @@ class WalkwayControllerTest {
             Long lastId = null;
             Integer size = 10;
 
-            CursorPagingResponse<Walkway> cursorPagingResponse = CursorPagingResponse.from(walkways, size);
+            PagingResponse<Walkway> cursorPagingResponse = PagingResponse.from(walkways, size);
 
             when(walkwayService.searchWalkway(any(), any())).thenReturn(cursorPagingResponse);
             when(walkwayService.existsLikedWalkways(any(), any())).thenReturn(isLiked);
@@ -352,9 +349,9 @@ class WalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkways").isArray())
-                    .andExpect(jsonPath("$.data.walkways").isNotEmpty())
-                    .andExpect(jsonPath("$.data.walkways.size()").value(size));
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.size()").value(size));
         }
     }
 
@@ -382,7 +379,7 @@ class WalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkwayHistoryId").value(walkwayHistoryId));
+                    .andExpect(jsonPath("$.walkwayHistoryId").value(walkwayHistoryId));
         }
     }
 
@@ -406,7 +403,7 @@ class WalkwayControllerTest {
 
             // Then
             response.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.walkwayHistories.size()").value(histories.size()));
+                    .andExpect(jsonPath("$.data.size()").value(histories.size()));
         }
     }
 }

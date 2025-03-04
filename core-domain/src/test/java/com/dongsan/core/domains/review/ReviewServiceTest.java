@@ -11,8 +11,8 @@ import com.dongsan.core.domains.walkway.WalkwayReader;
 import com.dongsan.core.domains.walkway.WalkwayValidator;
 import com.dongsan.core.domains.walkway.WalkwayWriter;
 import com.dongsan.core.support.error.CoreException;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import review.ReviewFixture;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +85,7 @@ class ReviewServiceTest {
             Long walkwayId = 1L;
             Long memberId = 1L;
             String type = "rating";
-            CursorPagingRequest cursorPagingRequest = new CursorPagingRequest(null, size);
+            CursorRequest cursorRequest = new CursorRequest(null, size);
 
             Walkway walkway = WalkwayFixture.createWalkway();
             ReviewSort sort = ReviewSort.typeOf(type);
@@ -96,10 +96,10 @@ class ReviewServiceTest {
             }
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
-            when(reviewReader.getWalkwayReviews(cursorPagingRequest.size() + 1, null, walkwayId, sort)).thenReturn(reviews);
+            when(reviewReader.getWalkwayReviews(cursorRequest.size() + 1, null, walkwayId, sort)).thenReturn(reviews);
 
             // When
-            CursorPagingResponse<Review> result = reviewService.getWalkwayReviews(type, walkwayId, memberId, cursorPagingRequest);
+            PagingResponse<Review> result = reviewService.getWalkwayReviews(type, walkwayId, memberId, cursorRequest);
 
             // Then
             assertThat(result.data()).hasSize(size);
@@ -113,7 +113,7 @@ class ReviewServiceTest {
             Long walkwayId = 1L;
             Long memberId = 1L;
             String type = "latest";
-            CursorPagingRequest cursorPagingRequest = new CursorPagingRequest(null, size);
+            CursorRequest cursorRequest = new CursorRequest(null, size);
 
             Walkway walkway = WalkwayFixture.createWalkway();
             ReviewSort sort = ReviewSort.typeOf(type);
@@ -124,10 +124,10 @@ class ReviewServiceTest {
             }
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
-            when(reviewReader.getWalkwayReviews(cursorPagingRequest.size() + 1, null, walkwayId, sort)).thenReturn(reviews);
+            when(reviewReader.getWalkwayReviews(cursorRequest.size() + 1, null, walkwayId, sort)).thenReturn(reviews);
 
             // When
-            CursorPagingResponse<Review> result = reviewService.getWalkwayReviews(type, walkwayId, memberId, cursorPagingRequest);
+            PagingResponse<Review> result = reviewService.getWalkwayReviews(type, walkwayId, memberId, cursorRequest);
 
             // Then
             assertThat(result.data()).hasSize(size);
@@ -141,14 +141,14 @@ class ReviewServiceTest {
             Long walkwayId = 1L;
             Long memberId = 1L;
             String type = "크아아아ㅏ아아아악";
-            CursorPagingRequest cursorPagingRequest = new CursorPagingRequest(null, size);
+            CursorRequest cursorRequest = new CursorRequest(null, size);
 
             Walkway walkway = WalkwayFixture.createWalkway();
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
 
             // When & Then
-            assertThatThrownBy(() -> reviewService.getWalkwayReviews(type, walkwayId, memberId, cursorPagingRequest))
+            assertThatThrownBy(() -> reviewService.getWalkwayReviews(type, walkwayId, memberId, cursorRequest))
                     .isInstanceOf(CoreException.class);
         }
     }

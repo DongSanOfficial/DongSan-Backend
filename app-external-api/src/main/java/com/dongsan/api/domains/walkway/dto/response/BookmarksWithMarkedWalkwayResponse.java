@@ -1,27 +1,17 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
-import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
-import com.dongsan.core.support.util.CursorPagingResponse;
 import java.util.List;
-import java.util.Map;
 
 public record BookmarksWithMarkedWalkwayResponse(
-        List<BookmarkWithMarkedWalkway> bookmarks,
-        Boolean hasNext
+        Long bookmarkId,
+        String name,
+        Boolean marked
 ) {
-    public BookmarksWithMarkedWalkwayResponse(CursorPagingResponse<BookmarkWithMarkedStatus> response) {
-        this(
-                response.data().stream()
-                        .map(bookmark -> new BookmarkWithMarkedWalkway(bookmark.bookmarkId(), bookmark.title(), bookmark.marked()))
-                        .toList(),
-                response.hasNext()
-        );
+    public static List<BookmarksWithMarkedWalkwayResponse> from(List<BookmarkWithMarkedStatus> bookmarks) {
+        return bookmarks.stream()
+                .map(bookmark -> new BookmarksWithMarkedWalkwayResponse(bookmark.bookmarkId(), bookmark.title(), bookmark.marked()))
+                .toList();
     }
 
-    public record BookmarkWithMarkedWalkway (
-            Long bookmarkId,
-            String name,
-            Boolean marked
-    ) {}
 }

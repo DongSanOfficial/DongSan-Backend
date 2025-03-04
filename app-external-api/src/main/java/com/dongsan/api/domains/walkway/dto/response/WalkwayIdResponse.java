@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
 
-public record CreateWalkwayResponse(
+public record WalkwayIdResponse(
         Long walkwayId
 ) {
 }

@@ -2,12 +2,12 @@ package com.dongsan.api.domains.member;
 
 import com.dongsan.core.domains.member.Member;
 
-public record GetProfileResponse(
+public record MemberProfileResponse(
         String profileImageUrl,
         String email,
         String nickname
 ) {
-    public GetProfileResponse(Member member){
+    public MemberProfileResponse(Member member){
         this(
                 member.profileImageUrl(),
                 member.email(),

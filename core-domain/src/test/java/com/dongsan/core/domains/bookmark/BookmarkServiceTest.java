@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayReader;
 import com.dongsan.core.domains.walkway.WalkwayValidator;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -162,7 +162,7 @@ class BookmarkServiceTest {
             // given
             Long memberId = 1L;
             Long bookmarkId = 10L;
-            CursorPagingRequest paging = new CursorPagingRequest(null, 10);
+            CursorRequest paging = new CursorRequest(null, 10);
             Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
             List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(
                     createMarkedWalkway(1L, memberId),
@@ -173,7 +173,7 @@ class BookmarkServiceTest {
             when(bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, null, memberId)).thenReturn(markedWalkways);
 
             // when
-            CursorPagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
+            PagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
 
             // then
             assertThat(result.data()).hasSize(markedWalkways.size());
@@ -188,7 +188,7 @@ class BookmarkServiceTest {
             // given
             Long memberId = 1L;
             Long bookmarkId = 10L;
-            CursorPagingRequest paging = new CursorPagingRequest(1L, 10);
+            CursorRequest paging = new CursorRequest(1L, 10);
             Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
             Walkway walkway =  new Walkway(paging.lastId(), null, null, null, null, null, null, null, null); // TODO : fixture로 추후 변경
             LocalDateTime lastCreatedAt = LocalDateTime.now().minusHours(10);
@@ -203,7 +203,7 @@ class BookmarkServiceTest {
             when(bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, lastCreatedAt, memberId)).thenReturn(markedWalkways);
 
             // when
-            CursorPagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
+            PagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
 
             // then
             assertThat(result.data()).hasSize(markedWalkways.size());
@@ -220,7 +220,7 @@ class BookmarkServiceTest {
             // given
             Long memberId = 1L;
             Long bookmarkId = 10L;
-            CursorPagingRequest paging = new CursorPagingRequest(null, 2);
+            CursorRequest paging = new CursorRequest(null, 2);
             Bookmark bookmark = createBookmark(bookmarkId, "북마크1");
             List<MarkedWalkway> markedWalkways = new ArrayList<>(List.of(
                     createMarkedWalkway(1L, memberId),
@@ -231,7 +231,7 @@ class BookmarkServiceTest {
             when(bookmarkReader.getBookmarkWalkway(bookmarkId, paging.size()+1, null, memberId)).thenReturn(markedWalkways);
 
             // when
-            CursorPagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
+            PagingResponse<MarkedWalkway> result = bookmarkService.getBookmarkWalkways(memberId, bookmarkId, paging);
 
             // then
             assertThat(result.data()).hasSize(markedWalkways.size());
@@ -249,7 +249,7 @@ class BookmarkServiceTest {
         void lastId가_null이면_북마크들의_첫_페이지를_반환한다(){
             // given
             Long memberId = 1L;
-            CursorPagingRequest paging = new CursorPagingRequest(null, 10);
+            CursorRequest paging = new CursorRequest(null, 10);
             List<Bookmark> bookmarks = new ArrayList<>(List.of(
                     createBookmark(),
                     createBookmark(),
@@ -258,7 +258,7 @@ class BookmarkServiceTest {
             when(bookmarkReader.getUserBookmarkNames(null, memberId, paging.size())).thenReturn(bookmarks);
 
             // when
-            CursorPagingResponse<Bookmark> result = bookmarkService.getUserBookmarksName(memberId, paging);
+            PagingResponse<Bookmark> result = bookmarkService.getUserBookmarksName(memberId, paging);
 
             // then
             assertThat(result.data()).hasSize(bookmarks.size());
@@ -270,7 +270,7 @@ class BookmarkServiceTest {
         void lastId가_존재하면_커서_다음의_북마크들을_반환한다(){
             // given
             Long memberId = 1L;
-            CursorPagingRequest paging = new CursorPagingRequest(1L, 10);
+            CursorRequest paging = new CursorRequest(1L, 10);
             Bookmark bookmark = createBookmark();
             List<Bookmark> bookmarks = new ArrayList<>(List.of(
                     createBookmark(),
@@ -281,7 +281,7 @@ class BookmarkServiceTest {
             when(bookmarkReader.getUserBookmarkNames(bookmark.createdAt(), memberId, paging.size())).thenReturn(bookmarks);
 
             // when
-            CursorPagingResponse<Bookmark> result = bookmarkService.getUserBookmarksName(memberId, paging);
+            PagingResponse<Bookmark> result = bookmarkService.getUserBookmarksName(memberId, paging);
 
             // then
             assertThat(result.data()).hasSize(bookmarks.size());
@@ -300,7 +300,7 @@ class BookmarkServiceTest {
             // given
             Long memberId = 1L;
             Long walkwayId = 10L;
-            CursorPagingRequest paging = new CursorPagingRequest(null, 10);
+            CursorRequest paging = new CursorRequest(null, 10);
             List<BookmarkWithMarkedStatus> bookmarks = new ArrayList<>(List.of(
                     createBookmarkWithMarkedStatus(),
                     createBookmarkWithMarkedStatus(),
@@ -309,7 +309,7 @@ class BookmarkServiceTest {
             when(bookmarkReader.getBookmarksWithMarkedStatus(walkwayId, memberId, null, paging.size())).thenReturn(bookmarks);
 
             // when
-            CursorPagingResponse<BookmarkWithMarkedStatus> result = bookmarkService.getBookmarksWithMarkedWalkway(memberId, walkwayId, paging);
+            PagingResponse<BookmarkWithMarkedStatus> result = bookmarkService.getBookmarksWithMarkedWalkway(memberId, walkwayId, paging);
 
             // then
             assertThat(result.data()).hasSize(bookmarks.size());
@@ -323,7 +323,7 @@ class BookmarkServiceTest {
             // given
             Long memberId = 1L;
             Long walkwayId = 10L;
-            CursorPagingRequest paging = new CursorPagingRequest(1L, 10);
+            CursorRequest paging = new CursorRequest(1L, 10);
             Bookmark bookmark = createBookmark();
             List<BookmarkWithMarkedStatus> bookmarks = new ArrayList<>(List.of(
                     createBookmarkWithMarkedStatus(),
@@ -334,7 +334,7 @@ class BookmarkServiceTest {
             when(bookmarkReader.getBookmarksWithMarkedStatus(walkwayId, memberId, bookmark.createdAt(), paging.size())).thenReturn(bookmarks);
 
             // when
-            CursorPagingResponse<BookmarkWithMarkedStatus> result = bookmarkService.getBookmarksWithMarkedWalkway(memberId, walkwayId, paging);
+            PagingResponse<BookmarkWithMarkedStatus> result = bookmarkService.getBookmarksWithMarkedWalkway(memberId, walkwayId, paging);
 
             // then
             assertThat(result.data()).hasSize(bookmarks.size());

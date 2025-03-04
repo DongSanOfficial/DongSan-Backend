@@ -6,8 +6,8 @@ import com.dongsan.core.domains.walkway.WalkwayHistoryValidator;
 import com.dongsan.core.domains.walkway.WalkwayReader;
 import com.dongsan.core.domains.walkway.WalkwayValidator;
 import com.dongsan.core.domains.walkway.WalkwayWriter;
-import com.dongsan.core.support.util.CursorPagingRequest;
-import com.dongsan.core.support.util.CursorPagingResponse;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,17 +66,17 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public CursorPagingResponse<Review> getWalkwayReviews(String type, Long walkwayId, Long memberId, CursorPagingRequest cursorPagingRequest) {
+    public PagingResponse<Review> getWalkwayReviews(String type, Long walkwayId, Long memberId, CursorRequest cursorRequest) {
         Walkway walkway = walkwayReader.getWalkway(walkwayId);
         walkwayValidator.validateWalkwayAccess(walkway, memberId);
 
         Review review = null;
-        if (cursorPagingRequest.lastId() != null) {
-            review = reviewReader.getReview(cursorPagingRequest.lastId());
+        if (cursorRequest.lastId() != null) {
+            review = reviewReader.getReview(cursorRequest.lastId());
         }
         ReviewSort sort = ReviewSort.typeOf(type);
-        List<Review> reviews = reviewReader.getWalkwayReviews(cursorPagingRequest.size() + 1, review, walkwayId, sort);
-        return CursorPagingResponse.from(reviews, cursorPagingRequest.size());
+        List<Review> reviews = reviewReader.getWalkwayReviews(cursorRequest.size() + 1, review, walkwayId, sort);
+        return PagingResponse.from(reviews, cursorRequest.size());
     }
 
     @Transactional(readOnly = true)
