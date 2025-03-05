@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface ReviewRepository {
     List<Review> getUserReviews(Integer size, LocalDateTime lastCreatedAt, Long memberId);
     List<Review> getWalkwayReviewsLatest(Integer size, Long walkwayId, LocalDateTime lastCreatedAt);
-    List<Review> getWalkwayReviewsRating(Integer size, Long walkwayId, LocalDateTime lastCreatedAt, Integer lastRating);
-    Map<Integer, Long> getWalkwayRating(Long walkwayId);
+    List<Review> getWalkwayReviewsRating(Integer size, Long walkwayId, LocalDateTime lastCreatedAt, Rating lastRating);
+    Map<Rating, Long> getWalkwayRating(Long walkwayId);
     Optional<Review> findById(Long reviewId);
     boolean existsById(Long reviewId);
     boolean existsByIdAndMemberId(Long reviewId, Long memberId);

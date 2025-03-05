@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -101,7 +100,7 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
         List<WalkwayEntity> walkwayEntities = walkwayQueryDSLRepository.getUserLikedWalkway(memberId, size, lastCreatedAt);
         return walkwayEntities.stream()
                 .map(WalkwayEntity::toWalkway)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -109,7 +108,7 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
         List<WalkwayEntity> walkwayEntities = walkwayQueryDSLRepository.getUserWalkway(memberId, size, lastCreatedAt);
         return walkwayEntities.stream()
                 .map(WalkwayEntity::toWalkway)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -156,8 +155,8 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
     }
 
     @Override
-    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId) {
-        List<WalkwayHistoryEntity> walkwayHistoryEntities = walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId);
+    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size, LocalDateTime lastCreatedAt) {
+        List<WalkwayHistoryEntity> walkwayHistoryEntities = walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId, size, lastCreatedAt);
         return walkwayHistoryEntities.stream()
                 .map(WalkwayHistoryEntity::toWalkwayHistory)
                 .toList();

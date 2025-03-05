@@ -18,7 +18,6 @@ import com.dongsan.api.domains.walkway.dto.WalkwayCoordinate;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
-import com.dongsan.api.domains.walkway.mapper.WalkwayMapper;
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.core.domains.bookmark.BookmarkService;
 import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
@@ -114,8 +113,7 @@ class WalkwayControllerTest {
                     course
             );
             Image image = createImage();
-            CreateWalkway createWalkway
-                    = WalkwayMapper.toCreateWalkway(createWalkwayRequest, image, customOAuth2User.getMemberId());
+            CreateWalkway createWalkway = createWalkwayRequest.toCreateWalkway(image, customOAuth2User.getMemberId());
             Long walkwayId = 1L;
 
             when(imageService.getImage(createWalkwayRequest.courseImageId())).thenReturn(image);
@@ -298,7 +296,6 @@ class WalkwayControllerTest {
             Double latitude = 1.0;
             Double longitude = 1.0;
             Double distance = 1.3;
-            Long lastId = null;
             Integer size = 10;
             PagingResponse<Walkway> cursorPagingResponse = PagingResponse.from(walkways, size);
 
@@ -329,7 +326,6 @@ class WalkwayControllerTest {
             Double latitude = 1.0;
             Double longitude = 1.0;
             Double distance = 1.3;
-            Long lastId = null;
             Integer size = 10;
 
             PagingResponse<Walkway> cursorPagingResponse = PagingResponse.from(walkways, size);
@@ -392,13 +388,17 @@ class WalkwayControllerTest {
             // Given
             Long walkwayId = 1L;
             Long memberId = member.id();
+            Integer size = 1;
+            Long lastHistoryId = 1L;
 
             List<WalkwayHistory> histories = List.of(WalkwayFixture.createWalkwayHistory());
 
-            when(walkwayService.getCanReviewWalkwayHistory(memberId, walkwayId)).thenReturn(histories);
+            when(walkwayService.getCanReviewWalkwayHistory(memberId, walkwayId, size, lastHistoryId)).thenReturn(histories);
 
             // When
             ResultActions response = mockMvc.perform(get("/walkways/{walkwayId}/history", walkwayId)
+                    .param("size", size.toString())
+                    .param("lastId", lastHistoryId.toString())
                     .contentType(MediaType.APPLICATION_JSON));
 
             // Then

@@ -61,9 +61,9 @@ public class WalkwayService {
 
     @Transactional
     public void createLikedWalkway(Long memberId, Long walkwayId) {
-        walkwayValidator.validateWalkwayPrivate(walkwayId);
+        Walkway walkway = walkwayReader.getWalkway(walkwayId);
+        walkwayValidator.validateWalkwayAccess(walkway, memberId);
         boolean isLiked = walkwayReader.existsLikedWalkway(memberId, walkwayId);
-
         if (!isLiked) {
             walkwayWriter.saveLikedWalkway(memberId, walkwayId);
         }
@@ -71,9 +71,9 @@ public class WalkwayService {
 
     @Transactional
     public void deleteLikedWalkway(Long memberId, Long walkwayId) {
-        walkwayValidator.validateWalkwayPrivate(walkwayId);
+        Walkway walkway = walkwayReader.getWalkway(walkwayId);
+        walkwayValidator.validateWalkwayAccess(walkway, memberId);
         boolean isLiked = walkwayReader.existsLikedWalkway(memberId, walkwayId);
-
         if (isLiked) {
             walkwayWriter.deleteLikedWalkway(memberId, walkwayId);
         }
@@ -123,9 +123,15 @@ public class WalkwayService {
         return walkwayWriter.saveWalkwayHistory(createWalkwayHistory);
     }
 
-    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId) {
+    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size, Long lastWalkwayHistoryId) {
         walkwayValidator.validateWalkwayPrivate(walkwayId);
-        return walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId);
+        LocalDateTime lastCreatedAt = null;
+        if (lastWalkwayHistoryId != null) {
+            WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(lastWalkwayHistoryId);
+            lastCreatedAt = walkwayHistory.createdAt();
+        }
+
+        return walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
     }
 
     public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, Long lastWalkwayHistoryId, int size) {
@@ -140,6 +146,6 @@ public class WalkwayService {
 
     public boolean isCanReview(Long walkwayHistoryId) {
         WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(walkwayHistoryId);
-        return walkwayHistory.distance() >= walkwayHistory.walkway().courseInfo().distance();
+        return walkwayHistory.distance() >= (walkwayHistory.walkway().courseInfo().distance()) * 2/3;
     }
 }

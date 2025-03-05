@@ -238,12 +238,13 @@ class WalkwayReaderTest {
             // given
             Long walkwayId = 1L;
             Long memberId = 1L;
+            int size = 1;
             List<WalkwayHistory> walkwayHistories = List.of(WalkwayFixture.createWalkwayHistory());
 
-            when(walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId)).thenReturn(walkwayHistories);
+            when(walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, null)).thenReturn(walkwayHistories);
 
             // when
-            List<WalkwayHistory> result = walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId);
+            List<WalkwayHistory> result = walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size, null);
 
             // then
             assertThat(result).hasSize(walkwayHistories.size());

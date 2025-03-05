@@ -17,7 +17,7 @@ public record MyReviewResponse(
                 review.reviewedWalkway().walkwayId(),
                 review.reviewedWalkway().walkwayName(),
                 review.createdAt().toString(),
-                review.rating(),
+                review.rating().getNum(),
                 review.content()
         );
     }

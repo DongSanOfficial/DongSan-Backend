@@ -13,9 +13,9 @@ import com.dongsan.core.domains.walkway.WalkwayWriter;
 import com.dongsan.core.support.error.CoreException;
 import com.dongsan.core.support.util.CursorRequest;
 import com.dongsan.core.support.util.PagingResponse;
+import java.util.EnumMap;
 import review.ReviewFixture;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -56,9 +56,9 @@ class ReviewServiceTest {
             Long walkwayId = 1L;
             Long reviewId = 1L;
             Long walkwayHistoryId = 1L;
-            Integer rating = 5;
+            Rating rating = Rating.FIVE;
             CreateReview createReview = new CreateReview(memberId, walkwayId, walkwayHistoryId, rating, "content");
-            Map<Integer, Long> ratingCounts = new HashMap<>();
+            Map<Rating, Long> ratingCounts = new EnumMap<>(Rating.class);
 
             WalkwayHistory walkwayHistory = WalkwayFixture.createWalkwayHistory();
 
@@ -165,23 +165,23 @@ class ReviewServiceTest {
             Walkway walkway = WalkwayFixture.createWalkway();
             Long count = 20L;
 
-            Map<Integer, Long> ratingCounts = new HashMap<>();
+            Map<Rating, Long> ratingCounts = new EnumMap<>(Rating.class);
             for(int i = 1; i <= 5; i++) {
-                ratingCounts.put(i, count);
+                ratingCounts.put(Rating.numOf(i), count);
             }
 
             when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
             when(reviewReader.getWalkwaysRating(walkwayId)).thenReturn(ratingCounts);
 
             // When
-            Map<Integer, Long> result = reviewService.getWalkwayRating(walkwayId, memberId);
+            Map<Rating, Long> result = reviewService.getWalkwayRating(walkwayId, memberId);
 
             // Then
-            assertThat(result.get(5)).isEqualTo(count);
-            assertThat(result.get(4)).isEqualTo(count);
-            assertThat(result.get(3)).isEqualTo(count);
-            assertThat(result.get(2)).isEqualTo(count);
-            assertThat(result.get(1)).isEqualTo(count);
+            assertThat(result).containsEntry(Rating.FIVE, count)
+                    .containsEntry(Rating.FOUR, count)
+                    .containsEntry(Rating.THREE, count)
+                    .containsEntry(Rating.TWO, count)
+                    .containsEntry(Rating.ONE, count);
         }
     }
 }

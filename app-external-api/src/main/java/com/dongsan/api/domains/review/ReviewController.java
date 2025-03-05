@@ -1,9 +1,9 @@
 package com.dongsan.api.domains.review;
 
 import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
-import com.dongsan.api.domains.walkway.dto.request.CreateReviewRequest;
 import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.core.domains.review.CreateReview;
+import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewService;
 import com.dongsan.core.support.util.CursorRequest;
@@ -44,7 +44,7 @@ public class ReviewController {
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
         CreateReview createReview
-                = new CreateReview(customOAuth2User.getMemberId(), walkwayId, request.walkwayHistoryId(), request.rating(), request.content());
+                = new CreateReview(customOAuth2User.getMemberId(), walkwayId, request.walkwayHistoryId(), Rating.numOf(request.rating()), request.content());
         Long reviewId = reviewService.createReview(createReview);
         return ResponseEntity.ok(new CreateReviewResponse(reviewId));
     }
@@ -69,7 +69,7 @@ public class ReviewController {
             @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        Map<Integer, Long> ratingCounts = reviewService.getWalkwayRating(walkwayId, customOAuth2User.getMemberId());
+        Map<Rating, Long> ratingCounts = reviewService.getWalkwayRating(walkwayId, customOAuth2User.getMemberId());
         return ResponseEntity.ok(WalkwayRatingResponse.from(ratingCounts));
     }
 }

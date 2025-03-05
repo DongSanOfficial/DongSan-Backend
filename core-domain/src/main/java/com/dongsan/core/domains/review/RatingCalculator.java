@@ -3,7 +3,9 @@ package com.dongsan.core.domains.review;
 import java.util.Map;
 
 public class RatingCalculator {
-    public static Double calculateAverageRating(Map<Integer, Long> ratingCounts) {
+    private RatingCalculator() {}
+
+    public static Double calculateAverageRating(Map<Rating, Long> ratingCounts) {
         Double totalRating = calculateTotalRating(ratingCounts);
         Integer totalReviewCount = calculateTotalReviewCount(ratingCounts);
 
@@ -13,13 +15,13 @@ public class RatingCalculator {
         return 0.0;
     }
 
-    public static Double calculateTotalRating(Map<Integer, Long> ratingCounts) {
+    public static Double calculateTotalRating(Map<Rating, Long> ratingCounts) {
         return ratingCounts.entrySet().stream()
-                .mapToDouble(entry -> entry.getKey() * entry.getValue())
+                .mapToDouble(entry -> entry.getKey().getNum() * entry.getValue())
                 .sum();
     }
 
-    public static Integer calculateTotalReviewCount(Map<Integer, Long> ratingCounts) {
+    public static Integer calculateTotalReviewCount(Map<Rating, Long> ratingCounts) {
         return (int) ratingCounts.values().stream()
                 .mapToLong(Long::longValue)
                 .sum();

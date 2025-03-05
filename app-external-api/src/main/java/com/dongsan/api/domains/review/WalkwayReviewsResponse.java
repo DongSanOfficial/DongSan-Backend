@@ -19,7 +19,7 @@ public record WalkwayReviewsResponse(
                 review.reviewer().nickname(),
                 review.createdAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
                 TimeFormat.formatTimeString(review.createdAt()),
-                review.rating(),
+                review.rating().getNum(),
                 review.content()
         );
     }

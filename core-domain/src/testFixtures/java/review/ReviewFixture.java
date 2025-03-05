@@ -1,5 +1,6 @@
 package review;
 
+import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewedWalkway;
 import com.dongsan.core.domains.review.Reviewer;
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class ReviewFixture {
     private static final Long ID = 1L;
-    private static final Integer RATING = 5;
+    private static final Rating RATING = Rating.FIVE;
     private static final String CONTENT = "test content";
     private static final LocalDateTime CREATED_AT = LocalDateTime.now();
     private static final String NICKNAME = "member";

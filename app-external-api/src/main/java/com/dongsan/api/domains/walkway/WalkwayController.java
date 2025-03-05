@@ -11,7 +11,6 @@ import com.dongsan.api.domains.walkway.dto.response.SearchWalkwayResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayDetailResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayHistoryResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayIdResponse;
-import com.dongsan.api.domains.walkway.mapper.WalkwayMapper;
 import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.core.domains.bookmark.BookmarkService;
 import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
@@ -66,6 +65,7 @@ public class WalkwayController {
         this.imageService = imageService;
     }
 
+
     @Operation(summary = "산책로 등록")
     @PostMapping("")
     public ResponseEntity<WalkwayIdResponse> createWalkway(
@@ -73,7 +73,7 @@ public class WalkwayController {
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
         Image image = imageService.getImage(createWalkwayRequest.courseImageId());
-        CreateWalkway createWalkway = WalkwayMapper.toCreateWalkway(createWalkwayRequest, image, customOAuth2User.getMemberId());
+        CreateWalkway createWalkway = createWalkwayRequest.toCreateWalkway(image, customOAuth2User.getMemberId());
         Long walkwayId = walkwayService.createWalkway(createWalkway);
         return ResponseEntity.ok(new WalkwayIdResponse(walkwayId));
     }
@@ -121,7 +121,7 @@ public class WalkwayController {
             @Validated @RequestBody UpdateWalkwayRequest updateWalkwayRequest,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        UpdateWalkway updateWalkway = WalkwayMapper.toUpdateWalkway(updateWalkwayRequest, walkwayId);
+        UpdateWalkway updateWalkway = updateWalkwayRequest.toUpdateWalkway(walkwayId);
         walkwayService.updateWalkway(updateWalkway, customOAuth2User.getMemberId());
         return ResponseEntity.ok().build();
     }
@@ -168,10 +168,12 @@ public class WalkwayController {
     @GetMapping("/{walkwayId}/history")
     public ResponseEntity<GetWalkwayHistoriesResponse> getHistories(
             @PathVariable Long walkwayId,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
         List<WalkwayHistory> walkwayHistories
-                = walkwayService.getCanReviewWalkwayHistory(walkwayId, customOAuth2User.getMemberId());
+                = walkwayService.getCanReviewWalkwayHistory(walkwayId, customOAuth2User.getMemberId(), size, lastId);
 
         return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(walkwayHistories));
     }

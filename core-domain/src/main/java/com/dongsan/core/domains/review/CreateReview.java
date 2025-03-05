@@ -4,7 +4,7 @@ public record CreateReview(
         Long memberId,
         Long walkwayId,
         Long walkwayHistoryId,
-        Integer rating,
+        Rating rating,
         String content
 ) {
 }

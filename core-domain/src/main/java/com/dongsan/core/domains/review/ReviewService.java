@@ -54,7 +54,7 @@ public class ReviewService {
         Long reviewId = reviewWriter.createReview(createReview);
 
         // 산책로 별점 수정
-        Map<Integer, Long> ratingCounts = reviewReader.getWalkwaysRating(createReview.walkwayId());
+        Map<Rating, Long> ratingCounts = reviewReader.getWalkwaysRating(createReview.walkwayId());
         Integer totalReviewCount = RatingCalculator.calculateTotalReviewCount(ratingCounts);
         Double avgRating = totalReviewCount > 0
                 ? Math.round(RatingCalculator.calculateAverageRating(ratingCounts) * 10.0) / 10.0
@@ -80,7 +80,7 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public Map<Integer, Long> getWalkwayRating(Long walkwayId, Long memberId) {
+    public Map<Rating, Long> getWalkwayRating(Long walkwayId, Long memberId) {
         Walkway walkway = walkwayReader.getWalkway(walkwayId);
         walkwayValidator.validateWalkwayAccess(walkway, memberId);
 

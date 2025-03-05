@@ -45,9 +45,10 @@ class WalkwayHistoryQueryDSLRepositoryTest extends RepositoryTest {
             // given
             Long memberId = member.getId();
             Long walkwayId = walkway.getId();
+            int size = 5;
 
             // when
-            List<WalkwayHistoryEntity> result = walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId);
+            List<WalkwayHistoryEntity> result = walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId, size, null);
 
             // then
             assertThat(result).hasSize(5);

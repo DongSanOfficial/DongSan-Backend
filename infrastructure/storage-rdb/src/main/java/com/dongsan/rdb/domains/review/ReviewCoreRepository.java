@@ -3,6 +3,7 @@ package com.dongsan.rdb.domains.review;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 import com.dongsan.core.domains.review.CreateReview;
+import com.dongsan.core.domains.review.Rating;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewRepository;
 import com.dongsan.core.domains.walkway.ExposeLevel;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -107,15 +109,15 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .toList();
     }
     @Override
-    public List<Review> getWalkwayReviewsRating(Integer size, Long walkwayId, LocalDateTime lastCreatedAt, Integer lastRating) {
+    public List<Review> getWalkwayReviewsRating(Integer size, Long walkwayId, LocalDateTime lastCreatedAt, Rating lastRating) {
         List<ReviewEntity> reviewEntities = queryFactory.selectFrom(review)
                 .join(review.walkway).fetchJoin()
                 .join(review.member).fetchJoin()
                 .where(review.walkway.id.eq(walkwayId),
                         lastRating == null
                                 ? null
-                                : review.rating.lt(lastRating)
-                                        .or(review.rating.eq(lastRating)
+                                : review.rating.lt(lastRating.getNum())
+                                        .or(review.rating.eq(lastRating.getNum())
                                                 .and(createdAtLt(lastCreatedAt))
                                         )
                 )
@@ -129,11 +131,14 @@ public class ReviewCoreRepository implements ReviewRepository {
     }
 
     @Override
-    public Map<Integer, Long> getWalkwayRating(Long walkwayId) {
-        return queryFactory.from(review)
+    public Map<Rating, Long> getWalkwayRating(Long walkwayId) {
+        Map<Integer, Long> rawResult = queryFactory.from(review)
                 .where(review.walkway.id.eq(walkwayId))
                 .groupBy(review.rating)
                 .transform(groupBy(review.rating).as(review.rating.count()));
+
+        return rawResult.entrySet().stream()
+                .collect(Collectors.toMap(entry -> Rating.numOf(entry.getKey()), Map.Entry::getValue));
     }
 
     @Override

@@ -69,7 +69,6 @@ class WalkwayCoreJpaRepositoryTest {
             LineString lineString = geometryFactory.createLineString(coordinates);
 
             Long memberId = 1L;
-            Long walkwayId = 1L;
             CreateWalkway createWalkway
                     = new CreateWalkway("Sample", 2.5, 30, ExposeLevel.PUBLIC, point, point, "walkway.", lineString, null,null, memberId);
 
@@ -332,16 +331,18 @@ class WalkwayCoreJpaRepositoryTest {
             // given
             Long walkwayId = 1L;
             Long memberId = 1L;
+            int size = 1;
             MemberEntity memberEntity = MemberEntityFixture.createMember();
             WalkwayEntity walkwayEntity = WalkwayEntityFixture.createWalkway(memberEntity);
             List<WalkwayHistoryEntity> walkwayHistoryEntities = List.of(WalkwayHistoryFixture.createWalkwayHistory(memberEntity, walkwayEntity));
             List<WalkwayHistory> walkwayHistories = walkwayHistoryEntities.stream()
                     .map(WalkwayHistoryEntity::toWalkwayHistory)
                     .toList();
-            when(walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId)).thenReturn(walkwayHistoryEntities);
+
+            when(walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId, size, null)).thenReturn(walkwayHistoryEntities);
 
             // when
-            List<WalkwayHistory> result = walkwayCoreJpaRepository.getCanReviewWalkwayHistory(walkwayId, memberId);
+            List<WalkwayHistory> result = walkwayCoreJpaRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, null);
 
             // then
             assertThat(result).hasSize(walkwayHistories.size());
