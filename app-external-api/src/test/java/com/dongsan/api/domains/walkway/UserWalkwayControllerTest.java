@@ -126,7 +126,6 @@ class UserWalkwayControllerTest {
             int size = 10;
             Long lastId = 1L;
             Long memberId = member.id();
-            Walkway walkway = createWalkwayWithId(1L);
 
             List<WalkwayHistory> histories = List.of(createWalkwayHistory());
             PagingResponse<WalkwayHistory> walkwayHistoryPagingResponse = PagingResponse.from(histories, size);
