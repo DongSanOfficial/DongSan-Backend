@@ -392,8 +392,8 @@ class WalkwayControllerTest {
             Long lastHistoryId = 1L;
 
             List<WalkwayHistory> histories = List.of(WalkwayFixture.createWalkwayHistory());
-
-            when(walkwayService.getCanReviewWalkwayHistory(memberId, walkwayId, size, lastHistoryId)).thenReturn(histories);
+            PagingResponse<WalkwayHistory> walkwayHistoryPagingResponse = PagingResponse.from(histories, size);
+            when(walkwayService.getCanReviewWalkwayHistory(memberId, walkwayId, size, lastHistoryId)).thenReturn(walkwayHistoryPagingResponse);
 
             // When
             ResultActions response = mockMvc.perform(get("/walkways/{walkwayId}/history", walkwayId)

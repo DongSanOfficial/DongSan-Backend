@@ -15,6 +15,7 @@ import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.domains.walkway.WalkwayService;
+import com.dongsan.core.support.util.PagingResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -67,7 +68,8 @@ class UserWalkwayControllerTest {
                     createWalkwayWithId(1L),
                     createWalkwayWithId(2L),
                     createWalkwayWithId(3L));
-            when(walkwayService.getUserWalkway(customOAuth2User.getMemberId(), size, walkwayId)).thenReturn(walkways);
+            PagingResponse<Walkway> walkwayPagingResponse = PagingResponse.from(walkways, size);
+            when(walkwayService.getUserWalkway(customOAuth2User.getMemberId(), size, walkwayId)).thenReturn(walkwayPagingResponse);
 
             // when & then
             mockMvc.perform(get("/users/walkways/upload")
@@ -96,8 +98,8 @@ class UserWalkwayControllerTest {
                     createWalkwayWithId(1L),
                     createWalkwayWithId(2L),
                     createWalkwayWithId(3L));
-
-            when(walkwayService.getUserLikedWalkway(customOAuth2User.getMemberId(), size, walkwayId)).thenReturn(walkways);
+            PagingResponse<Walkway> walkwayPagingResponse = PagingResponse.from(walkways, size);
+            when(walkwayService.getUserLikedWalkway(customOAuth2User.getMemberId(), size, walkwayId)).thenReturn(walkwayPagingResponse);
 
             // when & then
             mockMvc.perform(get("/users/walkways/like")
@@ -127,8 +129,8 @@ class UserWalkwayControllerTest {
             Walkway walkway = createWalkwayWithId(1L);
 
             List<WalkwayHistory> histories = List.of(createWalkwayHistory());
-
-            when(walkwayService.getUserCanReviewWalkwayHistory(memberId, lastId, size)).thenReturn(histories);
+            PagingResponse<WalkwayHistory> walkwayHistoryPagingResponse = PagingResponse.from(histories, size);
+            when(walkwayService.getUserCanReviewWalkwayHistory(memberId, lastId, size)).thenReturn(walkwayHistoryPagingResponse);
 
             // When
             ResultActions response = mockMvc.perform(get("/users/walkways/history")
