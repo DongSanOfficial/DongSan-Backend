@@ -80,7 +80,7 @@ public class WalkwayService {
     }
 
     @Transactional(readOnly = true)
-    public List<Walkway> getUserLikedWalkway(Long memberId, Integer size, Long walkwayId) {
+    public PagingResponse<Walkway> getUserLikedWalkway(Long memberId, Integer size, Long walkwayId) {
         LocalDateTime lastCreatedAt = null;
         if(walkwayId != null){
             // lastId 검증
@@ -91,15 +91,11 @@ public class WalkwayService {
             lastCreatedAt = walkway.createdAt();
         }
         List<Walkway> walkways = walkwayReader.getUserLikedWalkway(memberId, size+1, lastCreatedAt);
-        boolean hasNext = walkways.size() > size;
-        if(hasNext){
-            walkways.remove(walkways.size()-1);
-        }
-        return walkways;
+        return PagingResponse.from(walkways, size);
     }
 
     @Transactional(readOnly = true)
-    public List<Walkway> getUserWalkway(Long memberId, Integer size, Long walkwayId) {
+    public PagingResponse<Walkway> getUserWalkway(Long memberId, Integer size, Long walkwayId) {
         LocalDateTime lastCreatedAt = null;
         if(walkwayId != null){
             // lastId 검증
@@ -110,11 +106,7 @@ public class WalkwayService {
             lastCreatedAt = walkway.createdAt();
         }
         List<Walkway> walkways = walkwayReader.getUserWalkway(memberId, size+1, lastCreatedAt);
-        boolean hasNext = walkways.size() > size;
-        if(hasNext){
-            walkways.remove(walkways.size()-1);
-        }
-        return walkways;
+        return PagingResponse.from(walkways, size);
     }
 
     @Transactional
@@ -123,25 +115,25 @@ public class WalkwayService {
         return walkwayWriter.saveWalkwayHistory(createWalkwayHistory);
     }
 
-    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size, Long lastWalkwayHistoryId) {
+    public PagingResponse<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size, Long lastWalkwayHistoryId) {
         walkwayValidator.validateWalkwayPrivate(walkwayId);
         LocalDateTime lastCreatedAt = null;
         if (lastWalkwayHistoryId != null) {
             WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(lastWalkwayHistoryId);
             lastCreatedAt = walkwayHistory.createdAt();
         }
-
-        return walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
+        List<WalkwayHistory> walkwayHistories = walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size + 1, lastCreatedAt);
+        return PagingResponse.from(walkwayHistories, size);
     }
 
-    public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, Long lastWalkwayHistoryId, int size) {
+    public PagingResponse<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, Long lastWalkwayHistoryId, int size) {
         LocalDateTime lastCreatedAt = null;
         if (lastWalkwayHistoryId != null) {
             WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(lastWalkwayHistoryId);
             lastCreatedAt = walkwayHistory.createdAt();
         }
-
-        return walkwayReader.getUserCanReviewWalkwayHistory(memberId, size, lastCreatedAt);
+        List<WalkwayHistory> walkwayHistories = walkwayReader.getUserCanReviewWalkwayHistory(memberId, size + 1, lastCreatedAt);
+        return PagingResponse.from(walkwayHistories, size);
     }
 
     public boolean isCanReview(Long walkwayHistoryId) {
