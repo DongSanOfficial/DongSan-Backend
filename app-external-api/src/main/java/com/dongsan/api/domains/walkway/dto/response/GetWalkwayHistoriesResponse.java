@@ -6,13 +6,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record GetWalkwayHistoriesResponse(
-        List<CanReviewWalkwayHistory> data
+        List<CanReviewWalkwayHistory> data,
+        boolean hasNext
 ) {
-    public static GetWalkwayHistoriesResponse from(List<WalkwayHistory> walkwayHistories) {
+    public static GetWalkwayHistoriesResponse from(List<WalkwayHistory> walkwayHistories, boolean hasNext) {
         return new GetWalkwayHistoriesResponse(
                 walkwayHistories.stream()
                         .map(CanReviewWalkwayHistory::new)
-                        .toList()
+                        .toList(),
+                hasNext
         );
     }
 

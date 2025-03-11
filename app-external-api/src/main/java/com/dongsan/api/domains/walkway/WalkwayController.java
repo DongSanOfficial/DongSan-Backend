@@ -172,9 +172,9 @@ public class WalkwayController {
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        List<WalkwayHistory> walkwayHistories
+        PagingResponse<WalkwayHistory> response
                 = walkwayService.getCanReviewWalkwayHistory(walkwayId, customOAuth2User.getMemberId(), size, lastId);
 
-        return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(walkwayHistories));
+        return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response.data(), response.hasNext()));
     }
 }

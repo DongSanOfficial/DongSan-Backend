@@ -222,10 +222,11 @@ class WalkwayServiceTest {
             when(walkwayReader.getUserLikedWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
 
             // when
-            List<Walkway> result = walkwayService.getUserLikedWalkway(memberId, size, walkwayId);
+            PagingResponse<Walkway> result = walkwayService.getUserLikedWalkway(memberId, size, walkwayId);
 
             // then
-            assertThat(result).hasSize(walkways.size());
+            assertThat(result.data()).hasSize(walkways.size());
+            assertThat(result.hasNext()).isFalse();
         }
     }
 
@@ -246,10 +247,11 @@ class WalkwayServiceTest {
             when(walkwayReader.getUserWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
 
             // when
-            List<Walkway> result = walkwayService.getUserWalkway(memberId, size, walkwayId);
+            PagingResponse<Walkway> result = walkwayService.getUserWalkway(memberId, size, walkwayId);
 
             // then
-            assertThat(result).hasSize(walkways.size());
+            assertThat(result.data()).hasSize(walkways.size());
+            assertThat(result.hasNext()).isFalse();
         }
     }
 
@@ -285,13 +287,14 @@ class WalkwayServiceTest {
             int size = 1;
             List<WalkwayHistory> walkwayHistories = List.of(createWalkwayHistory());
 
-            when(walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size, null)).thenReturn(walkwayHistories);
+            when(walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size+1, null)).thenReturn(walkwayHistories);
 
             // when
-            List<WalkwayHistory> result = walkwayService.getCanReviewWalkwayHistory(walkwayId, memberId, size, null);
+            PagingResponse<WalkwayHistory> result = walkwayService.getCanReviewWalkwayHistory(walkwayId, memberId, size, null);
 
             // then
-            assertThat(result).hasSize(walkwayHistories.size());
+            assertThat(result.data()).hasSize(walkwayHistories.size());
+            assertThat(result.hasNext()).isFalse();
         }
     }
 
@@ -309,13 +312,14 @@ class WalkwayServiceTest {
             List<WalkwayHistory> walkwayHistories = List.of(createWalkwayHistory());
 
             when(walkwayReader.getWalkwayHistory(lastWalkwayHistoryId)).thenReturn(walkwayHistory);
-            when(walkwayReader.getUserCanReviewWalkwayHistory(memberId, size, walkwayHistory.createdAt())).thenReturn(walkwayHistories);
+            when(walkwayReader.getUserCanReviewWalkwayHistory(memberId, size+1, walkwayHistory.createdAt())).thenReturn(walkwayHistories);
 
             // when
-            List<WalkwayHistory> result = walkwayService.getUserCanReviewWalkwayHistory(lastWalkwayHistoryId, memberId, size);
+            PagingResponse<WalkwayHistory> result = walkwayService.getUserCanReviewWalkwayHistory(lastWalkwayHistoryId, memberId, size);
 
             // then
-            assertThat(result).hasSize(walkwayHistories.size());
+            assertThat(result.data()).hasSize(walkwayHistories.size());
+            assertThat(result.hasNext()).isFalse();
         }
     }
 

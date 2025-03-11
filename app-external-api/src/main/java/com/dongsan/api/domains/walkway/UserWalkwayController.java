@@ -7,9 +7,9 @@ import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.domains.walkway.WalkwayService;
+import com.dongsan.core.support.util.PagingResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +40,8 @@ public class UserWalkwayController {
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ){
-        List<Walkway> response = walkwayService.getUserWalkway(customOAuth2User.getMemberId(), size, lastId);
-        return ResponseEntity.ok(new CursorResponse<>(MyWalkwayResponse.from(response), response.size() == size));
+        PagingResponse<Walkway> response = walkwayService.getUserWalkway(customOAuth2User.getMemberId(), size, lastId);
+        return ResponseEntity.ok(new CursorResponse<>(MyWalkwayResponse.from(response.data()), response.hasNext()));
     }
 
     /**
@@ -57,8 +57,8 @@ public class UserWalkwayController {
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ){
-        List<Walkway> response = walkwayService.getUserLikedWalkway(customOAuth2User.getMemberId(), size, lastId);
-        return ResponseEntity.ok(new CursorResponse<>(MyWalkwayResponse.from(response), response.size() == size));
+        PagingResponse<Walkway> response = walkwayService.getUserLikedWalkway(customOAuth2User.getMemberId(), size, lastId);
+        return ResponseEntity.ok(new CursorResponse<>(MyWalkwayResponse.from(response.data()), response.hasNext()));
     }
 
     @Operation(summary = "회원의 리뷰 작성 가능한 산책로 이용 기록 모두 보기")
@@ -68,8 +68,8 @@ public class UserWalkwayController {
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ){
-        List<WalkwayHistory> response = walkwayService.getUserCanReviewWalkwayHistory(customOAuth2User.getMemberId(), lastId, size);
-        return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response));
+        PagingResponse<WalkwayHistory> response = walkwayService.getUserCanReviewWalkwayHistory(customOAuth2User.getMemberId(), lastId, size);
+        return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response.data(), response.hasNext()));
     }
 
 }
