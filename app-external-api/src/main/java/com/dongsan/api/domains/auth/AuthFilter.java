@@ -1,8 +1,5 @@
-package com.dongsan.api.domains.auth.security.filter;
+package com.dongsan.api.domains.auth;
 
-import com.dongsan.api.domains.auth.CookieService;
-import com.dongsan.api.domains.auth.JwtService;
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
 import com.dongsan.core.domains.auth.TokenReader;
@@ -107,7 +104,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
     private void authenticateUser(Member member) {
         log.info("[AUTH] auth filter 사용자 정보, email : {}", member.email());
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(member);
+        CustomAuthUser customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 customOAuth2User,
                 null,

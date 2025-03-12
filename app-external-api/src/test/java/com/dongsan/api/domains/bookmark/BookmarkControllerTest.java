@@ -11,7 +11,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.AuthUserDto;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
@@ -50,12 +51,12 @@ class BookmarkControllerTest {
     BookmarkService bookmarkService;
 
     Member member;
-    CustomOAuth2User customOAuth2User;
+    CustomAuthUser customOAuth2User;
 
     @BeforeEach
     void setUp(){
         member = createMember();
-        customOAuth2User = new CustomOAuth2User(member);
+        customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
         Authentication authentication = new UsernamePasswordAuthenticationToken(customOAuth2User, null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

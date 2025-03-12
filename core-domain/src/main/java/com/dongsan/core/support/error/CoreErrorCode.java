@@ -44,7 +44,10 @@ public enum CoreErrorCode {
 
     // walkway history
     WALKWAY_HISTORY_NOT_FOUND(NOT_FOUND, "WALKWAY-HISTORY-01", "존재하지 않는 산책로 이용 기록입니다."),
-    CANT_CREATE_WALKWAY_HISTORY(BAD_REQUEST, "WALKWAY-HISTORY-02", "산책 기록을 생성할 수 없습니다.")
+    CANT_CREATE_WALKWAY_HISTORY(BAD_REQUEST, "WALKWAY-HISTORY-02", "산책 기록을 생성할 수 없습니다."),
+
+    // auth provider
+    PROVIDER_NOT_FOUND(NOT_FOUND, "PROVIDER-01", "존재하지 않는 Provider 입니다."),
     ;
 
     private final CoreErrorStatus httpStatus;

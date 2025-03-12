@@ -1,6 +1,6 @@
 package com.dongsan.api.config;
 
-import com.dongsan.api.domains.auth.security.oauth2.SocialType;
+import com.dongsan.core.domains.auth.Provider;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -55,8 +55,8 @@ public class SwaggerConfig {
                         new Tag().name("산책로 리뷰").description("Review of Walkway"),
                         new Tag().name("북마크").description("Bookmark"),
                         new Tag().name("마이페이지").description("Information for User")))
-                .path("/oauth2/authorization/kakao", oauth2PathItem(SocialType.KAKAO))
-                .path("/oauth2/authorization/naver", oauth2PathItem(SocialType.NAVER))
+                .path("/oauth2/authorization/kakao", oauth2PathItem(Provider.KAKAO))
+                .path("/oauth2/authorization/naver", oauth2PathItem(Provider.NAVER))
                 ;
 
         return openApi;
@@ -64,7 +64,7 @@ public class SwaggerConfig {
 
 
     // 소셜 로그인
-    private PathItem oauth2PathItem(SocialType socialLoginType) {
+    private PathItem oauth2PathItem(Provider socialLoginType) {
         String socialId = socialLoginType.getRegistrationId();
         return new PathItem().get(new Operation()
                 .tags(List.of(SOCIAL_TAG_NAME))

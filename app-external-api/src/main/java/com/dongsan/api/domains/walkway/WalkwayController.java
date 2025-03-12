@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.walkway;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
@@ -70,7 +70,7 @@ public class WalkwayController {
     @PostMapping("")
     public ResponseEntity<WalkwayIdResponse> createWalkway(
             @Validated @RequestBody CreateWalkwayRequest createWalkwayRequest,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         Image image = imageService.getImage(createWalkwayRequest.courseImageId());
         CreateWalkway createWalkway = createWalkwayRequest.toCreateWalkway(image, customOAuth2User.getMemberId());
@@ -82,7 +82,7 @@ public class WalkwayController {
     @PostMapping(value ="/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CourseImageIdResponse> createWalkwayCourseImage(
             @RequestPart("courseImage") MultipartFile courseImage,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         String imageUrl = s3FileService.saveFile(courseImage);
         Long imageId = imageService.createImage(imageUrl);
@@ -93,7 +93,7 @@ public class WalkwayController {
     @GetMapping("/{walkwayId}")
     public ResponseEntity<WalkwayDetailResponse> getWalkway(
             @PathVariable Long walkwayId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         Walkway walkway = walkwayService.getWalkway(customOAuth2User.getMemberId(), walkwayId);
         boolean isLike = walkwayService.existsLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
@@ -107,7 +107,7 @@ public class WalkwayController {
             @PathVariable Long walkwayId,
             @RequestParam(required = false) Long lastId,
             @RequestParam(required = false, defaultValue = "10") Integer size,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         PagingResponse<BookmarkWithMarkedStatus> response
                 = bookmarkService.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorRequest(lastId, size));
@@ -119,7 +119,7 @@ public class WalkwayController {
     public ResponseEntity<Void> updateWalkway(
             @PathVariable Long walkwayId,
             @Validated @RequestBody UpdateWalkwayRequest updateWalkwayRequest,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         UpdateWalkway updateWalkway = updateWalkwayRequest.toUpdateWalkway(walkwayId);
         walkwayService.updateWalkway(updateWalkway, customOAuth2User.getMemberId());
@@ -135,7 +135,7 @@ public class WalkwayController {
             @RequestParam(name = "distance") Double distance,
             @RequestParam(name = "lastId", required = false) Long lastId,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         SearchWalkwayQuery searchWalkwayQuery
                 = new SearchWalkwayQuery(customOAuth2User.getMemberId(), longitude, latitude, distance, lastId, size + 1);
@@ -155,7 +155,7 @@ public class WalkwayController {
     public ResponseEntity<WalkwayHistoryResponse> createHistory(
             @PathVariable Long walkwayId,
             @Validated @RequestBody CreateWalkwayHistoryRequest request,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         CreateWalkwayHistory createWalkwayHistory
                 = new CreateWalkwayHistory(walkwayId, customOAuth2User.getMemberId(), request.distance(), request.time());
@@ -170,7 +170,7 @@ public class WalkwayController {
             @PathVariable Long walkwayId,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         PagingResponse<WalkwayHistory> response
                 = walkwayService.getCanReviewWalkwayHistory(walkwayId, customOAuth2User.getMemberId(), size, lastId);

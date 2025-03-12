@@ -1,5 +1,6 @@
 package com.dongsan.rdb.domains.member;
 
+import com.dongsan.core.domains.auth.Provider;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberRepository;
 import com.dongsan.core.domains.member.MemberRole;
@@ -27,9 +28,17 @@ public class MemberCoreRepository implements MemberRepository {
     }
 
     @Override
-    public Member save(String email, String nickname, String profileImageUrl, MemberRole role) {
-        MemberEntity memberEntity = new MemberEntity(email, nickname, profileImageUrl, role);
+    public Member save(String email, String nickname, String profileImageUrl, MemberRole role, Provider provider) {
+        MemberEntity memberEntity = new MemberEntity(email, nickname, profileImageUrl, role, provider);
+        System.out.println(role + " , "+ provider);
+        System.out.println(memberEntity.getProvider());
         memberJpaRepository.save(memberEntity);
         return memberEntity.toMember();
+    }
+
+    @Override
+    public Optional<Member> findByEmailAndProvider(String email, Provider provider) {
+        return memberJpaRepository.findByEmailAndProvider(email, provider)
+                .map(MemberEntity::toMember);
     }
 }

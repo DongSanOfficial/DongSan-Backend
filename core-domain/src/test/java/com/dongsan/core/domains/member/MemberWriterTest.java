@@ -3,9 +3,9 @@ package com.dongsan.core.domains.member;
 import static com.dongsan.core.domains.member.MemberRole.ROLE_USER;
 import static member.MemberFixture.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+import com.dongsan.core.domains.auth.Provider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,11 +32,12 @@ class MemberWriterTest {
             String nickname = "haha";
             String profileImageUrl = "dongsan.png";
             MemberRole role = ROLE_USER;
+            Provider provider = Provider.KAKAO;
             Member member = createMember(email, nickname, profileImageUrl, role);
-            when(memberRepository.save(email, nickname, profileImageUrl, role)).thenReturn(member);
+            when(memberRepository.save(email, nickname, profileImageUrl, role, provider)).thenReturn(member);
 
             // when
-            Member result = memberWriter.save(email, nickname, profileImageUrl, role);
+            Member result = memberWriter.save(email, nickname, profileImageUrl, role, provider);
 
             // then
             assertThat(result).isEqualTo(member);

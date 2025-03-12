@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.walkway;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.core.domains.walkway.WalkwayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ public class LikedWalkwayController {
     @PostMapping("/{walkwayId}/likes")
     public ResponseEntity<Void> createLikedWalkway(
             @PathVariable Long walkwayId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         walkwayService.createLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
         return ResponseEntity.ok().build();
@@ -40,7 +40,7 @@ public class LikedWalkwayController {
     @DeleteMapping("/{walkwayId}/likes")
     public ResponseEntity<Void> deleteLikedWalkway(
             @PathVariable Long walkwayId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         walkwayService.deleteLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
         return ResponseEntity.ok().build();

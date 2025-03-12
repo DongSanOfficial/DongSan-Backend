@@ -1,13 +1,15 @@
-package com.dongsan.api.domains.auth.security.oauth2;
+package com.dongsan.api.domains.auth.oauth2;
 
+import com.dongsan.core.domains.auth.Provider;
 import java.util.Map;
 
 public record OAuth2Attributes(
         String email,
         String nickname,
-        String profileImage) {
+        String profileImage
+) {
 
-    public static OAuth2Attributes of(SocialType socialType, Map<String, Object> attributes) {
+    public static OAuth2Attributes of(Provider socialType, Map<String, Object> attributes) {
         return switch (socialType) {
             case KAKAO -> ofKakao(attributes);
             case NAVER -> ofNaver(attributes);

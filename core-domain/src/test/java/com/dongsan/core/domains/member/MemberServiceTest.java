@@ -5,6 +5,7 @@ import static member.MemberFixture.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import com.dongsan.core.domains.auth.Provider;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -87,11 +88,12 @@ class MemberServiceTest {
             String nickname = "haha";
             String profileImageUrl = "dongsan.png";
             MemberRole role = ROLE_USER;
+            Provider provider = Provider.KAKAO;
             Member member = createMember(email, nickname, profileImageUrl, role);
-            when(memberWriter.save(email, nickname, profileImageUrl, role)).thenReturn(member);
+            when(memberWriter.save(email, nickname, profileImageUrl, role, provider)).thenReturn(member);
 
             // when
-            Member result = memberService.save(email, nickname, profileImageUrl, role);
+            Member result = memberService.save(email, nickname, profileImageUrl, role, provider);
 
             // then
             assertThat(result).isEqualTo(member);

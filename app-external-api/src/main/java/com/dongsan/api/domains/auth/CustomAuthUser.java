@@ -1,4 +1,4 @@
-package com.dongsan.api.domains.auth.security.oauth2;
+package com.dongsan.api.domains.auth;
 
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberRole;
@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class CustomOAuth2User implements OAuth2User {
-    private final Member member;
+public class CustomAuthUser implements OAuth2User, UserDetails {
+    private final AuthUserDto user;
 
-    public CustomOAuth2User(Member member) {
-        this.member = member;
+    public CustomAuthUser(AuthUserDto user) {
+        this.user = user;
     }
 
     @Override
@@ -23,43 +24,57 @@ public class CustomOAuth2User implements OAuth2User {
     @Override
     public Map<String, Object> getAttributes() {
         return Map.of(
-                "email", member.email(),
-                "nickname", member.nickname(),
-                "profileImageUrl", member.profileImageUrl(),
-                "role", member.role()
+                "email", user.email(),
+                "nickname", user.nickname(),
+                "profileImageUrl", user.profileImageUrl(),
+                "role", user.role()
         );
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add((GrantedAuthority) () -> member.role()
+        collection.add((GrantedAuthority) () -> user.role()
                 .getDescription());
         return collection;
     }
 
     @Override
     public String getName() {
-        return member.email();
+        return user.email();
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return user.email();
     }
 
     public Long getMemberId(){
-        return member.id();
+        return user.memberId();
     }
 
     public String getEmail(){
-        return member.email();
+        return user.email();
     }
 
     public String getNickname(){
-        return member.nickname();
+        return user.nickname();
     }
 
     public String getProfileImageUrl(){
-        return member.profileImageUrl();
+        return user.profileImageUrl();
     }
 
     public MemberRole getRole(){
-        return member.role();
+        return user.role();
+    }
+
+    public Member getMember(){
+        return user.toMember();
     }
 }
