@@ -1,5 +1,6 @@
 package com.dongsan.rdb.domains.member;
 
+import com.dongsan.core.domains.auth.Provider;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberRole;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
@@ -29,13 +30,18 @@ public class MemberEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
+    //@Column(columnDefinition = "varchar(255)")
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
     protected MemberEntity(){}
 
-    public MemberEntity(String email, String nickname, String profileImageUrl, MemberRole role){
+    public MemberEntity(String email, String nickname, String profileImageUrl, MemberRole role, Provider provider){
         this.email = email;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.role = role;
+        this.provider = provider;
     }
 
     public Member toMember(){
@@ -52,5 +58,9 @@ public class MemberEntity extends BaseEntity {
 
     public String getEmail() {
         return email;
+    }
+
+    public Provider getProvider() {
+        return provider;
     }
 }

@@ -1,5 +1,6 @@
 package com.dongsan.core.domains.member;
 
+import com.dongsan.core.domains.auth.Provider;
 import com.dongsan.core.support.error.CoreErrorCode;
 import com.dongsan.core.support.error.CoreException;
 import java.util.Optional;
@@ -25,5 +26,9 @@ public class MemberReader {
 
     public Optional<Member> readOptionalMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    public Optional<Member> readOptionalMemberByEmailAndProvider(String email, Provider provider){
+        return memberRepository.findByEmailAndProvider(email, provider);
     }
 }

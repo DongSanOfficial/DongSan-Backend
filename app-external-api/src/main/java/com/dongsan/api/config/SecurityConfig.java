@@ -1,13 +1,12 @@
 package com.dongsan.api.config;
 
-import com.dongsan.api.domains.auth.AuthService;
 import com.dongsan.api.domains.auth.CookieService;
 import com.dongsan.api.domains.auth.JwtService;
-import com.dongsan.api.domains.auth.security.filter.AuthFilter;
-import com.dongsan.api.domains.auth.security.handler.CustomAccessDeniedHandler;
-import com.dongsan.api.domains.auth.security.handler.CustomAuthenticationEntryPoint;
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuthUserService;
-import com.dongsan.api.domains.auth.security.oauth2.CustomSuccessHandler;
+import com.dongsan.api.domains.auth.AuthFilter;
+import com.dongsan.api.domains.auth.CustomAccessDeniedHandler;
+import com.dongsan.api.domains.auth.CustomAuthenticationEntryPoint;
+import com.dongsan.api.domains.auth.oauth2.CustomOAuthUserService;
+import com.dongsan.api.domains.auth.CustomSuccessHandler;
 import com.dongsan.core.domains.auth.TokenReader;
 import com.dongsan.core.domains.auth.TokenWriter;
 import java.util.Arrays;

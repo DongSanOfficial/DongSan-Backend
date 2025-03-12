@@ -1,7 +1,5 @@
-package com.dongsan.api.domains.auth.security.oauth2;
+package com.dongsan.api.domains.auth;
 
-import com.dongsan.api.domains.auth.CookieService;
-import com.dongsan.api.domains.auth.JwtService;
 import com.dongsan.core.domains.auth.TokenWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +34,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+        CustomAuthUser customOAuth2User = (CustomAuthUser) authentication.getPrincipal();
         Long memberId = customOAuth2User.getMemberId();
 
         String accessToken = jwtService.createAccessToken(memberId);

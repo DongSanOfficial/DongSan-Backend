@@ -1,6 +1,5 @@
 package com.dongsan.api.domains.auth;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +34,7 @@ public class AuthController {
     @Operation(summary = "로그 아웃")
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User,
             HttpServletResponse response
     ){
         authService.logout(customOAuth2User.getMemberId(), response);

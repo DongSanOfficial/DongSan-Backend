@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.review;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.UserReviewService;
@@ -35,7 +35,7 @@ public class UserReviewController {
     public ResponseEntity<CursorResponse<MyReviewResponse>> getReviews(
             @RequestParam(defaultValue = "5") Integer size,
             @RequestParam(required = false) Long lastId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         PagingResponse<Review> response = userReviewService.getReviews(new CursorRequest(lastId, size), customOAuth2User.getMemberId());
         return ResponseEntity.ok(new CursorResponse<>(MyReviewResponse.from(response.data()), response.hasNext()));

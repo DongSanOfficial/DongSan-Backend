@@ -4,6 +4,7 @@ import static fixture.MemberEntityFixture.createMember;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.dongsan.common.support.RepositoryTest;
+import com.dongsan.core.domains.auth.Provider;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberRole;
 import java.util.Optional;
@@ -98,10 +99,11 @@ class MemberCoreRepositoryTest extends RepositoryTest {
             String nickname = "동산최고!";
             String profileImageUrl = "dongsan.png";
             MemberEntity member = createMember(email, nickname, profileImageUrl);
+            Provider provider = Provider.KAKAO;
             em.persist(member);
 
             // when
-            Member result = memberCoreRepository.save(email, nickname, profileImageUrl, MemberRole.ROLE_USER);
+            Member result = memberCoreRepository.save(email, nickname, profileImageUrl, MemberRole.ROLE_USER, provider);
 
             // then
             assertThat(result).isNotNull();

@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.bookmark;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
@@ -38,7 +38,7 @@ public class BookmarkController {
     @Operation(summary = "북마크 생성")
     public ResponseEntity<BookmarkIdResponse> createBookmark(
             @Valid @RequestBody BookmarkNameRequest dto,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         Long response = bookmarkService.createBookmark(customOAuth2User.getMemberId(), dto.name());
         return ResponseEntity.ok(new BookmarkIdResponse(response));
@@ -49,7 +49,7 @@ public class BookmarkController {
     public ResponseEntity<Void> renameBookmark(
             @PathVariable Long bookmarkId,
             @Valid @RequestBody BookmarkNameRequest dto,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         bookmarkService.renameBookmark(customOAuth2User.getMemberId(), bookmarkId, dto.name());
         return ResponseEntity.ok().build();
@@ -60,7 +60,7 @@ public class BookmarkController {
     public ResponseEntity<Void> includeWalkway(
             @PathVariable Long bookmarkId,
             @Valid @RequestBody WalkwayIdRequest request,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         bookmarkService.includeWalkway(customOAuth2User.getMemberId(), bookmarkId, request.walkwayId());
         return ResponseEntity.ok().build();
@@ -71,7 +71,7 @@ public class BookmarkController {
     public ResponseEntity<Void> excludeWalkway(
             @PathVariable Long bookmarkId,
             @PathVariable Long walkwayId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         bookmarkService.excludeWalkway(customOAuth2User.getMemberId(), bookmarkId, walkwayId);
         return ResponseEntity.ok().build();
@@ -81,7 +81,7 @@ public class BookmarkController {
     @Operation(summary = "북마크 삭제")
     public ResponseEntity<Void> deleteBookmark(
             @PathVariable Long bookmarkId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         bookmarkService.deleteBookmark(customOAuth2User.getMemberId(), bookmarkId);
         return ResponseEntity.ok().build();
@@ -93,7 +93,7 @@ public class BookmarkController {
             @PathVariable Long bookmarkId,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         PagingResponse<MarkedWalkway> response = bookmarkService.getBookmarkWalkways(customOAuth2User.getMemberId(), bookmarkId, new CursorRequest(lastId, size));
         return ResponseEntity.ok(new CursorResponse<>(BookmarkWalkwaysResponse.from(response.data()), response.hasNext()));
@@ -104,7 +104,7 @@ public class BookmarkController {
     public ResponseEntity<CursorResponse<BookmarksNameResponse>> getBookmarksName(
             @RequestParam(required = false) Long lastId,
             @RequestParam(defaultValue = "10") Integer size,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         PagingResponse<Bookmark> response = bookmarkService.getUserBookmarksName(customOAuth2User.getMemberId(), new CursorRequest(lastId, size));
         return ResponseEntity.ok(new CursorResponse<>(BookmarksNameResponse.from(response.data()), response.hasNext()));

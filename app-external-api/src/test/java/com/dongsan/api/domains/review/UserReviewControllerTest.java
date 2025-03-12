@@ -10,7 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.AuthUserDto;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.review.Review;
 import com.dongsan.core.domains.review.ReviewReader;
@@ -47,7 +48,7 @@ class UserReviewControllerTest {
     @MockBean
     ReviewReader reviewReader;
     final Member member = createMember();
-    final CustomOAuth2User customOAuth2User = new CustomOAuth2User(member);
+    final CustomAuthUser customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
 
     @BeforeEach
     void setUp_Authentication(){

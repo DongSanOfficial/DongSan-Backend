@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.walkway;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.walkway.dto.response.GetWalkwayHistoriesResponse;
 import com.dongsan.api.domains.walkway.dto.response.MyWalkwayResponse;
 import com.dongsan.api.support.response.CursorResponse;
@@ -38,7 +38,7 @@ public class UserWalkwayController {
     public ResponseEntity<CursorResponse<MyWalkwayResponse>> getUserUploadWalkway(
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         PagingResponse<Walkway> response = walkwayService.getUserWalkway(customOAuth2User.getMemberId(), size, lastId);
         return ResponseEntity.ok(new CursorResponse<>(MyWalkwayResponse.from(response.data()), response.hasNext()));
@@ -55,7 +55,7 @@ public class UserWalkwayController {
     public ResponseEntity<CursorResponse<MyWalkwayResponse>> getUserLikedWalkway(
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         PagingResponse<Walkway> response = walkwayService.getUserLikedWalkway(customOAuth2User.getMemberId(), size, lastId);
         return ResponseEntity.ok(new CursorResponse<>(MyWalkwayResponse.from(response.data()), response.hasNext()));
@@ -66,7 +66,7 @@ public class UserWalkwayController {
     public ResponseEntity<GetWalkwayHistoriesResponse> getUserWalkwayHistory(
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ){
         PagingResponse<WalkwayHistory> response = walkwayService.getUserCanReviewWalkwayHistory(customOAuth2User.getMemberId(), lastId, size);
         return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response.data(), response.hasNext()));

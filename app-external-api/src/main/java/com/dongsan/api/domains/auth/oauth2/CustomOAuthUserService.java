@@ -1,6 +1,9 @@
-package com.dongsan.api.domains.auth.security.oauth2;
+package com.dongsan.api.domains.auth.oauth2;
 
-import com.dongsan.api.domains.auth.security.handler.CustomAccessDeniedHandler;
+import com.dongsan.api.domains.auth.AuthUserDto;
+import com.dongsan.api.domains.auth.CustomAccessDeniedHandler;
+import com.dongsan.api.domains.auth.CustomAuthUser;
+import com.dongsan.core.domains.auth.Provider;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberRole;
 import com.dongsan.core.domains.member.MemberService;
@@ -32,20 +35,16 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        SocialType socialType = SocialType.from(registrationId);
-
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        OAuth2Attributes oAuth2Attributes = OAuth2Attributes.of(socialType, attributes);
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        Provider provider = Provider.of(registrationId);
+        OAuth2Attributes oAuth2Attributes = OAuth2Attributes.of(provider, attributes);
 
-        Member member = memberService.getOptionalMemberByEmail(oAuth2Attributes.email()).orElseGet(() -> {
-            log.info("[AUTH] 신규 회원 등록, 이메일 : %s".formatted(oAuth2Attributes.email()));
-            return memberService.save(oAuth2Attributes.email(), oAuth2Attributes.nickname(), oAuth2Attributes.profileImage(), MemberRole.ROLE_USER);
-        });
+        Member member = memberService.getOptionalMemberByEmailAndProvider(oAuth2Attributes.email(), provider)
+                .orElseGet(() -> memberService.save(oAuth2Attributes.email(), oAuth2Attributes.nickname(), oAuth2Attributes.profileImage(), MemberRole.ROLE_USER, provider));
         log.info("[AUTH] 로그인 이메일 : %s".formatted(member.email()));
-
-        return new CustomOAuth2User(member);
+        AuthUserDto user = new AuthUserDto(member);
+        return new CustomAuthUser(user);
     }
 }

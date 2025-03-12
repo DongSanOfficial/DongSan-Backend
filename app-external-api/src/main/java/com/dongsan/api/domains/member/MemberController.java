@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.member;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ public class MemberController {
     @Operation(summary = "사용자 프로필 조회")
     @GetMapping("/users/profile")
     public ResponseEntity<MemberProfileResponse> getProfile(
-            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         Member member = memberService.getMember(customOAuth2User.getMemberId());
         return ResponseEntity.ok(new MemberProfileResponse(member));

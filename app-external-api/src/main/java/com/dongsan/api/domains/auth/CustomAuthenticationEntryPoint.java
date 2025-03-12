@@ -1,4 +1,4 @@
-package com.dongsan.api.domains.auth.security.handler;
+package com.dongsan.api.domains.auth;
 
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.response.ErrorResponse;

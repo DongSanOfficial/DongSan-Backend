@@ -6,7 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.dongsan.api.domains.auth.security.oauth2.CustomOAuth2User;
+import com.dongsan.api.domains.auth.AuthUserDto;
+import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ class MemberControllerTest {
     @BeforeEach
     void setUp(){
         member = createMember();
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(member);
+        CustomAuthUser customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
         Authentication authentication = new UsernamePasswordAuthenticationToken(customOAuth2User, null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

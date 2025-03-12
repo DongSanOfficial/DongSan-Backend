@@ -1,5 +1,6 @@
 package com.dongsan.core.domains.member;
 
+import com.dongsan.core.domains.auth.Provider;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,11 @@ public class MemberService {
         return memberReader.readOptionalMemberByEmail(email);
     }
 
-    public Member save(String email, String nickname, String profileImageUrl, MemberRole role){
-        return memberWriter.save(email, nickname, profileImageUrl, role);
+    public Member save(String email, String nickname, String profileImageUrl, MemberRole role, Provider provider){
+        return memberWriter.save(email, nickname, profileImageUrl, role, provider);
+    }
+
+    public Optional<Member> getOptionalMemberByEmailAndProvider(String email, Provider provider){
+        return memberReader.readOptionalMemberByEmailAndProvider(email, provider);
     }
 }
