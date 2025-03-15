@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WalkwayHistoryJpaRepository extends JpaRepository<WalkwayHistoryEntity, Long> {
-
+    void deleteAllInBatchByWalkwayId(Long walkwayId);
 }

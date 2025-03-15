@@ -30,6 +30,10 @@ public class WalkwayWriter {
         walkwayRepository.updateWalkway(updateWalkway);
     }
 
+    public void deleteWalkway(Long walkwayId) {
+        walkwayRepository.deleteWalkway(walkwayId);
+    }
+
     public void saveLikedWalkway(Long memberId, Long walkwayId) {
         walkwayRepository.saveLikedWalkway(memberId, walkwayId);
     }
