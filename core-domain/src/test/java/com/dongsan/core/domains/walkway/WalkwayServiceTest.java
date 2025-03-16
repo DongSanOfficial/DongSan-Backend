@@ -343,4 +343,22 @@ class WalkwayServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("deleteWalkway 메서드는")
+    class DeleteWalkway {
+        @Test
+        @DisplayName("삭책로를 삭제한다.")
+        void it_returns_void() {
+            // given
+            Long walkwayId = 1L;
+            Long memberId = 1L;
+
+            // when
+            walkwayService.deleteWalkway(walkwayId, memberId);
+
+            // then
+            verify(walkwayValidator).isOwnerOfWalkway(walkwayId, memberId);
+            verify(walkwayWriter).deleteWalkway(walkwayId);
+        }
+    }
 }

@@ -11,8 +11,10 @@ import com.dongsan.core.domains.walkway.ExposeLevel;
 import com.dongsan.core.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
+import com.dongsan.rdb.domains.bookmark.MarkedWalkwayJpaRepository;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
+import com.dongsan.rdb.domains.review.ReviewJpaRepository;
 import fixture.LikedWalkwayFixture;
 import fixture.MemberEntityFixture;
 import fixture.WalkwayEntityFixture;
@@ -53,6 +55,11 @@ class WalkwayCoreRepositoryTest {
     private WalkwayHistoryJpaRepository walkwayHistoryJpaRepository;
     @Mock
     private WalkwayHistoryQueryDSLRepository walkwayHistoryQueryDSLRepository;
+    @Mock
+    private ReviewJpaRepository reviewJpaRepository;
+    @Mock
+    private MarkedWalkwayJpaRepository markedWalkwayJpaRepository;
+
     @Nested
     @DisplayName("saveWalkway 메서드는")
     class Describe_saveWalkway {
@@ -415,6 +422,27 @@ class WalkwayCoreRepositoryTest {
 
             // then
             verify(walkwayHistoryJpaRepository).save(walkwayHistoryEntity);
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteWalkway 메서드는")
+    class Describe_deleteWalkway {
+        @Test
+        @DisplayName("id에 해당하는 산책로와 리뷰, 산책 기록, 좋아요, 북마크를 삭제한다.")
+        void it_delete_walkway() {
+            // given
+            Long walkwayId = 1L;
+
+            // when
+            walkwayCoreRepository.deleteWalkway(walkwayId);
+
+            // then
+            verify(walkwayJpaRepository).deleteById(walkwayId);
+            verify(walkwayHistoryJpaRepository).deleteAllInBatchByWalkwayId(walkwayId);
+            verify(reviewJpaRepository).deleteAllInBatchByWalkwayId(walkwayId);
+            verify(likedWalkwayJpaRepository).deleteAllInBatchByWalkwayId(walkwayId);
+            verify(markedWalkwayJpaRepository).deleteAllInBatchByWalkwayId(walkwayId);
         }
     }
 }

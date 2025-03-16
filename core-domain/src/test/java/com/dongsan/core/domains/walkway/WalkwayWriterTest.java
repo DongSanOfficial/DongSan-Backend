@@ -152,4 +152,21 @@ class WalkwayWriterTest {
             verify(walkwayRepository).updateWalkwayRating(reviewCount, rating, walkwayId);
         }
     }
+
+    @Nested
+    @DisplayName("deleteWalkway 메서드는")
+    class Describe_deleteWalkway {
+        @Test
+        @DisplayName("산책로를 삭제한다.")
+        void it_returns_void() {
+            // given
+            Long walkwayId = 1L;
+
+            // when
+            walkwayWriter.deleteWalkway(walkwayId);
+
+            // then
+            verify(walkwayRepository).deleteWalkway(walkwayId);
+        }
+    }
 }
