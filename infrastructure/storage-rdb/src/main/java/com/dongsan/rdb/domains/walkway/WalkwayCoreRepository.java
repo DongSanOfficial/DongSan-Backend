@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WalkwayCoreJpaRepository implements WalkwayRepository {
+public class WalkwayCoreRepository implements WalkwayRepository {
     private final MemberJpaRepository memberJpaRepository;
     private final LikedWalkwayJpaRepository likedWalkwayJpaRepository;
     private final LikedWalkwayQueryDSLRepository likedWalkwayQueryDSLRepository;
@@ -31,15 +31,15 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
     private final MarkedWalkwayJpaRepository markedWalkwayJpaRepository;
 
     @Autowired
-    public WalkwayCoreJpaRepository(MemberJpaRepository memberJpaRepository,
-                                    LikedWalkwayJpaRepository likedWalkwayJpaRepository,
-                                    LikedWalkwayQueryDSLRepository likedWalkwayQueryDSLRepository,
-                                    WalkwayJpaRepository walkwayJpaRepository,
-                                    WalkwayQueryDSLRepository walkwayQueryDSLRepository,
-                                    WalkwayHistoryJpaRepository walkwayHistoryJpaRepository,
-                                    WalkwayHistoryQueryDSLRepository walkwayHistoryQueryDSLRepository,
-                                    ReviewJpaRepository reviewJpaRepository,
-                                    MarkedWalkwayJpaRepository markedWalkwayJpaRepository) {
+    public WalkwayCoreRepository(MemberJpaRepository memberJpaRepository,
+                                 LikedWalkwayJpaRepository likedWalkwayJpaRepository,
+                                 LikedWalkwayQueryDSLRepository likedWalkwayQueryDSLRepository,
+                                 WalkwayJpaRepository walkwayJpaRepository,
+                                 WalkwayQueryDSLRepository walkwayQueryDSLRepository,
+                                 WalkwayHistoryJpaRepository walkwayHistoryJpaRepository,
+                                 WalkwayHistoryQueryDSLRepository walkwayHistoryQueryDSLRepository,
+                                 ReviewJpaRepository reviewJpaRepository,
+                                 MarkedWalkwayJpaRepository markedWalkwayJpaRepository) {
         this.memberJpaRepository = memberJpaRepository;
         this.likedWalkwayJpaRepository = likedWalkwayJpaRepository;
         this.likedWalkwayQueryDSLRepository = likedWalkwayQueryDSLRepository;

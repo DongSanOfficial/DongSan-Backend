@@ -36,9 +36,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("WalkwayCoreJpaRepository Unit Test")
-class WalkwayCoreJpaRepositoryTest {
+class WalkwayCoreRepositoryTest {
     @InjectMocks
-    private WalkwayCoreJpaRepository walkwayCoreJpaRepository;
+    private WalkwayCoreRepository walkwayCoreRepository;
     @Mock
     private MemberJpaRepository memberJpaRepository;
     @Mock
@@ -79,7 +79,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayJpaRepository.save(any(WalkwayEntity.class))).thenReturn(walkwayEntity);
 
             // when
-            Long result = walkwayCoreJpaRepository.saveWalkway(createWalkway);
+            Long result = walkwayCoreRepository.saveWalkway(createWalkway);
 
             // then
             assertThat(result).isEqualTo(walkwayEntity.getId());
@@ -100,7 +100,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayJpaRepository.findById(walkwayId)).thenReturn(Optional.of(walkwayEntity));
 
             // when
-            Optional<Walkway> result = walkwayCoreJpaRepository.getWalkway(walkwayId);
+            Optional<Walkway> result = walkwayCoreRepository.getWalkway(walkwayId);
 
             // then
             assertThat(result).isPresent();
@@ -114,7 +114,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayJpaRepository.findById(walkwayId)).thenReturn(Optional.empty());
 
             // when
-            Optional<Walkway> result = walkwayCoreJpaRepository.getWalkway(walkwayId);
+            Optional<Walkway> result = walkwayCoreRepository.getWalkway(walkwayId);
 
             // then
             assertThat(result).isEmpty();
@@ -137,7 +137,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(likedWalkwayJpaRepository.save(any(LikedWalkwayEntity.class))).thenReturn(likedWalkwayEntity);
 
             // when
-            Long result = walkwayCoreJpaRepository.saveLikedWalkway(memberId, walkwayId);
+            Long result = walkwayCoreRepository.saveLikedWalkway(memberId, walkwayId);
 
             // then
             assertThat(result).isEqualTo(likedWalkwayEntity.getId());
@@ -158,7 +158,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayQueryDSLRepository.searchWalkwaysLiked(query)).thenReturn(walkwayEntities);
 
             // when
-            List<Walkway> result = walkwayCoreJpaRepository.searchWalkwaysLiked(query);
+            List<Walkway> result = walkwayCoreRepository.searchWalkwaysLiked(query);
 
             // then
             assertThat(result).isNotEmpty();
@@ -179,7 +179,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayQueryDSLRepository.searchWalkwaysRating(query)).thenReturn(walkwayEntities);
 
             // when
-            List<Walkway> result = walkwayCoreJpaRepository.searchWalkwaysRating(query);
+            List<Walkway> result = walkwayCoreRepository.searchWalkwaysRating(query);
 
             // then
             assertThat(result).hasSize(walkwayEntities.size());
@@ -202,7 +202,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayQueryDSLRepository.getUserWalkway(memberId, size, lastCreatedAt)).thenReturn(walkwayEntities);
 
             // when
-            List<Walkway> result = walkwayCoreJpaRepository.getUserWalkway(memberId, size, lastCreatedAt);
+            List<Walkway> result = walkwayCoreRepository.getUserWalkway(memberId, size, lastCreatedAt);
 
             // then
             assertThat(result).hasSize(walkwayEntities.size());
@@ -225,7 +225,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayQueryDSLRepository.getUserWalkway(memberId, size, lastCreatedAt)).thenReturn(walkwayEntities);
 
             // when
-            List<Walkway> result = walkwayCoreJpaRepository.getUserWalkway(memberId, size, lastCreatedAt);
+            List<Walkway> result = walkwayCoreRepository.getUserWalkway(memberId, size, lastCreatedAt);
 
             // then
             assertThat(result).isNotEmpty();
@@ -247,7 +247,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayJpaRepository.getReferenceById(walkwayId)).thenReturn(walkwayEntity);
 
             // when
-            walkwayCoreJpaRepository.updateWalkwayRating(reviewCount, rating, walkwayId);
+            walkwayCoreRepository.updateWalkwayRating(reviewCount, rating, walkwayId);
 
             // then
             verify(walkwayJpaRepository).save(walkwayEntity);
@@ -268,7 +268,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(likedWalkwayQueryDSLRepository.existsLikedWalkways(memberId, walkwayIds)).thenReturn(isLiked);
 
             // when
-            Map<Long, Boolean> result = walkwayCoreJpaRepository.existsLikedWalkways(1L, walkwayIds);
+            Map<Long, Boolean> result = walkwayCoreRepository.existsLikedWalkways(1L, walkwayIds);
 
             // then
             assertThat(result).isNotNull();
@@ -289,7 +289,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayJpaRepository.getReferenceById(walkwayId)).thenReturn(walkwayEntity);
 
             // when
-            walkwayCoreJpaRepository.deleteLikedWalkway(memberId, walkwayId);
+            walkwayCoreRepository.deleteLikedWalkway(memberId, walkwayId);
 
             // then
             verify(walkwayJpaRepository).save(walkwayEntity);
@@ -315,7 +315,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayJpaRepository.getReferenceById(walkwayId)).thenReturn(walkwayEntity);
 
             // when
-            Long result = walkwayCoreJpaRepository.saveWalkwayHistory(createHistory);
+            Long result = walkwayCoreRepository.saveWalkwayHistory(createHistory);
 
             // then
             assertThat(result).isEqualTo(historyEntity.getId());
@@ -342,7 +342,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(walkwayId, memberId, size, null)).thenReturn(walkwayHistoryEntities);
 
             // when
-            List<WalkwayHistory> result = walkwayCoreJpaRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, null);
+            List<WalkwayHistory> result = walkwayCoreRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, null);
 
             // then
             assertThat(result).hasSize(walkwayHistories.size());
@@ -368,7 +368,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayHistoryQueryDSLRepository.getUserCanReviewWalkwayHistories(memberId, size, lastCreatedAt)).thenReturn(walkwayHistoryEntities);
 
             // when
-            List<WalkwayHistory> result = walkwayCoreJpaRepository.getUserCanReviewWalkwayHistory(memberId, size, lastCreatedAt);
+            List<WalkwayHistory> result = walkwayCoreRepository.getUserCanReviewWalkwayHistory(memberId, size, lastCreatedAt);
 
             // then
             assertThat(result).hasSize(walkwayHistories.size());
@@ -390,7 +390,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayHistoryJpaRepository.findById(walkwayHistoryId)).thenReturn(Optional.of(walkwayHistoryEntity));
 
             // when
-            Optional<WalkwayHistory> result = walkwayCoreJpaRepository.getWalkwayHistory(walkwayHistoryId);
+            Optional<WalkwayHistory> result = walkwayCoreRepository.getWalkwayHistory(walkwayHistoryId);
 
             // then
             assertThat(result).isPresent();
@@ -411,7 +411,7 @@ class WalkwayCoreJpaRepositoryTest {
             when(walkwayHistoryJpaRepository.getReferenceById(walkwayHistoryId)).thenReturn(walkwayHistoryEntity);
 
             // when
-            walkwayCoreJpaRepository.updateWalkwayHistoryIsReviewed(walkwayHistoryId, isReviewed);
+            walkwayCoreRepository.updateWalkwayHistoryIsReviewed(walkwayHistoryId, isReviewed);
 
             // then
             verify(walkwayHistoryJpaRepository).save(walkwayHistoryEntity);

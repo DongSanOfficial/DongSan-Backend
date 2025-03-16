@@ -141,6 +141,7 @@ public class WalkwayService {
         return walkwayHistory.distance() >= (walkwayHistory.walkway().courseInfo().distance()) * 2/3;
     }
 
+    @Transactional
     public void deleteWalkway(Long walkwayId, Long memberId) {
         walkwayValidator.isOwnerOfWalkway(walkwayId, memberId);
         walkwayWriter.deleteWalkway(walkwayId);
