@@ -140,4 +140,10 @@ public class WalkwayService {
         WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(walkwayHistoryId);
         return walkwayHistory.distance() >= (walkwayHistory.walkway().courseInfo().distance()) * 2/3;
     }
+
+    @Transactional
+    public void deleteWalkway(Long walkwayId, Long memberId) {
+        walkwayValidator.isOwnerOfWalkway(walkwayId, memberId);
+        walkwayWriter.deleteWalkway(walkwayId);
+    }
 }

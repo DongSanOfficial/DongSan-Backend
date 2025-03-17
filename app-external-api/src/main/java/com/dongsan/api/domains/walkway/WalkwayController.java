@@ -35,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -176,5 +177,15 @@ public class WalkwayController {
                 = walkwayService.getCanReviewWalkwayHistory(walkwayId, customOAuth2User.getMemberId(), size, lastId);
 
         return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response.data(), response.hasNext()));
+    }
+
+    @Operation(summary = "산책로 삭제")
+    @DeleteMapping("/{walkwayId}")
+    public ResponseEntity<Void> deleteWalkway(
+            @PathVariable Long walkwayId,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        walkwayService.deleteWalkway(walkwayId, customOAuth2User.getMemberId());
+        return ResponseEntity.ok().build();
     }
 }

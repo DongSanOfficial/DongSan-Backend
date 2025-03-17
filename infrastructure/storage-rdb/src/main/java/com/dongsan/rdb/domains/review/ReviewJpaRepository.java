@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewJpaRepository extends JpaRepository<ReviewEntity, Long>{
     boolean existsByIdAndMemberId(Long reviewId, Long memberId);
+
+    void deleteAllInBatchByWalkwayId(Long walkwayId);
 }

@@ -1,12 +1,6 @@
 package com.dongsan.core.domains.walkway;
 
 
-import com.dongsan.core.domains.walkway.CreateWalkway;
-import com.dongsan.core.domains.walkway.CreateWalkwayHistory;
-import com.dongsan.core.domains.walkway.UpdateWalkway;
-import com.dongsan.core.domains.walkway.WalkwayRepository;
-import com.dongsan.core.support.error.CoreErrorCode;
-import com.dongsan.core.support.error.CoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +22,10 @@ public class WalkwayWriter {
 
     public void updateWalkway(UpdateWalkway updateWalkway) {
         walkwayRepository.updateWalkway(updateWalkway);
+    }
+
+    public void deleteWalkway(Long walkwayId) {
+        walkwayRepository.deleteWalkway(walkwayId);
     }
 
     public void saveLikedWalkway(Long memberId, Long walkwayId) {

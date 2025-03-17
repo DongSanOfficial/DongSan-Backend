@@ -19,6 +19,7 @@ public interface WalkwayRepository {
     List<Walkway> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt);
     List<Walkway> getUserWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt);
     void updateWalkwayRating(Integer reviewCount, Double rating, Long walkwayId);
+    void deleteWalkway(Long walkwayId);
 
     // 좋아요
     boolean existsLikedWalkway(Long memberId, Long walkwayId);

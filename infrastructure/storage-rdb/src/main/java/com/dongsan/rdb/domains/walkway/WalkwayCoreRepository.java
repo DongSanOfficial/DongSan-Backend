@@ -7,8 +7,10 @@ import com.dongsan.core.domains.walkway.UpdateWalkway;
 import com.dongsan.core.domains.walkway.Walkway;
 import com.dongsan.core.domains.walkway.WalkwayHistory;
 import com.dongsan.core.domains.walkway.WalkwayRepository;
+import com.dongsan.rdb.domains.bookmark.MarkedWalkwayJpaRepository;
 import com.dongsan.rdb.domains.member.MemberEntity;
 import com.dongsan.rdb.domains.member.MemberJpaRepository;
+import com.dongsan.rdb.domains.review.ReviewJpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WalkwayCoreJpaRepository implements WalkwayRepository {
+public class WalkwayCoreRepository implements WalkwayRepository {
     private final MemberJpaRepository memberJpaRepository;
     private final LikedWalkwayJpaRepository likedWalkwayJpaRepository;
     private final LikedWalkwayQueryDSLRepository likedWalkwayQueryDSLRepository;
@@ -25,15 +27,19 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
     private final WalkwayQueryDSLRepository walkwayQueryDSLRepository;
     private final WalkwayHistoryJpaRepository walkwayHistoryJpaRepository;
     private final WalkwayHistoryQueryDSLRepository walkwayHistoryQueryDSLRepository;
+    private final ReviewJpaRepository reviewJpaRepository;
+    private final MarkedWalkwayJpaRepository markedWalkwayJpaRepository;
 
     @Autowired
-    public WalkwayCoreJpaRepository(MemberJpaRepository memberJpaRepository,
-                                    LikedWalkwayJpaRepository likedWalkwayJpaRepository,
-                                    LikedWalkwayQueryDSLRepository likedWalkwayQueryDSLRepository,
-                                    WalkwayJpaRepository walkwayJpaRepository,
-                                    WalkwayQueryDSLRepository walkwayQueryDSLRepository,
-                                    WalkwayHistoryJpaRepository walkwayHistoryJpaRepository,
-                                    WalkwayHistoryQueryDSLRepository walkwayHistoryQueryDSLRepository) {
+    public WalkwayCoreRepository(MemberJpaRepository memberJpaRepository,
+                                 LikedWalkwayJpaRepository likedWalkwayJpaRepository,
+                                 LikedWalkwayQueryDSLRepository likedWalkwayQueryDSLRepository,
+                                 WalkwayJpaRepository walkwayJpaRepository,
+                                 WalkwayQueryDSLRepository walkwayQueryDSLRepository,
+                                 WalkwayHistoryJpaRepository walkwayHistoryJpaRepository,
+                                 WalkwayHistoryQueryDSLRepository walkwayHistoryQueryDSLRepository,
+                                 ReviewJpaRepository reviewJpaRepository,
+                                 MarkedWalkwayJpaRepository markedWalkwayJpaRepository) {
         this.memberJpaRepository = memberJpaRepository;
         this.likedWalkwayJpaRepository = likedWalkwayJpaRepository;
         this.likedWalkwayQueryDSLRepository = likedWalkwayQueryDSLRepository;
@@ -41,6 +47,8 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
         this.walkwayQueryDSLRepository = walkwayQueryDSLRepository;
         this.walkwayHistoryJpaRepository = walkwayHistoryJpaRepository;
         this.walkwayHistoryQueryDSLRepository = walkwayHistoryQueryDSLRepository;
+        this.reviewJpaRepository = reviewJpaRepository;
+        this.markedWalkwayJpaRepository = markedWalkwayJpaRepository;
     }
 
     // 생성용 dto만들기
@@ -72,6 +80,15 @@ public class WalkwayCoreJpaRepository implements WalkwayRepository {
     @Override
     public boolean existsWalkway(Long walkwayId, Long memberId) {
         return walkwayJpaRepository.existsByIdAndMemberId(walkwayId, memberId);
+    }
+
+    @Override
+    public void deleteWalkway(Long walkwayId) {
+        walkwayJpaRepository.deleteById(walkwayId);
+        reviewJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
+        walkwayHistoryJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
+        likedWalkwayJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
+        markedWalkwayJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
     @Override

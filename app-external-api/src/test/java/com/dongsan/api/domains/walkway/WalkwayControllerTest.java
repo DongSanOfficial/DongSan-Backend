@@ -1,17 +1,5 @@
 package com.dongsan.api.domains.walkway;
 
-import static image.ImageFixture.createImage;
-import static member.MemberFixture.createMember;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static walkway.WalkwayFixture.createWalkwayWithId;
-
 import bookmark.BookmarkFixture;
 import com.dongsan.api.domains.auth.AuthUserDto;
 import com.dongsan.api.domains.auth.CustomAuthUser;
@@ -25,19 +13,11 @@ import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.domains.image.Image;
 import com.dongsan.core.domains.image.ImageService;
 import com.dongsan.core.domains.member.Member;
-import com.dongsan.core.domains.walkway.CreateWalkway;
-import com.dongsan.core.domains.walkway.ExposeLevel;
-import com.dongsan.core.domains.walkway.Walkway;
-import com.dongsan.core.domains.walkway.WalkwayHistory;
-import com.dongsan.core.domains.walkway.WalkwayService;
+import com.dongsan.core.domains.walkway.*;
 import com.dongsan.core.support.util.CursorRequest;
 import com.dongsan.core.support.util.PagingResponse;
 import com.dongsan.file.service.S3FileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -57,6 +37,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import walkway.WalkwayFixture;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static image.ImageFixture.createImage;
+import static member.MemberFixture.createMember;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static walkway.WalkwayFixture.createWalkwayWithId;
 
 @WebMvcTest(controllers = WalkwayController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -405,6 +399,24 @@ class WalkwayControllerTest {
             // Then
             response.andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.size()").value(histories.size()));
+        }
+    }
+
+    @Nested
+    @DisplayName("deleteWalkway 메서드는")
+    class DeleteWalkway {
+        @Test
+        @DisplayName("산책로를 삭제한다.")
+        void it_returns_void() throws Exception {
+            // given
+            Long walkwayId = 1L;
+
+            // when
+            ResultActions response = mockMvc.perform(delete("/walkways/{walkwayId}", walkwayId)
+                    .contentType(MediaType.APPLICATION_JSON));
+
+            // then
+            response.andExpect(status().isOk());
         }
     }
 }

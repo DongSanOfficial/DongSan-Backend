@@ -19,4 +19,5 @@ public interface MarkedWalkwayJpaRepository extends JpaRepository<MarkedWalkwayE
     int countByBookmarkId(Long bookmarkId);
     Optional<MarkedWalkwayEntity> findByBookmarkIdAndWalkwayId(Long bookmarkId, Long walkwayId);
 
+    void deleteAllInBatchByWalkwayId(Long walkwayId);
 }
