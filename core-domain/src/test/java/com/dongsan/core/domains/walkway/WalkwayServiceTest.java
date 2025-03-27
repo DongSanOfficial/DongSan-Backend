@@ -1,15 +1,13 @@
 package com.dongsan.core.domains.walkway;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static walkway.WalkwayFixture.createWalkway;
-import static walkway.WalkwayFixture.createWalkwayHistory;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static walkway.WalkwayFixture.*;
 
-import com.dongsan.core.support.util.PagingResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,348 +15,356 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.dongsan.core.support.util.PagingResponse;
+
 import walkway.WalkwayFixture;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("WalkwayService Unit Test")
 class WalkwayServiceTest {
-    @InjectMocks
-    WalkwayService walkwayService;
-    @Mock
-    WalkwayReader walkwayReader;
-    @Mock
-    WalkwayWriter walkwayWriter;
-    @Mock
-    WalkwayValidator walkwayValidator;
+	@InjectMocks
+	WalkwayService walkwayService;
+	@Mock
+	WalkwayReader walkwayReader;
+	@Mock
+	WalkwayWriter walkwayWriter;
+	@Mock
+	WalkwayValidator walkwayValidator;
 
-    @Nested
-    @DisplayName("createWalkway 메서드는")
-    class Describe_createWalkway {
-        @Test
-        @DisplayName("산책로를 생성하고 id를 반환한다.")
-        void it_returns_id() {
-            // given
-            CreateWalkway createWalkway
-                    = new CreateWalkway("name", 2.5, 30, ExposeLevel.PUBLIC, null, null, "memo", null, null, null, null);
-            Long walkwayId = 1L;
+	@Nested
+	@DisplayName("createWalkway 메서드는")
+	class Describe_createWalkway {
+		@Test
+		@DisplayName("산책로를 생성하고 id를 반환한다.")
+		void it_returns_id() {
+			// given
+			CreateWalkway createWalkway
+				= new CreateWalkway("name", 2.5, 30, ExposeLevel.PUBLIC, null, null, "memo", null, null, null, null);
+			Long walkwayId = 1L;
 
-            when(walkwayWriter.saveWalkway(createWalkway)).thenReturn(walkwayId);
+			when(walkwayWriter.saveWalkway(createWalkway)).thenReturn(walkwayId);
 
-            // when
-            Long result = walkwayService.createWalkway(createWalkway);
+			// when
+			Long result = walkwayService.createWalkway(createWalkway);
 
-            // then
-            assertThat(result).isEqualTo(walkwayId);
-        }
-    }
+			// then
+			assertThat(result).isEqualTo(walkwayId);
+		}
+	}
 
-    @Nested
-    @DisplayName("getWalkway 메서드는")
-    class Describe_getWalkway {
-        @Test
-        @DisplayName("산책로를 반환한다.")
-        void it_returns_walkway() {
-            // given
-            Long walkwayId = 1L;
-            Long memberId = 1L;
-            Walkway walkway = createWalkway();
+	@Nested
+	@DisplayName("getWalkway 메서드는")
+	class Describe_getWalkway {
+		@Test
+		@DisplayName("산책로를 반환한다.")
+		void it_returns_walkway() {
+			// given
+			Long walkwayId = 1L;
+			Long memberId = 1L;
+			Walkway walkway = createWalkway();
 
-            when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
+			when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
 
-            // when
-            Walkway result = walkwayService.getWalkway(memberId, walkwayId);
+			// when
+			Walkway result = walkwayService.getWalkway(memberId, walkwayId);
 
-            // then
-            assertThat(result).isEqualTo(walkway);
-        }
-    }
+			// then
+			assertThat(result).isEqualTo(walkway);
+		}
+	}
 
-    @Nested
-    @DisplayName("updateWalkway 메서드는")
-    class Describe_updateWalkway {
-        @Test
-        @DisplayName("산책로를 수정한다")
-        void it_returns_void() {
-            // given
-            UpdateWalkway updateWalkway
-                    = new UpdateWalkway(1L, "name", "memo", ExposeLevel.PUBLIC, List.of("tag"));
-            Long memberId = 1L;
+	@Nested
+	@DisplayName("updateWalkway 메서드는")
+	class Describe_updateWalkway {
+		@Test
+		@DisplayName("산책로를 수정한다")
+		void it_returns_void() {
+			// given
+			UpdateWalkway updateWalkway
+				= new UpdateWalkway(1L, "name", "memo", ExposeLevel.PUBLIC, List.of("tag"));
+			Long memberId = 1L;
 
-            // when
-            walkwayService.updateWalkway(updateWalkway, memberId);
+			// when
+			walkwayService.updateWalkway(updateWalkway, memberId);
 
-            // when & then
-            verify(walkwayWriter).updateWalkway(updateWalkway);
-        }
+			// when & then
+			verify(walkwayWriter).updateWalkway(updateWalkway);
+		}
 
-    }
+	}
 
-    @Nested
-    @DisplayName("searchWalkway 메서드는")
-    class Describe_searchWalkway {
-        @Test
-        @DisplayName("산책로를 수정한다")
-        void it_returns_walkway_list() {
-            // given
-            String sortType = "rating";
-            SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(1L, 123.0, 123.0, 10.0, 1L, 10);
-            WalkwaySort sort = WalkwaySort.typeOf(sortType);
-            List<Walkway> walkways = List.of(createWalkway());
+	@Nested
+	@DisplayName("searchWalkway 메서드는")
+	class Describe_searchWalkway {
+		@Test
+		@DisplayName("산책로를 수정한다")
+		void it_returns_walkway_list() {
+			// given
+			String sortType = "rating";
+			SearchWalkwayQuery searchWalkwayQuery = new SearchWalkwayQuery(1L, 123.0, 123.0, 10.0, 1L, 10);
+			WalkwaySort sort = WalkwaySort.typeOf(sortType);
+			List<Walkway> walkways = List.of(createWalkway());
 
-            when(walkwayReader.searchWalkway(searchWalkwayQuery, sort)).thenReturn(walkways);
+			when(walkwayReader.searchWalkway(searchWalkwayQuery, sort)).thenReturn(walkways);
 
-            // when
-            PagingResponse<Walkway> result = walkwayService.searchWalkway(sortType, searchWalkwayQuery);
+			// when
+			PagingResponse<Walkway> result = walkwayService.searchWalkway(sortType, searchWalkwayQuery);
 
-            // when & then
-            assertThat(result.data()).hasSize(walkways.size());
-        }
-    }
+			// when & then
+			assertThat(result.data()).hasSize(walkways.size());
+		}
+	}
 
-    @Nested
-    @DisplayName("existsLikedWalkway")
-    class Describe_existsLikedWalkway {
-        @Test
-        @DisplayName("산책로의 좋아요 여부를 반환한다.")
-        void it_returns_exists() {
-            // given
-            Long memberId = 1L;
-            Long walkwayId = 1L;
-            boolean exists = true;
+	@Nested
+	@DisplayName("existsLikedWalkway")
+	class Describe_existsLikedWalkway {
+		@Test
+		@DisplayName("산책로의 좋아요 여부를 반환한다.")
+		void it_returns_exists() {
+			// given
+			Long memberId = 1L;
+			Long walkwayId = 1L;
+			boolean exists = true;
 
-            when(walkwayReader.existsLikedWalkway(memberId, walkwayId)).thenReturn(exists);
+			when(walkwayReader.existsLikedWalkway(memberId, walkwayId)).thenReturn(exists);
 
-            // when
-            boolean result = walkwayService.existsLikedWalkway(memberId, walkwayId);
+			// when
+			boolean result = walkwayService.existsLikedWalkway(memberId, walkwayId);
 
-            // then
-            assertThat(result).isTrue();
-        }
-    }
+			// then
+			assertThat(result).isTrue();
+		}
+	}
 
-    @Nested
-    @DisplayName("existsLikedWalkways 메서드는")
-    class Describe_existsLikedWalkways {
-        @Test
-        @DisplayName("산책로의 좋아요 여부를 반환한다.")
-        void it_returns_exists() {
-            // given
-            Long memberId = 1L;
-            List<Long> walkwayIds = List.of(1L, 2L);
-            Map<Long, Boolean> likedWalkways = new HashMap<>();
-            likedWalkways.put(1L, true);
-            likedWalkways.put(2L, false);
+	@Nested
+	@DisplayName("existsLikedWalkways 메서드는")
+	class Describe_existsLikedWalkways {
+		@Test
+		@DisplayName("산책로의 좋아요 여부를 반환한다.")
+		void it_returns_exists() {
+			// given
+			Long memberId = 1L;
+			List<Long> walkwayIds = List.of(1L, 2L);
+			Map<Long, Boolean> likedWalkways = new HashMap<>();
+			likedWalkways.put(1L, true);
+			likedWalkways.put(2L, false);
 
-            when(walkwayReader.existsLikedWalkways(memberId, walkwayIds)).thenReturn(likedWalkways);
+			when(walkwayReader.existsLikedWalkways(memberId, walkwayIds)).thenReturn(likedWalkways);
 
-            // when
-            Map<Long, Boolean> result = walkwayService.existsLikedWalkways(memberId, walkwayIds);
+			// when
+			Map<Long, Boolean> result = walkwayService.existsLikedWalkways(memberId, walkwayIds);
 
-            // then
-            assertThat(result.get(1L)).isTrue();
-            assertThat(result.get(2L)).isFalse();
-        }
-    }
+			// then
+			assertThat(result.get(1L)).isTrue();
+			assertThat(result.get(2L)).isFalse();
+		}
+	}
 
-    @Nested
-    @DisplayName("createLikedWalkway 메서드는")
-    class Describe_createLikedWalkway {
-        @Test
-        @DisplayName("산책로의 좋아요를 생성한다.")
-        void it_returns_void() {
-            // given
-            Long memberId = 1L;
-            Long walkwayId = 1L;
-            boolean isLiked = false;
-            Walkway walkway = WalkwayFixture.createWalkway();
+	@Nested
+	@DisplayName("createLikedWalkway 메서드는")
+	class Describe_createLikedWalkway {
+		@Test
+		@DisplayName("산책로의 좋아요를 생성한다.")
+		void it_returns_void() {
+			// given
+			Long memberId = 1L;
+			Long walkwayId = 1L;
+			boolean isLiked = false;
+			Walkway walkway = WalkwayFixture.createWalkway();
 
-            when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
-            when(walkwayReader.existsLikedWalkway(memberId, walkwayId)).thenReturn(isLiked);
+			when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
+			when(walkwayReader.existsLikedWalkway(memberId, walkwayId)).thenReturn(isLiked);
 
-            // when
-            walkwayService.createLikedWalkway(memberId, walkwayId);
+			// when
+			walkwayService.createLikedWalkway(memberId, walkwayId);
 
-            // then
-            verify(walkwayWriter).saveLikedWalkway(memberId, walkwayId);
-        }
-    }
+			// then
+			verify(walkwayWriter).saveLikedWalkway(memberId, walkwayId);
+		}
+	}
 
-    @Nested
-    @DisplayName("deleteLikedWalkway 메서드는")
-    class Describe_deleteLikedWalkway {
-        @Test
-        @DisplayName("산책로의 좋아요를 삭제한다.")
-        void it_returns_void() {
-            Long memberId = 1L;
-            Long walkwayId = 1L;
-            boolean isLiked = true;
-            Walkway walkway = WalkwayFixture.createWalkway();
+	@Nested
+	@DisplayName("deleteLikedWalkway 메서드는")
+	class Describe_deleteLikedWalkway {
+		@Test
+		@DisplayName("산책로의 좋아요를 삭제한다.")
+		void it_returns_void() {
+			Long memberId = 1L;
+			Long walkwayId = 1L;
+			boolean isLiked = true;
+			Walkway walkway = WalkwayFixture.createWalkway();
 
-            when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
-            when(walkwayReader.existsLikedWalkway(memberId, walkwayId)).thenReturn(isLiked);
+			when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
+			when(walkwayReader.existsLikedWalkway(memberId, walkwayId)).thenReturn(isLiked);
 
-            // when
-            walkwayService.deleteLikedWalkway(memberId, walkwayId);
+			// when
+			walkwayService.deleteLikedWalkway(memberId, walkwayId);
 
-            // then
-            verify(walkwayWriter).deleteLikedWalkway(memberId, walkwayId);
-        }
-    }
+			// then
+			verify(walkwayWriter).deleteLikedWalkway(memberId, walkwayId);
+		}
+	}
 
-    @Nested
-    @DisplayName("getUserLikedWalkway 메서드는")
-    class Describe_getUserLikedWalkway {
-        @Test
-        @DisplayName("회원의 산책로를 반환한다.")
-        void it_returns_walkway_list() {
-            // given
-            Long memberId = 1L;
-            Integer size = 10;
-            Long walkwayId = 1L;
-            Walkway walkway = createWalkway();
-            List<Walkway> walkways = List.of(createWalkway());
+	@Nested
+	@DisplayName("getUserLikedWalkway 메서드는")
+	class Describe_getUserLikedWalkway {
+		@Test
+		@DisplayName("회원의 산책로를 반환한다.")
+		void it_returns_walkway_list() {
+			// given
+			Long memberId = 1L;
+			Integer size = 10;
+			Long walkwayId = 1L;
+			Walkway walkway = createWalkway();
+			List<Walkway> walkways = List.of(createWalkway());
 
-            when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
-            when(walkwayReader.getUserLikedWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
+			when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
+			when(walkwayReader.getUserLikedWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
 
-            // when
-            PagingResponse<Walkway> result = walkwayService.getUserLikedWalkway(memberId, size, walkwayId);
+			// when
+			PagingResponse<Walkway> result = walkwayService.getUserLikedWalkway(memberId, size, walkwayId);
 
-            // then
-            assertThat(result.data()).hasSize(walkways.size());
-            assertThat(result.hasNext()).isFalse();
-        }
-    }
+			// then
+			assertThat(result.data()).hasSize(walkways.size());
+			assertThat(result.hasNext()).isFalse();
+		}
+	}
 
-    @Nested
-    @DisplayName("getUserWalkway 메서드는")
-    class Describe_getUserWalkway {
-        @Test
-        @DisplayName("회원의 산책로를 반환한다.")
-        void it_returns_walkway_list() {
-            // given
-            Long memberId = 1L;
-            Integer size = 10;
-            Long walkwayId = 1L;
-            Walkway walkway = createWalkway();
-            List<Walkway> walkways = List.of(createWalkway());
+	@Nested
+	@DisplayName("getUserWalkway 메서드는")
+	class Describe_getUserWalkway {
+		@Test
+		@DisplayName("회원의 산책로를 반환한다.")
+		void it_returns_walkway_list() {
+			// given
+			Long memberId = 1L;
+			Integer size = 10;
+			Long walkwayId = 1L;
+			Walkway walkway = createWalkway();
+			List<Walkway> walkways = List.of(createWalkway());
 
-            when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
-            when(walkwayReader.getUserWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
+			when(walkwayReader.getWalkway(walkwayId)).thenReturn(walkway);
+			when(walkwayReader.getUserWalkway(memberId, size + 1, walkway.createdAt())).thenReturn(walkways);
 
-            // when
-            PagingResponse<Walkway> result = walkwayService.getUserWalkway(memberId, size, walkwayId);
+			// when
+			PagingResponse<Walkway> result = walkwayService.getUserWalkway(memberId, size, walkwayId);
 
-            // then
-            assertThat(result.data()).hasSize(walkways.size());
-            assertThat(result.hasNext()).isFalse();
-        }
-    }
+			// then
+			assertThat(result.data()).hasSize(walkways.size());
+			assertThat(result.hasNext()).isFalse();
+		}
+	}
 
-    @Nested
-    @DisplayName("createWalkwayHistory 메서드는")
-    class Describe_createWalkwayHistory {
-        @Test
-        @DisplayName("산책 기록을 저장하고 반환한다.")
-        void it_returns_id() {
-            // given
-            Long walkwayHistoryId = 1L;
-            CreateWalkwayHistory createWalkwayHistory = new CreateWalkwayHistory(1L, 1L, 2.5, 100);
+	@Nested
+	@DisplayName("createWalkwayHistory 메서드는")
+	class Describe_createWalkwayHistory {
+		@Test
+		@DisplayName("산책 기록을 저장하고 반환한다.")
+		void it_returns_id() {
+			// given
+			Long walkwayHistoryId = 1L;
+			CreateWalkwayHistory createWalkwayHistory = new CreateWalkwayHistory(1L, 1L, 2.5, 100);
 
-            when(walkwayWriter.saveWalkwayHistory(createWalkwayHistory)).thenReturn(walkwayHistoryId);
+			when(walkwayWriter.saveWalkwayHistory(createWalkwayHistory)).thenReturn(walkwayHistoryId);
 
-            // when
-            Long result = walkwayService.createWalkwayHistory(createWalkwayHistory);
+			// when
+			Long result = walkwayService.createWalkwayHistory(createWalkwayHistory);
 
-            // then
-            assertThat(result).isEqualTo(walkwayHistoryId);
-        }
-    }
+			// then
+			assertThat(result).isEqualTo(walkwayHistoryId);
+		}
+	}
 
-    @Nested
-    @DisplayName("getCanReviewWalkwayHistory 메서드는")
-    class Describe_getCanReviewWalkwayHistory {
-        @Test
-        @DisplayName("리뷰 가능한 산책로의 산책 기록을 조회힌다.")
-        void it_returns_walkway_history_list() {
-            // given
-            Long walkwayId = 1L;
-            Long memberId = 1L;
-            int size = 1;
-            List<WalkwayHistory> walkwayHistories = List.of(createWalkwayHistory());
+	@Nested
+	@DisplayName("getCanReviewWalkwayHistory 메서드는")
+	class Describe_getCanReviewWalkwayHistory {
+		@Test
+		@DisplayName("리뷰 가능한 산책로의 산책 기록을 조회힌다.")
+		void it_returns_walkway_history_list() {
+			// given
+			Long walkwayId = 1L;
+			Long memberId = 1L;
+			int size = 1;
+			List<WalkwayHistory> walkwayHistories = List.of(createWalkwayHistory());
 
-            when(walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size+1, null)).thenReturn(walkwayHistories);
+			when(walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size + 1, null)).thenReturn(
+				walkwayHistories);
 
-            // when
-            PagingResponse<WalkwayHistory> result = walkwayService.getCanReviewWalkwayHistory(walkwayId, memberId, size, null);
+			// when
+			PagingResponse<WalkwayHistory> result = walkwayService.getCanReviewWalkwayHistory(walkwayId, memberId,
+				size,
+				null);
 
-            // then
-            assertThat(result.data()).hasSize(walkwayHistories.size());
-            assertThat(result.hasNext()).isFalse();
-        }
-    }
+			// then
+			assertThat(result.data()).hasSize(walkwayHistories.size());
+			assertThat(result.hasNext()).isFalse();
+		}
+	}
 
-    @Nested
-    @DisplayName("getUserCanReviewWalkwayHistory 메서드는")
-    class Describe_getUserCanReviewWalkwayHistory {
-        @Test
-        @DisplayName("회원의 리뷰 가능한 산책 기록을 반환한다.")
-        void it_returns_walkway_history_list() {
-            // given
-            Long lastWalkwayHistoryId = 1L;
-            Long memberId = 1L;
-            int size = 10;
-            WalkwayHistory walkwayHistory = createWalkwayHistory();
-            List<WalkwayHistory> walkwayHistories = List.of(createWalkwayHistory());
+	@Nested
+	@DisplayName("getUserCanReviewWalkwayHistory 메서드는")
+	class Describe_getUserCanReviewWalkwayHistory {
+		@Test
+		@DisplayName("회원의 리뷰 가능한 산책 기록을 반환한다.")
+		void it_returns_walkway_history_list() {
+			// given
+			Long lastWalkwayHistoryId = 1L;
+			Long memberId = 1L;
+			int size = 10;
+			WalkwayHistory walkwayHistory = createWalkwayHistory();
+			List<WalkwayHistory> walkwayHistories = List.of(createWalkwayHistory());
 
-            when(walkwayReader.getWalkwayHistory(lastWalkwayHistoryId)).thenReturn(walkwayHistory);
-            when(walkwayReader.getUserCanReviewWalkwayHistory(memberId, size+1, walkwayHistory.createdAt())).thenReturn(walkwayHistories);
+			when(walkwayReader.getWalkwayHistory(lastWalkwayHistoryId)).thenReturn(walkwayHistory);
+			when(walkwayReader.getUserCanReviewWalkwayHistory(memberId, size + 1,
+				walkwayHistory.createdAt())).thenReturn(walkwayHistories);
 
-            // when
-            PagingResponse<WalkwayHistory> result = walkwayService.getUserCanReviewWalkwayHistory(lastWalkwayHistoryId, memberId, size);
+			// when
+			PagingResponse<WalkwayHistory> result = walkwayService.getUserCanReviewWalkwayHistory(lastWalkwayHistoryId,
+				memberId, size);
 
-            // then
-            assertThat(result.data()).hasSize(walkwayHistories.size());
-            assertThat(result.hasNext()).isFalse();
-        }
-    }
+			// then
+			assertThat(result.data()).hasSize(walkwayHistories.size());
+			assertThat(result.hasNext()).isFalse();
+		}
+	}
 
-    @Nested
-    @DisplayName("isCanReview 메서드는")
-    class Describe_isCanReview {
-        @Test
-        @DisplayName("산책 기록이 리뷰 가능한지 반환한다.")
-        void it_returns_can_review() {
-            // given
-            Long walkwayHistoryId = 1L;
-            WalkwayHistory walkwayHistory = createWalkwayHistory(0.0);
+	@Nested
+	@DisplayName("isCanReview 메서드는")
+	class Describe_isCanReview {
+		@Test
+		@DisplayName("산책 기록이 리뷰 가능한지 반환한다.")
+		void it_returns_can_review() {
+			// given
+			Long walkwayHistoryId = 1L;
+			WalkwayHistory walkwayHistory = createWalkwayHistory(0.0);
 
-            when(walkwayReader.getWalkwayHistory(walkwayHistoryId)).thenReturn(walkwayHistory);
+			when(walkwayReader.getWalkwayHistory(walkwayHistoryId)).thenReturn(walkwayHistory);
 
-            // when
-            boolean result = walkwayService.isCanReview(walkwayHistoryId);
+			// when
+			boolean result = walkwayService.isCanReview(walkwayHistoryId);
 
-            // then
-            assertThat(result).isFalse();
-        }
-    }
+			// then
+			assertThat(result).isFalse();
+		}
+	}
 
-    @Nested
-    @DisplayName("deleteWalkway 메서드는")
-    class DeleteWalkway {
-        @Test
-        @DisplayName("삭책로를 삭제한다.")
-        void it_returns_void() {
-            // given
-            Long walkwayId = 1L;
-            Long memberId = 1L;
+	@Nested
+	@DisplayName("deleteWalkway 메서드는")
+	class DeleteWalkway {
+		@Test
+		@DisplayName("삭책로를 삭제한다.")
+		void it_returns_void() {
+			// given
+			Long walkwayId = 1L;
+			Long memberId = 1L;
 
-            // when
-            walkwayService.deleteWalkway(walkwayId, memberId);
+			// when
+			walkwayService.deleteWalkway(walkwayId, memberId);
 
-            // then
-            verify(walkwayValidator).isOwnerOfWalkway(walkwayId, memberId);
-            verify(walkwayWriter).deleteWalkway(walkwayId);
-        }
-    }
+			// then
+			verify(walkwayValidator).isOwnerOfWalkway(walkwayId, memberId);
+			verify(walkwayWriter).deleteWalkway(walkwayId);
+		}
+	}
 }

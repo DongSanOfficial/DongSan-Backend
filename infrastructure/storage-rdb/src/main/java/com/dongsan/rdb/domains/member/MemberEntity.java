@@ -4,6 +4,7 @@ import com.dongsan.core.domains.auth.Provider;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberRole;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,51 +17,52 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "member")
 public class MemberEntity extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String email;
+	@Column(nullable = false)
+	private String email;
 
-    private String nickname;
+	private String nickname;
 
-    private String profileImageUrl;
+	private String profileImageUrl;
 
-    @Enumerated(EnumType.STRING)
-    private MemberRole role;
+	@Enumerated(EnumType.STRING)
+	private MemberRole role;
 
-    //@Column(columnDefinition = "varchar(255)")
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
+	//@Column(columnDefinition = "varchar(255)")
+	@Enumerated(EnumType.STRING)
+	private Provider provider;
 
-    protected MemberEntity(){}
+	protected MemberEntity() {
+	}
 
-    public MemberEntity(String email, String nickname, String profileImageUrl, MemberRole role, Provider provider){
-        this.email = email;
-        this.nickname = nickname;
-        this.profileImageUrl = profileImageUrl;
-        this.role = role;
-        this.provider = provider;
-    }
+	public MemberEntity(String email, String nickname, String profileImageUrl, MemberRole role, Provider provider) {
+		this.email = email;
+		this.nickname = nickname;
+		this.profileImageUrl = profileImageUrl;
+		this.role = role;
+		this.provider = provider;
+	}
 
-    public Member toMember(){
-        return new Member(id, email, nickname, profileImageUrl, role);
-    }
+	public Member toMember() {
+		return new Member(id, email, nickname, profileImageUrl, role);
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getNickname() {
-        return nickname;
-    }
+	public String getNickname() {
+		return nickname;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public Provider getProvider() {
-        return provider;
-    }
+	public Provider getProvider() {
+		return provider;
+	}
 }

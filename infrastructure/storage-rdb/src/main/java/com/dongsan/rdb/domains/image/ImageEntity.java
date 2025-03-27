@@ -2,6 +2,7 @@ package com.dongsan.rdb.domains.image;
 
 import com.dongsan.core.domains.image.Image;
 import com.dongsan.rdb.domains.common.entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,24 +13,25 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "image")
 public class ImageEntity extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String url;
+	@Column(nullable = false)
+	private String url;
 
-    protected ImageEntity(){}
+	protected ImageEntity() {
+	}
 
-    public ImageEntity(String url) {
-        this.url = url;
-    }
+	public ImageEntity(String url) {
+		this.url = url;
+	}
 
-    public Image toImage() {
-        return new Image(id, url);
-    }
+	public Image toImage() {
+		return new Image(id, url);
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 }

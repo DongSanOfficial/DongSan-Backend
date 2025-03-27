@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Transactional
 public class ImageWriter {
-    @Autowired
-    public ImageWriter(ImageRepository imageRepository) {
-        this.imageRepository = imageRepository;
-    }
+	@Autowired
+	public ImageWriter(ImageRepository imageRepository) {
+		this.imageRepository = imageRepository;
+	}
 
-    private final ImageRepository imageRepository;
+	private final ImageRepository imageRepository;
 
-    public Long createImage(String imageUrl) {
-        return imageRepository.save(imageUrl);
-    }
+	public Long createImage(String imageUrl) {
+		return imageRepository.save(imageUrl);
+	}
 }

@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Transactional(readOnly = true)
 public class ImageReader {
-    @Autowired
-    public ImageReader(ImageRepository imageRepository) {
-        this.imageRepository = imageRepository;
-    }
+	@Autowired
+	public ImageReader(ImageRepository imageRepository) {
+		this.imageRepository = imageRepository;
+	}
 
-    private final ImageRepository imageRepository;
+	private final ImageRepository imageRepository;
 
-    public Image getImage(Long id) {
-        return imageRepository.findById(id);
-    }
+	public Image getImage(Long id) {
+		return imageRepository.findById(id);
+	}
 }

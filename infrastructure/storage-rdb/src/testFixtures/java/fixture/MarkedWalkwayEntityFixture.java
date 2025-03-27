@@ -6,8 +6,8 @@ import com.dongsan.rdb.domains.walkway.WalkwayEntity;
 
 public class MarkedWalkwayEntityFixture {
 
-    public static MarkedWalkwayEntity createMarkedWalkway(WalkwayEntity walkwayEntity, BookmarkEntity bookmarkEntity){
-        return new MarkedWalkwayEntity(bookmarkEntity, walkwayEntity);
-    }
+	public static MarkedWalkwayEntity createMarkedWalkway(WalkwayEntity walkwayEntity, BookmarkEntity bookmarkEntity) {
+		return new MarkedWalkwayEntity(bookmarkEntity, walkwayEntity);
+	}
 
 }

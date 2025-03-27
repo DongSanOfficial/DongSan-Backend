@@ -1,17 +1,17 @@
 package com.dongsan.core.domains.member;
 
 public enum MemberRole {
-    ROLE_USER("ROLE_USER"),
-    ROLE_ADMIN("ROLE_ADMIN"),
-    ;
+	ROLE_USER("ROLE_USER"),
+	ROLE_ADMIN("ROLE_ADMIN"),
+	;
 
-    private final String description;
+	private final String description;
 
-    MemberRole(String description) {
-        this.description = description;
-    }
+	MemberRole(String description) {
+		this.description = description;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 }
