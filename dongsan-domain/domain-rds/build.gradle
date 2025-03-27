@@ -1,14 +1,13 @@
 plugins {
     id "java-test-fixtures"
-//    id "maven-publish"
 }
 
 dependencies {
-    compileOnly project(':core-domain')
-    testImplementation project(':core-domain')
+    compileOnly project(':dongsan-core')
+    testImplementation project(':dongsan-core')
 
     // LineString
-    implementation'org.hibernate:hibernate-spatial:6.2.2.Final'
+    implementation 'org.hibernate:hibernate-spatial:6.2.2.Final'
 
     // JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -39,11 +38,11 @@ dependencies {
 
     // testFixtures
     testFixturesImplementation 'org.locationtech.jts:jts-core:1.20.0'
-    testFixturesCompileOnly project(':core-domain') // enum 때문에 필요
+    testFixturesCompileOnly project(':dongsan-core') // enum 때문에 필요
 }
 
 // application.yml 설정 파일 복사
-tasks.register('copyConfig', Copy){
+tasks.register('copyConfig', Copy) {
     from '../../Config/storage/rdb'
     include "application*.yml"
     into 'src/main/resources'

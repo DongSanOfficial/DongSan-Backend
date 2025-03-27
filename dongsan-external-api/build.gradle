@@ -1,9 +1,9 @@
 dependencies {
-    implementation project(":core-domain")
-    implementation project(':infrastructure:storage-file')
-    runtimeOnly project(':infrastructure:storage-rdb')
-    runtimeOnly project(':infrastructure:storage-cache')
-    testImplementation(testFixtures(project(":core-domain")))
+    implementation project(":dongsan-core")
+    implementation project(':dongsan-domain:domain-file')
+    runtimeOnly project(':dongsan-domain:domain-rds')
+    runtimeOnly project(':dongsan-domain:domain-redis')
+    testImplementation(testFixtures(project(":dongsan-core")))
 
     // spring boot web
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -25,7 +25,7 @@ dependencies {
 }
 
 // application.yml 설정 파일 복사
-tasks.register('copyConfig', Copy){
+tasks.register('copyConfig', Copy) {
     from '../Config/external-api/'
     include "application*.yml"
     into 'src/main/resources'
@@ -33,10 +33,10 @@ tasks.register('copyConfig', Copy){
 
 processResources.dependsOn('copyConfig')
 
-bootJar{
+bootJar {
     enabled = true
 }
 
-jar{
+jar {
     enabled = false
 }
