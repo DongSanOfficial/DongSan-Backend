@@ -1,8 +1,9 @@
 package com.dongsan.core.domains.bookmark;
 
-import com.dongsan.core.domains.walkway.ExposeLevel;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.dongsan.core.domains.walkway.ExposeLevel;
 
 public record MarkedWalkway(
         Long walkwayId,
@@ -12,6 +13,9 @@ public record MarkedWalkway(
         Double distance,
         List<String> hashtags,
         String courseImageUrl,
-        ExposeLevel exposeLevel
+        ExposeLevel exposeLevel,
+		int likeCount,
+		int reviewCount,
+		double rating
 ) {
 }
