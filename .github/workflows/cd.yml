@@ -38,7 +38,7 @@ jobs:
 
       - name: Docker build & push to dev
         run: |
-          docker build -t ${{secrets.DOCKER_REPO}}:latest -f app-external-api/Dockerfile .
+          docker build -t ${{secrets.DOCKER_REPO}}:latest -f dongsan-external-api/Dockerfile .
           docker push ${{secrets.DOCKER_REPO}}:latest
 
       - name: Deploy to dev
