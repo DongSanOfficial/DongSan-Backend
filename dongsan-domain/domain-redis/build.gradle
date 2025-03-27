@@ -1,0 +1,16 @@
+dependencies {
+    compileOnly project(':dongsan-core')
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+}
+
+// application.yml 설정 파일 복사
+tasks.register('copyConfig', Copy) {
+    from '../../Config/storage/redis'
+    include "application*.yml"
+    into 'src/main/resources'
+}
+
+processResources.dependsOn('copyConfig')
+

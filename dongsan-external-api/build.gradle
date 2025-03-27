@@ -1,0 +1,42 @@
+dependencies {
+    implementation project(":dongsan-core")
+    implementation project(':dongsan-domain:domain-file')
+    runtimeOnly project(':dongsan-domain:domain-rds')
+    runtimeOnly project(':dongsan-domain:domain-redis')
+    testImplementation(testFixtures(project(":dongsan-core")))
+
+    // spring boot web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // security, oauth
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+}
+
+// application.yml 설정 파일 복사
+tasks.register('copyConfig', Copy) {
+    from '../Config/external-api/'
+    include "application*.yml"
+    into 'src/main/resources'
+}
+
+processResources.dependsOn('copyConfig')
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+}
