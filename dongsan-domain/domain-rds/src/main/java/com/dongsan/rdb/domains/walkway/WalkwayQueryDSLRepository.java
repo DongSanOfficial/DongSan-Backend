@@ -148,7 +148,9 @@ public class WalkwayQueryDSLRepository {
 					.or(walkwayEntity.member.id.eq(memberId)),
 				lastWalkwayEntity == null
 					? null
-					: walkwayEntity.createdAt.loe(lastWalkwayEntity.getCreatedAt())
+					: walkwayEntity.createdAt.lt(lastWalkwayEntity.getCreatedAt())
+					.or(walkwayEntity.createdAt.eq(lastWalkwayEntity.getCreatedAt())
+						.and(walkwayEntity.id.lt(lastWalkwayId)))
 			)
 			.limit(size)
 			.orderBy(walkwayEntity.createdAt.desc())
