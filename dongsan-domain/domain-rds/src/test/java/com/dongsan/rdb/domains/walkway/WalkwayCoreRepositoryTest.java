@@ -458,4 +458,27 @@ class WalkwayCoreRepositoryTest {
 			verify(markedWalkwayJpaRepository).deleteAllInBatchByWalkwayId(walkwayId);
 		}
 	}
+
+	@Nested
+	@DisplayName("getWalkwaysLatest 메서드는")
+	class Describe_getWalkwaysLatest {
+		@Test
+		@DisplayName("산책로 목록을 반환한다")
+		void it_returns_sorted_list() {
+			// given
+			Integer size = 1;
+			Long walkwayId = null;
+			Long memberId = 1L;
+			MemberEntity memberEntity = MemberEntityFixture.createMember();
+			List<WalkwayEntity> walkwayEntities = List.of(WalkwayEntityFixture.createWalkway(memberEntity));
+
+			when(walkwayQueryDSLRepository.getWalkwaysLatest(size, walkwayId, memberId)).thenReturn(walkwayEntities);
+
+			// when
+			List<Walkway> result = walkwayCoreRepository.getWalkwaysLatest(size, walkwayId, memberId);
+
+			// then
+			assertThat(result).isNotEmpty();
+		}
+	}
 }

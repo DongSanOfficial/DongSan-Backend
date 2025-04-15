@@ -32,6 +32,8 @@ public interface WalkwayRepository {
 
 	void deleteWalkway(Long walkwayId);
 
+	List<Walkway> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId);
+
 	// 좋아요
 	boolean existsLikedWalkway(Long memberId, Long walkwayId);
 

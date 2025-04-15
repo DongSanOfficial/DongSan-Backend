@@ -329,4 +329,57 @@ class WalkwayQueryDSLRepositoryTest extends RepositoryTest {
 			assertThat(result).hasSize(size - 1);
 		}
 	}
+
+	@Nested
+	@DisplayName("getWalkwaysLatest 메서드는")
+	class Describe_getWalkwaysLatest {
+		@BeforeEach
+		void setUp() {
+			MemberEntity memberEntity = MemberEntityFixture.createMember();
+			em.persist(memberEntity);
+
+			for (int i = 0; i < 5; i++) {
+				WalkwayEntity walkwayEntity = createWalkway(memberEntity);
+				em.persist(walkwayEntity);
+			}
+		}
+
+		@Test
+		@DisplayName("산책로를 반환 한다.")
+		void it_returns_walkway_list() {
+			// given
+			Long memberId = 1L;
+			Long lastWalkwayId = null;
+			int size = 5;
+
+			// when
+			List<WalkwayEntity> result = walkwayQueryDSLRepository.getWalkwaysLatest(size, lastWalkwayId, memberId);
+
+			// then
+			assertThat(result).hasSize(size);
+			LocalDateTime prevCreatedAt = result.get(0)
+				.getCreatedAt();
+			for (int i = 1; i < 5; i++) {
+				LocalDateTime curCreatedAt = result.get(i)
+					.getCreatedAt();
+				assertThat(curCreatedAt).isBeforeOrEqualTo(prevCreatedAt);
+				prevCreatedAt = curCreatedAt;
+			}
+		}
+
+		@Test
+		@DisplayName("size 크기만큼 산책로를 반환 한다.")
+		void it_returns_size_list() {
+			// given
+			Long memberId = 1L;
+			Long lastWalkwayId = null;
+			int size = 1;
+
+			// when
+			List<WalkwayEntity> result = walkwayQueryDSLRepository.getWalkwaysLatest(size, lastWalkwayId, memberId);
+
+			// then
+			assertThat(result).hasSize(size);
+		}
+	}
 }

@@ -211,4 +211,14 @@ public class WalkwayCoreRepository implements WalkwayRepository {
 		walkwayHistory.updateIsReviewed(isReviewed);
 		walkwayHistoryJpaRepository.save(walkwayHistory);
 	}
+
+	@Override
+	public List<Walkway> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {
+		List<WalkwayEntity> walkwayEntities =
+			walkwayQueryDSLRepository.getWalkwaysLatest(size, lastWalkwayId, memberId);
+
+		return walkwayEntities.stream()
+			.map(WalkwayEntity::toWalkway)
+			.toList();
+	}
 }
