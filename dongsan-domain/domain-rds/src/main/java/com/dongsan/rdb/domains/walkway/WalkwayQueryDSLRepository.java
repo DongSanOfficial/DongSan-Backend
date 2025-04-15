@@ -150,7 +150,7 @@ public class WalkwayQueryDSLRepository {
 					? null
 					: walkwayEntity.createdAt.lt(lastWalkwayEntity.getCreatedAt())
 					.or(walkwayEntity.createdAt.eq(lastWalkwayEntity.getCreatedAt())
-						.and(walkwayEntity.id.lt(lastWalkwayId)))
+						.and(walkwayIdLt(lastWalkwayId)))
 			)
 			.limit(size)
 			.orderBy(walkwayEntity.createdAt.desc())
