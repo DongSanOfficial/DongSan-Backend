@@ -367,4 +367,27 @@ class WalkwayServiceTest {
 			verify(walkwayWriter).deleteWalkway(walkwayId);
 		}
 	}
+
+	@Nested
+	@DisplayName("getWalkwaysLatest 메서드는")
+	class Describe_getWalkwaysLatest {
+		@Test
+		@DisplayName("산책로 목록을 반환한다.")
+		void it_returns_walkway_list() {
+			// given
+			Long memberId = 1L;
+			Integer size = 1;
+			Long lastWalkwayId = null;
+			List<Walkway> walkways = List.of(createWalkway());
+
+			when(walkwayReader.getWalkwaysLatest(size + 1, lastWalkwayId, memberId)).thenReturn(walkways);
+
+			// when
+			PagingResponse<Walkway> result = walkwayService.getWalkwaysLatest(size, lastWalkwayId, memberId);
+
+			// then
+			assertThat(result.data()).hasSize(walkways.size());
+			assertThat(result.hasNext()).isFalse();
+		}
+	}
 }
