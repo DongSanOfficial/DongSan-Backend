@@ -382,4 +382,84 @@ class WalkwayQueryDSLRepositoryTest extends RepositoryTest {
 			assertThat(result).hasSize(size);
 		}
 	}
+
+	@Nested
+	@DisplayName("getWalkwaysLiked 메서드는")
+	class Describe_getWalkwaysLiked {
+		@BeforeEach
+		void setUp() {
+			MemberEntity memberEntity = MemberEntityFixture.createMember();
+			em.persist(memberEntity);
+
+			for (int i = 0; i < 5; i++) {
+				WalkwayEntity walkwayEntity = createWalkway(memberEntity);
+				for (int j = 0; j < i; j++) {
+					walkwayEntity.increaseLikeCount();
+				}
+				em.persist(walkwayEntity);
+			}
+		}
+
+		@Test
+		@DisplayName("좋아요 순으로 산책로를 반환 한다.")
+		void it_returns_walkway_list() {
+			// given
+			Long memberId = 1L;
+			Long lastWalkwayId = null;
+			int size = 5;
+
+			// when
+			List<WalkwayEntity> result = walkwayQueryDSLRepository.getWalkwaysLiked(size, lastWalkwayId, memberId);
+
+			// then
+			assertThat(result).hasSize(size);
+			int prevLikeCount = result.get(0)
+				.getLikeCount();
+			for (int i = 1; i < 5; i++) {
+				int currentLikeCount = result.get(i)
+					.getLikeCount();
+				assertThat(currentLikeCount).isLessThanOrEqualTo(prevLikeCount);
+				prevLikeCount = currentLikeCount;
+			}
+		}
+	}
+
+	@Nested
+	@DisplayName("getWalkwaysRating 메서드는")
+	class Describe_getWalkwaysRating {
+		@BeforeEach
+		void setUp() {
+			MemberEntity memberEntity = MemberEntityFixture.createMember();
+			em.persist(memberEntity);
+
+			for (int i = 0; i < 5; i++) {
+				WalkwayEntity walkwayEntity = createWalkway(memberEntity);
+				walkwayEntity.updateRatingAndReviewCount((double)i, i);
+				em.persist(walkwayEntity);
+			}
+		}
+
+		@Test
+		@DisplayName("좋아요 순으로 산책로를 반환 한다.")
+		void it_returns_walkway_list() {
+			// given
+			Long memberId = 1L;
+			Long lastWalkwayId = null;
+			int size = 5;
+
+			// when
+			List<WalkwayEntity> result = walkwayQueryDSLRepository.getWalkwaysRating(size, lastWalkwayId, memberId);
+
+			// then
+			assertThat(result).hasSize(size);
+			Double prevRating = result.get(0)
+				.getRating();
+			for (int i = 1; i < 5; i++) {
+				Double currentLikeCount = result.get(i)
+					.getRating();
+				assertThat(currentLikeCount).isLessThanOrEqualTo(prevRating);
+				prevRating = currentLikeCount;
+			}
+		}
+	}
 }

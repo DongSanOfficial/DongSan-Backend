@@ -34,6 +34,10 @@ public interface WalkwayRepository {
 
 	List<Walkway> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId);
 
+	List<Walkway> getWalkwaysLiked(Integer size, Long lastWalkwayId, Long memberId);
+
+	List<Walkway> getWalkwaysRating(Integer size, Long lastWalkwayId, Long memberId);
+
 	// 좋아요
 	boolean existsLikedWalkway(Long memberId, Long walkwayId);
 

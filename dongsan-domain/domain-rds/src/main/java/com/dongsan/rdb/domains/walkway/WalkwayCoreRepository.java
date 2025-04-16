@@ -221,4 +221,24 @@ public class WalkwayCoreRepository implements WalkwayRepository {
 			.map(WalkwayEntity::toWalkway)
 			.toList();
 	}
+
+	@Override
+	public List<Walkway> getWalkwaysLiked(Integer size, Long lastWalkwayId, Long memberId) {
+		List<WalkwayEntity> walkwayEntities =
+			walkwayQueryDSLRepository.getWalkwaysLiked(size, lastWalkwayId, memberId);
+
+		return walkwayEntities.stream()
+			.map(WalkwayEntity::toWalkway)
+			.toList();
+	}
+
+	@Override
+	public List<Walkway> getWalkwaysRating(Integer size, Long lastWalkwayId, Long memberId) {
+		List<WalkwayEntity> walkwayEntities =
+			walkwayQueryDSLRepository.getWalkwaysRating(size, lastWalkwayId, memberId);
+
+		return walkwayEntities.stream()
+			.map(WalkwayEntity::toWalkway)
+			.toList();
+	}
 }
