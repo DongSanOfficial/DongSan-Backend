@@ -445,7 +445,7 @@ class WalkwayControllerTest {
 			Integer size = 10;
 			PagingResponse<Walkway> cursorPagingResponse = PagingResponse.from(walkways, size);
 
-			when(walkwayService.getWalkwaysLatest(any(), any(), any())).thenReturn(cursorPagingResponse);
+			when(walkwayService.getWalkways(any(), any(), any(), any())).thenReturn(cursorPagingResponse);
 			when(walkwayService.existsLikedWalkways(any(), any())).thenReturn(isLiked);
 
 			// When
