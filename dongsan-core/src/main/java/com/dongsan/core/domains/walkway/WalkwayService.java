@@ -156,8 +156,13 @@ public class WalkwayService {
 	}
 
 	@Transactional(readOnly = true)
-	public PagingResponse<Walkway> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {
-		List<Walkway> walkways = walkwayReader.getWalkwaysLatest(size + 1, lastWalkwayId, memberId);
+	public PagingResponse<Walkway> getWalkways(Integer size, Long lastWalkwayId, Long memberId, String sort) {
+		List<Walkway> walkways = switch (sort) {
+			case "liked" -> walkwayReader.getWalkwaysLiked(size + 1, lastWalkwayId, memberId);
+			case "rating" -> walkwayReader.getWalkwaysRating(size + 1, lastWalkwayId, memberId);
+			default -> walkwayReader.getWalkwaysLatest(size + 1, lastWalkwayId, memberId);
+		};
+
 		return PagingResponse.from(walkways, size);
 	}
 }

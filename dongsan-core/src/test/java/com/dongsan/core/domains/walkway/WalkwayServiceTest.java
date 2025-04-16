@@ -369,21 +369,62 @@ class WalkwayServiceTest {
 	}
 
 	@Nested
-	@DisplayName("getWalkwaysLatest 메서드는")
-	class Describe_getWalkwaysLatest {
+	@DisplayName("getWalkways 메서드는")
+	class Describe_getWalkways {
 		@Test
-		@DisplayName("산책로 목록을 반환한다.")
+		@DisplayName("sort가 liked나 rating이 아니면 최신순 산책로 목록을 반환한다.")
 		void it_returns_walkway_list() {
 			// given
 			Long memberId = 1L;
 			Integer size = 1;
 			Long lastWalkwayId = null;
+			String sort = "latest";
 			List<Walkway> walkways = List.of(createWalkway());
 
 			when(walkwayReader.getWalkwaysLatest(size + 1, lastWalkwayId, memberId)).thenReturn(walkways);
 
 			// when
-			PagingResponse<Walkway> result = walkwayService.getWalkwaysLatest(size, lastWalkwayId, memberId);
+			PagingResponse<Walkway> result = walkwayService.getWalkways(size, lastWalkwayId, memberId, sort);
+
+			// then
+			assertThat(result.data()).hasSize(walkways.size());
+			assertThat(result.hasNext()).isFalse();
+		}
+
+		@Test
+		@DisplayName("sort가 liked이면 좋아요순 산책로 목록을 반환한다.")
+		void it_returns_walkway_list_ordered_liked() {
+			// given
+			Long memberId = 1L;
+			Integer size = 1;
+			Long lastWalkwayId = null;
+			String sort = "liked";
+			List<Walkway> walkways = List.of(createWalkway());
+
+			when(walkwayReader.getWalkwaysLiked(size + 1, lastWalkwayId, memberId)).thenReturn(walkways);
+
+			// when
+			PagingResponse<Walkway> result = walkwayService.getWalkways(size, lastWalkwayId, memberId, sort);
+
+			// then
+			assertThat(result.data()).hasSize(walkways.size());
+			assertThat(result.hasNext()).isFalse();
+		}
+
+		@Test
+		@DisplayName("sort가 rating이면 최신순 산책로 목록을 반환한다.")
+		void it_returns_walkway_list_ordered_rating() {
+			// given
+			Long memberId = 1L;
+			Integer size = 1;
+			Long lastWalkwayId = null;
+			String sort = "rating";
+			List<Walkway> walkways = List.of(createWalkway());
+
+			when(walkwayReader.getWalkwaysRating(size + 1, lastWalkwayId, memberId)).thenReturn(walkways);
+
+			// when
+			PagingResponse<Walkway> result = walkwayService.getWalkways(size, lastWalkwayId, memberId, sort);
 
 			// then
 			assertThat(result.data()).hasSize(walkways.size());
