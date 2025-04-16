@@ -65,4 +65,8 @@ public class WalkwayReader {
 	public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt) {
 		return walkwayRepository.getUserCanReviewWalkwayHistory(memberId, size, lastCreatedAt);
 	}
+
+	public List<Walkway> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {
+		return walkwayRepository.getWalkwaysLatest(size, lastWalkwayId, memberId);
+	}
 }

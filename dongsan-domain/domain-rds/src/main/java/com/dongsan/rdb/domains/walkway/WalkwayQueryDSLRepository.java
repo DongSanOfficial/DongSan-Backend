@@ -132,4 +132,29 @@ public class WalkwayQueryDSLRepository {
 			.fetch();
 	}
 
+	// 전체 조회
+	public List<WalkwayEntity> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {
+		WalkwayEntity lastWalkwayEntity = null;
+		if (lastWalkwayId != null) {
+			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
+				.where(walkwayEntity.id.eq(lastWalkwayId))
+				.fetchOne();
+		}
+
+		return queryFactory.select(walkwayEntity)
+			.from(walkwayEntity)
+			.where(
+				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
+					.or(walkwayEntity.member.id.eq(memberId)),
+				lastWalkwayEntity == null
+					? null
+					: walkwayEntity.createdAt.lt(lastWalkwayEntity.getCreatedAt())
+					.or(walkwayEntity.createdAt.eq(lastWalkwayEntity.getCreatedAt())
+						.and(walkwayIdLt(lastWalkwayId)))
+			)
+			.limit(size)
+			.orderBy(walkwayEntity.createdAt.desc())
+			.fetch();
+	}
+
 }

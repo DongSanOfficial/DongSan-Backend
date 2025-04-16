@@ -154,4 +154,10 @@ public class WalkwayService {
 		walkwayValidator.isOwnerOfWalkway(walkwayId, memberId);
 		walkwayWriter.deleteWalkway(walkwayId);
 	}
+
+	@Transactional(readOnly = true)
+	public PagingResponse<Walkway> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {
+		List<Walkway> walkways = walkwayReader.getWalkwaysLatest(size + 1, lastWalkwayId, memberId);
+		return PagingResponse.from(walkways, size);
+	}
 }
