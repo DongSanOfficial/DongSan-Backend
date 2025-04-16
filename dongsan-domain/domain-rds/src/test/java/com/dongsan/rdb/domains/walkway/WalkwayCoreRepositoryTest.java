@@ -481,4 +481,50 @@ class WalkwayCoreRepositoryTest {
 			assertThat(result).isNotEmpty();
 		}
 	}
+
+	@Nested
+	@DisplayName("getWalkwaysLiked 메서드는")
+	class Describe_getWalkwaysLiked {
+		@Test
+		@DisplayName("산책로 목록을 반환한다")
+		void it_returns_sorted_list() {
+			// given
+			Integer size = 1;
+			Long walkwayId = null;
+			Long memberId = 1L;
+			MemberEntity memberEntity = MemberEntityFixture.createMember();
+			List<WalkwayEntity> walkwayEntities = List.of(WalkwayEntityFixture.createWalkway(memberEntity));
+
+			when(walkwayQueryDSLRepository.getWalkwaysLiked(size, walkwayId, memberId)).thenReturn(walkwayEntities);
+
+			// when
+			List<Walkway> result = walkwayCoreRepository.getWalkwaysLiked(size, walkwayId, memberId);
+
+			// then
+			assertThat(result).isNotEmpty();
+		}
+	}
+
+	@Nested
+	@DisplayName("getWalkwaysRating 메서드는")
+	class Describe_getWalkwaysRating {
+		@Test
+		@DisplayName("산책로 목록을 반환한다")
+		void it_returns_sorted_list() {
+			// given
+			Integer size = 1;
+			Long walkwayId = null;
+			Long memberId = 1L;
+			MemberEntity memberEntity = MemberEntityFixture.createMember();
+			List<WalkwayEntity> walkwayEntities = List.of(WalkwayEntityFixture.createWalkway(memberEntity));
+
+			when(walkwayQueryDSLRepository.getWalkwaysRating(size, walkwayId, memberId)).thenReturn(walkwayEntities);
+
+			// when
+			List<Walkway> result = walkwayCoreRepository.getWalkwaysRating(size, walkwayId, memberId);
+
+			// then
+			assertThat(result).isNotEmpty();
+		}
+	}
 }
