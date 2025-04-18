@@ -1,15 +1,17 @@
 package com.dongsan.api.domains.review;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static review.ReviewFixture.*;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
+import com.dongsan.api.domains.auth.AuthUserDto;
+import com.dongsan.api.domains.auth.CustomAuthUser;
+import com.dongsan.api.domains.auth.oauth2.CustomRequestEntityConverter;
+import com.dongsan.core.domains.member.Member;
+import com.dongsan.core.domains.review.CreateReview;
+import com.dongsan.core.domains.review.Rating;
+import com.dongsan.core.domains.review.Review;
+import com.dongsan.core.domains.review.ReviewService;
+import com.dongsan.core.support.util.CursorRequest;
+import com.dongsan.core.support.util.PagingResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import member.MemberFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -28,126 +30,128 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.dongsan.api.domains.auth.AuthUserDto;
-import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.core.domains.member.Member;
-import com.dongsan.core.domains.review.CreateReview;
-import com.dongsan.core.domains.review.Rating;
-import com.dongsan.core.domains.review.Review;
-import com.dongsan.core.domains.review.ReviewService;
-import com.dongsan.core.support.util.CursorRequest;
-import com.dongsan.core.support.util.PagingResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
-import member.MemberFixture;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static review.ReviewFixture.createReviewWithId;
 
 @WebMvcTest(ReviewController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReviewController Unit Test")
 class ReviewControllerTest {
-	@Autowired
-	MockMvc mockMvc;
-	@Autowired
-	ObjectMapper objectMapper;
-	@MockBean
-	ReviewService reviewService;
-	final Member member = MemberFixture.createMember();
-	final CustomAuthUser customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    ObjectMapper objectMapper;
+    @MockBean
+    ReviewService reviewService;
+    @MockBean
+    CustomRequestEntityConverter customRequestEntityConverter;
 
-	@BeforeEach
-	void setUp_Authentication() {
-		SecurityContext context = SecurityContextHolder.getContext();
-		Authentication authentication = new UsernamePasswordAuthenticationToken(customOAuth2User, null, null);
-		context.setAuthentication(authentication);
-	}
+    final Member member = MemberFixture.createMember();
+    final CustomAuthUser customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
 
-	@Nested
-	@DisplayName("createReview 메서드는")
-	class Describe_createReviewEntity {
-		@Test
-		@DisplayName("리뷰 작성에 성공하면 작성한 리뷰의 ID를 반환한다.")
-		void it_returns_reviewId() throws Exception {
-			// Given
-			Long walkwayId = 1L;
-			Long reviewId = 1L;
-			Integer rating = 5;
-			CreateReviewRequest request = new CreateReviewRequest(1L, rating, "test content");
-			CreateReview createReview = new CreateReview(customOAuth2User.getMemberId(), walkwayId,
-				request.walkwayHistoryId(), Rating.numOf(request.rating()), request.content());
+    @BeforeEach
+    void setUp_Authentication() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(customOAuth2User, null, null);
+        context.setAuthentication(authentication);
+    }
 
-			when(reviewService.createReview(createReview)).thenReturn(reviewId);
+    @Nested
+    @DisplayName("createReview 메서드는")
+    class Describe_createReviewEntity {
+        @Test
+        @DisplayName("리뷰 작성에 성공하면 작성한 리뷰의 ID를 반환한다.")
+        void it_returns_reviewId() throws Exception {
+            // Given
+            Long walkwayId = 1L;
+            Long reviewId = 1L;
+            Integer rating = 5;
+            CreateReviewRequest request = new CreateReviewRequest(1L, rating, "test content");
+            CreateReview createReview = new CreateReview(customOAuth2User.getMemberId(), walkwayId,
+                    request.walkwayHistoryId(), Rating.numOf(request.rating()), request.content());
 
-			// When
-			ResultActions response = mockMvc.perform(post("/walkways/1/review")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(request)));
+            when(reviewService.createReview(createReview)).thenReturn(reviewId);
 
-			// Then
-			response.andExpect(status().isOk())
-				.andExpect(jsonPath("$.reviewId").value(reviewId));
-		}
-	}
+            // When
+            ResultActions response = mockMvc.perform(post("/walkways/1/review")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)));
 
-	@Nested
-	@DisplayName("getWalkwayReviews 메서드는")
-	class Describe_getWalkwayReviewsEntity {
-		@Test
-		@DisplayName("리뷰 리스트를 반환한다.")
-		void it_returns_review_list() throws Exception {
-			// Given
-			String type = "latest";
-			Long walkwayId = 1L;
-			Long lastId = null;
-			Integer size = 10;
+            // Then
+            response.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.reviewId").value(reviewId));
+        }
+    }
 
-			List<Review> reviews = new ArrayList<>();
-			for (int i = 0; i < 5; i++) {
-				reviews.add(createReviewWithId(1L, member.id(), walkwayId));
-			}
-			PagingResponse<Review> cursorPagingResponse = PagingResponse.from(reviews, size);
+    @Nested
+    @DisplayName("getWalkwayReviews 메서드는")
+    class Describe_getWalkwayReviewsEntity {
+        @Test
+        @DisplayName("리뷰 리스트를 반환한다.")
+        void it_returns_review_list() throws Exception {
+            // Given
+            String type = "latest";
+            Long walkwayId = 1L;
+            Long lastId = null;
+            Integer size = 10;
 
-			when(reviewService.getWalkwayReviews(type, walkwayId, member.id(), new CursorRequest(lastId, size)))
-				.thenReturn(cursorPagingResponse);
+            List<Review> reviews = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                reviews.add(createReviewWithId(1L, member.id(), walkwayId));
+            }
+            PagingResponse<Review> cursorPagingResponse = PagingResponse.from(reviews, size);
 
-			// When
-			ResultActions response = mockMvc.perform(get("/walkways/1/review/content")
-				.contentType(MediaType.APPLICATION_JSON)
-				.param("sort", type));
+            when(reviewService.getWalkwayReviews(type, walkwayId, member.id(), new CursorRequest(lastId, size)))
+                    .thenReturn(cursorPagingResponse);
 
-			// Then
-			response.andExpect(status().isOk())
-				.andExpect(jsonPath("$.data").isNotEmpty())
-				.andExpect(jsonPath("$.data").isArray())
-				.andExpect(jsonPath("$.data.size()").value(5));
-		}
-	}
+            // When
+            ResultActions response = mockMvc.perform(get("/walkways/1/review/content")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .param("sort", type));
 
-	@Nested
-	@DisplayName("getWalkwaysRating 메서드는")
-	class Describe_getWalkwaysRating {
-		@Test
-		@DisplayName("산책로 별점 내용을 반환한다.")
-		void it_returns_walkway_rating_info() throws Exception {
-			// Given
-			Long walkwayId = 1L;
+            // Then
+            response.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data.size()").value(5));
+        }
+    }
 
-			Map<Rating, Long> ratingCounts = new EnumMap<>(Rating.class);
-			for (Integer i = 1; i <= 5; i++) {
-				ratingCounts.put(Rating.numOf(i), 10L);
-			}
+    @Nested
+    @DisplayName("getWalkwaysRating 메서드는")
+    class Describe_getWalkwaysRating {
+        @Test
+        @DisplayName("산책로 별점 내용을 반환한다.")
+        void it_returns_walkway_rating_info() throws Exception {
+            // Given
+            Long walkwayId = 1L;
 
-			when(reviewService.getWalkwayRating(walkwayId, member.id())).thenReturn(ratingCounts);
+            Map<Rating, Long> ratingCounts = new EnumMap<>(Rating.class);
+            for (Integer i = 1; i <= 5; i++) {
+                ratingCounts.put(Rating.numOf(i), 10L);
+            }
 
-			// When
-			ResultActions response = mockMvc.perform(get("/walkways/1/review/rating")
-				.contentType(MediaType.APPLICATION_JSON));
+            when(reviewService.getWalkwayRating(walkwayId, member.id())).thenReturn(ratingCounts);
 
-			response.andExpect(jsonPath("$.five").value(20L))
-				.andExpect(jsonPath("$.four").value(20L))
-				.andExpect(jsonPath("$.three").value(20L))
-				.andExpect(jsonPath("$.two").value(20L))
-				.andExpect(jsonPath("$.one").value(20L));
-		}
-	}
+            // When
+            ResultActions response = mockMvc.perform(get("/walkways/1/review/rating")
+                    .contentType(MediaType.APPLICATION_JSON));
+
+            response.andExpect(jsonPath("$.five").value(20L))
+                    .andExpect(jsonPath("$.four").value(20L))
+                    .andExpect(jsonPath("$.three").value(20L))
+                    .andExpect(jsonPath("$.two").value(20L))
+                    .andExpect(jsonPath("$.one").value(20L));
+        }
+    }
 }

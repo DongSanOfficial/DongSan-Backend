@@ -13,6 +13,7 @@ public record OAuth2Attributes(
         return switch (socialType) {
             case KAKAO -> ofKakao(attributes);
             case NAVER -> ofNaver(attributes);
+            case APPLE -> ofApple(attributes);
         };
     }
 
@@ -25,5 +26,10 @@ public record OAuth2Attributes(
     private static OAuth2Attributes ofNaver(Map<String, Object> attributes) {
         Map<String, String> response = (Map<String, String>) attributes.get("response");
         return new OAuth2Attributes(response.get("email"), response.get("nickname"));
+    }
+
+    private static OAuth2Attributes ofApple(Map<String, Object> attributes) {
+        String email = (String) attributes.get("email");
+        return new OAuth2Attributes(email, email);
     }
 }
