@@ -276,4 +276,73 @@ class WalkwayReaderTest {
 			assertThat(result).hasSize(walkwayHistories.size());
 		}
 	}
+
+	@Nested
+	@DisplayName("getWalkwaysLatest 메서드는")
+	class Describe_getWalkwaysLatest {
+		@Test
+		@DisplayName("산책로 목록을 반환한다.")
+		void it_returns_walkways() {
+			// given
+			Long memberId = 1L;
+			int size = 1;
+			Long lastWalkwayId = null;
+			List<Walkway> walkways = List.of(WalkwayFixture.createWalkway());
+
+			when(walkwayRepository.getWalkwaysLatest(size, lastWalkwayId, memberId)).thenReturn(
+				walkways);
+
+			// when
+			List<Walkway> result = walkwayReader.getWalkwaysLatest(size, lastWalkwayId, memberId);
+
+			// then
+			assertThat(result).hasSize(size);
+		}
+	}
+
+	@Nested
+	@DisplayName("getWalkwaysLiked 메서드는")
+	class Describe_getWalkwaysLiked {
+		@Test
+		@DisplayName("산책로 목록을 반환한다.")
+		void it_returns_walkways() {
+			// given
+			Long memberId = 1L;
+			int size = 1;
+			Long lastWalkwayId = null;
+			List<Walkway> walkways = List.of(WalkwayFixture.createWalkway());
+
+			when(walkwayRepository.getWalkwaysLiked(size, lastWalkwayId, memberId)).thenReturn(
+				walkways);
+
+			// when
+			List<Walkway> result = walkwayReader.getWalkwaysLiked(size, lastWalkwayId, memberId);
+
+			// then
+			assertThat(result).hasSize(size);
+		}
+	}
+
+	@Nested
+	@DisplayName("getWalkwaysRating 메서드는")
+	class Describe_getWalkwaysRating {
+		@Test
+		@DisplayName("산책로 목록을 반환한다.")
+		void it_returns_walkways() {
+			// given
+			Long memberId = 1L;
+			int size = 1;
+			Long lastWalkwayId = null;
+			List<Walkway> walkways = List.of(WalkwayFixture.createWalkway());
+
+			when(walkwayRepository.getWalkwaysRating(size, lastWalkwayId, memberId)).thenReturn(
+				walkways);
+
+			// when
+			List<Walkway> result = walkwayReader.getWalkwaysRating(size, lastWalkwayId, memberId);
+
+			// then
+			assertThat(result).hasSize(size);
+		}
+	}
 }

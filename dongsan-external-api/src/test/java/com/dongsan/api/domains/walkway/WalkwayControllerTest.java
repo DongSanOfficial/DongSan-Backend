@@ -61,7 +61,7 @@ class WalkwayControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-    
+
     @MockBean
     CustomRequestEntityConverter customRequestEntityConverter;
 
@@ -420,6 +420,43 @@ class WalkwayControllerTest {
 
             // then
             response.andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    @DisplayName("getWalkwaysLatest 메서드는")
+    class Describe_getWalkwaysLatest {
+        List<Walkway> walkways = new ArrayList<>();
+        Map<Long, Boolean> isLiked = new HashMap<>();
+
+        @BeforeEach
+        void setUp() {
+            for (long i = 1; i <= 10; i++) {
+                walkways.add(createWalkwayWithId(i));
+                isLiked.put(i, true);
+            }
+        }
+
+        @Test
+        @DisplayName("산책로 목록을 반환한다.")
+        void it_returns_walkways() throws Exception {
+            // given
+            Integer size = 10;
+            PagingResponse<Walkway> cursorPagingResponse = PagingResponse.from(walkways, size);
+
+            when(walkwayService.getWalkways(any(), any(), any(), any())).thenReturn(cursorPagingResponse);
+            when(walkwayService.existsLikedWalkways(any(), any())).thenReturn(isLiked);
+
+            // When
+            ResultActions response = mockMvc.perform(get("/walkways/all")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .param("size", size.toString()));
+
+            // Then
+            response.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.size()").value(size));
         }
     }
 }

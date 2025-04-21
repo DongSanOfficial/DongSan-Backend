@@ -132,4 +132,79 @@ public class WalkwayQueryDSLRepository {
 			.fetch();
 	}
 
+	// 전체 조회
+	public List<WalkwayEntity> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {
+		WalkwayEntity lastWalkwayEntity = null;
+		if (lastWalkwayId != null) {
+			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
+				.where(walkwayEntity.id.eq(lastWalkwayId))
+				.fetchOne();
+		}
+
+		return queryFactory.select(walkwayEntity)
+			.from(walkwayEntity)
+			.where(
+				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
+					.or(walkwayEntity.member.id.eq(memberId)),
+				lastWalkwayEntity == null
+					? null
+					: walkwayEntity.createdAt.lt(lastWalkwayEntity.getCreatedAt())
+					.or(walkwayEntity.createdAt.eq(lastWalkwayEntity.getCreatedAt())
+						.and(walkwayIdLt(lastWalkwayId)))
+			)
+			.limit(size)
+			.orderBy(walkwayEntity.createdAt.desc())
+			.fetch();
+	}
+
+	public List<WalkwayEntity> getWalkwaysLiked(Integer size, Long lastWalkwayId, Long memberId) {
+		WalkwayEntity lastWalkwayEntity = null;
+		if (lastWalkwayId != null) {
+			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
+				.where(walkwayEntity.id.eq(lastWalkwayId))
+				.fetchOne();
+		}
+
+		return queryFactory.select(walkwayEntity)
+			.from(walkwayEntity)
+			.where(
+				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
+					.or(walkwayEntity.member.id.eq(memberId)),
+				lastWalkwayEntity == null
+					? null
+					: walkwayEntity.likeCount.lt(lastWalkwayEntity.getLikeCount())
+					.or(walkwayEntity.likeCount.eq(lastWalkwayEntity.getLikeCount())
+						.and(createdAtLt(lastWalkwayEntity.getCreatedAt()))
+					)
+			)
+			.limit(size)
+			.orderBy(walkwayEntity.likeCount.desc(), walkwayEntity.createdAt.desc())
+			.fetch();
+	}
+
+	public List<WalkwayEntity> getWalkwaysRating(Integer size, Long lastWalkwayId, Long memberId) {
+		WalkwayEntity lastWalkwayEntity = null;
+		if (lastWalkwayId != null) {
+			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
+				.where(walkwayEntity.id.eq(lastWalkwayId))
+				.fetchOne();
+		}
+
+		return queryFactory.select(walkwayEntity)
+			.from(walkwayEntity)
+			.where(
+				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
+					.or(walkwayEntity.member.id.eq(memberId)),
+				lastWalkwayEntity == null
+					? null
+					: walkwayEntity.rating.lt(lastWalkwayEntity.getRating())
+					.or(walkwayEntity.rating.eq(lastWalkwayEntity.getRating())
+						.and(createdAtLt(lastWalkwayEntity.getCreatedAt()))
+					)
+			)
+			.limit(size)
+			.orderBy(walkwayEntity.rating.desc(), walkwayEntity.createdAt.desc())
+			.fetch();
+	}
+
 }

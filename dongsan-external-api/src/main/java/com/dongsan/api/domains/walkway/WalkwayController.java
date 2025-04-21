@@ -197,4 +197,25 @@ public class WalkwayController {
 		return ResponseEntity.ok()
 			.build();
 	}
+
+	@Operation(summary = "산책로 조회 (위치 기반 X)")
+	@GetMapping("/all")
+	public ResponseEntity<CursorResponse<SearchWalkwayResponse>> getWalkwaysLatest(
+		@RequestParam(name = "sort", defaultValue = "latest") String sort,
+		@RequestParam(name = "lastId", required = false) Long lastId,
+		@RequestParam(name = "size", defaultValue = "10") Integer size,
+		@AuthenticationPrincipal CustomAuthUser customOAuth2User
+	) {
+		PagingResponse<Walkway> response = walkwayService.getWalkways(size, lastId,
+			customOAuth2User.getMemberId(), sort);
+
+		List<Long> walkwayIds = response.data()
+			.stream()
+			.map(Walkway::walkwayId)
+			.toList();
+		Map<Long, Boolean> isLiked = walkwayService.existsLikedWalkways(customOAuth2User.getMemberId(), walkwayIds);
+
+		return ResponseEntity.ok(new CursorResponse<>(SearchWalkwayResponse.from(response.data(), isLiked),
+			response.hasNext()));
+	}
 }
