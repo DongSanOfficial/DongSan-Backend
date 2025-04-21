@@ -55,7 +55,7 @@ jobs:
             sudo docker rm -f $(sudo docker ps -qa | grep -v $(sudo docker ps -q -f name=dongsan-redis))
             fi
             sudo docker pull ${{ secrets.DOCKER_REPO }}:latest
-            sudo docker run -d --network dongsan-network -p 8080:8080 ${{secrets.DOCKER_REPO}}:latest
+            sudo docker run -d --network dongsan-network -p 8080:8080 -v /home/ubuntu/secret:/app/secret ${{secrets.DOCKER_REPO}}:latest
             sudo docker image prune -f 
 
       - name: Report to CodeCov
