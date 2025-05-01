@@ -23,6 +23,9 @@ dependencies {
 
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+    // feign (webhook용)
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.4'
 }
 
 // application.yml 설정 파일 복사
