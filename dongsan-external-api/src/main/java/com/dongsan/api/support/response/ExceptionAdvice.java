@@ -1,5 +1,6 @@
 package com.dongsan.api.support.response;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -73,10 +74,9 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
 		log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
 		SystemErrorCode errorCode = SystemErrorCode.INTERNAL_SERVER_ERROR;
-		// if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
-		// 	sendDiscordAlarm(e, request);
-		// }
-		sendDiscordAlarm(e, request);
+		if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
+			sendDiscordAlarm(e, request);
+		}
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage()));
@@ -128,7 +128,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage(), errors));
 	}
-	
+
 	private void sendDiscordAlarm(Exception e, HttpServletRequest request) {
 		discordClient.sendAlarm(
 			DiscordMessage.fromException(e, request)
