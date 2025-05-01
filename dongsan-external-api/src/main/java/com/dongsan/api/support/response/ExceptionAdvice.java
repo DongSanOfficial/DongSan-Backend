@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -24,11 +25,20 @@ import com.dongsan.core.support.error.CoreErrorCode;
 import com.dongsan.core.support.error.CoreErrorStatus;
 import com.dongsan.core.support.error.CoreException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+	private final DiscordClient discordClient;
+	private final Environment environment;
+
 	private static final Logger log = LoggerFactory.getLogger(ExceptionAdvice.class);
+
+	public ExceptionAdvice(DiscordClient discordClient, Environment environment) {
+		this.discordClient = discordClient;
+		this.environment = environment;
+	}
 
 	@ExceptionHandler(value = CoreException.class)
 	public ResponseEntity<ErrorResponse> handleCoreException(CoreException e) {
@@ -60,9 +70,13 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
 	// exception 을 상속받는 모든 예외 처리
 	@ExceptionHandler(value = Exception.class)
-	public ResponseEntity<ErrorResponse> handleException(Exception e) {
+	public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
 		log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
 		SystemErrorCode errorCode = SystemErrorCode.INTERNAL_SERVER_ERROR;
+		// if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
+		// 	sendDiscordAlarm(e, request);
+		// }
+		sendDiscordAlarm(e, request);
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage()));
@@ -114,5 +128,10 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage(), errors));
 	}
-
+	
+	private void sendDiscordAlarm(Exception e, HttpServletRequest request) {
+		discordClient.sendAlarm(
+			DiscordMessage.fromException(e, request)
+		);
+	}
 }

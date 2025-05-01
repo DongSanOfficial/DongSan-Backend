@@ -91,4 +91,9 @@ public class DevController {
 		return ResponseEntity.ok(url);
 	}
 
+	@Operation(summary = "에러 발생 테스트")
+	@GetMapping("/exception")
+	public void exception() throws Exception {
+		throw new Exception("에러 발생");
+	}
 }
