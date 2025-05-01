@@ -1,15 +1,15 @@
 package com.dongsan.api.domains.dev;
 
-import com.dongsan.core.domains.member.Member;
+import com.dongsan.rds.domains.member.Member;
 
 public record MemberInfoResponse(
-	Long memberId,
-	String email
+        Long memberId,
+        String email
 ) {
-	public MemberInfoResponse(Member member) {
-		this(
-			member.id(),
-			member.email()
-		);
-	}
+    public MemberInfoResponse(Member member) {
+        this(
+                member.getId(),
+                member.getEmail()
+        );
+    }
 }
