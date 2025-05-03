@@ -3,6 +3,7 @@ package com.dongsan.api.domains.walkway;
 import com.dongsan.api.domains.auth.AuthUserDto;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.auth.oauth2.CustomRequestEntityConverter;
+import com.dongsan.api.support.response.discord.DiscordNotifier;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.walkway.WalkwayService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +43,9 @@ class LikedWalkwayControllerTest {
     ObjectMapper objectMapper;
     @MockBean
     WalkwayService walkwayService;
+    @MockBean
+    DiscordNotifier discordNotifier;
+
     final Member member = createMember();
     final CustomAuthUser customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
 

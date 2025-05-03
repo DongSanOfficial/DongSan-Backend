@@ -4,6 +4,7 @@ import com.dongsan.api.domains.auth.AuthUserDto;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.auth.oauth2.CustomRequestEntityConverter;
 import com.dongsan.api.support.response.CursorResponse;
+import com.dongsan.api.support.response.discord.DiscordNotifier;
 import com.dongsan.core.domains.bookmark.Bookmark;
 import com.dongsan.core.domains.bookmark.BookmarkService;
 import com.dongsan.core.domains.bookmark.MarkedWalkway;
@@ -50,6 +51,8 @@ class BookmarkControllerTest {
     BookmarkService bookmarkService;
     @MockBean
     CustomRequestEntityConverter customRequestEntityConverter;
+    @MockBean
+    DiscordNotifier discordNotifier;
 
     Member member;
     CustomAuthUser customOAuth2User;

@@ -9,6 +9,7 @@ import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
 import com.dongsan.api.support.error.ApiErrorCode;
+import com.dongsan.api.support.response.discord.DiscordNotifier;
 import com.dongsan.core.domains.bookmark.BookmarkService;
 import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.core.domains.image.Image;
@@ -79,6 +80,9 @@ class WalkwayControllerTest {
 
     @MockBean
     ImageService imageService;
+
+    @MockBean
+    DiscordNotifier discordNotifier;
 
     final Member member = createMember();
     final CustomAuthUser customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
