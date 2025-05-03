@@ -1,12 +1,11 @@
 package com.dongsan.api.support.response;
 
-import java.util.Arrays;
+import com.dongsan.api.support.response.discord.DiscordNotifier;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedExceptionUtils;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -31,14 +30,12 @@ import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
-	private final DiscordClient discordClient;
-	private final Environment environment;
+	private final DiscordNotifier discordNotifier;
 
 	private static final Logger log = LoggerFactory.getLogger(ExceptionAdvice.class);
 
-	public ExceptionAdvice(DiscordClient discordClient, Environment environment) {
-		this.discordClient = discordClient;
-		this.environment = environment;
+	public ExceptionAdvice(DiscordNotifier discordNotifier) {
+		this.discordNotifier = discordNotifier;
 	}
 
 	@ExceptionHandler(value = CoreException.class)
@@ -74,9 +71,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
 		log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
 		SystemErrorCode errorCode = SystemErrorCode.INTERNAL_SERVER_ERROR;
-		if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
-			sendDiscordAlarm(e, request);
-		}
+		discordNotifier.notify(e, request);
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage()));
@@ -127,11 +122,5 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage(), errors));
-	}
-
-	private void sendDiscordAlarm(Exception e, HttpServletRequest request) {
-		discordClient.sendAlarm(
-			DiscordMessage.fromException(e, request)
-		);
 	}
 }

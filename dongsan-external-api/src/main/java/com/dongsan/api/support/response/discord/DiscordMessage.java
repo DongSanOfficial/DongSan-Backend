@@ -1,4 +1,4 @@
-package com.dongsan.api.support.response;
+package com.dongsan.api.support.response.discord;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
