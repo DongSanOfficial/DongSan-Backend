@@ -1,5 +1,6 @@
 package com.dongsan.api.support.response;
 
+import com.dongsan.api.support.response.discord.DiscordNotifier;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,11 +25,18 @@ import com.dongsan.core.support.error.CoreErrorCode;
 import com.dongsan.core.support.error.CoreErrorStatus;
 import com.dongsan.core.support.error.CoreException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
+	private final DiscordNotifier discordNotifier;
+
 	private static final Logger log = LoggerFactory.getLogger(ExceptionAdvice.class);
+
+	public ExceptionAdvice(DiscordNotifier discordNotifier) {
+		this.discordNotifier = discordNotifier;
+	}
 
 	@ExceptionHandler(value = CoreException.class)
 	public ResponseEntity<ErrorResponse> handleCoreException(CoreException e) {
@@ -60,9 +68,10 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
 	// exception 을 상속받는 모든 예외 처리
 	@ExceptionHandler(value = Exception.class)
-	public ResponseEntity<ErrorResponse> handleException(Exception e) {
+	public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
 		log.error("[Exception] cause: {} , message: {}", NestedExceptionUtils.getMostSpecificCause(e), e.getMessage());
 		SystemErrorCode errorCode = SystemErrorCode.INTERNAL_SERVER_ERROR;
+		discordNotifier.notify(e, request);
 		return ResponseEntity
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage()));
@@ -114,5 +123,4 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 			.status(errorCode.getHttpStatus())
 			.body(ErrorResponse.from(errorCode.getCode(), errorCode.getMessage(), errors));
 	}
-
 }

@@ -3,6 +3,7 @@ package com.dongsan.api.domains.member;
 import com.dongsan.api.domains.auth.AuthUserDto;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.auth.oauth2.CustomRequestEntityConverter;
+import com.dongsan.api.support.response.discord.DiscordNotifier;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,9 @@ class MemberControllerTest {
 
     @MockBean
     CustomRequestEntityConverter customRequestEntityConverter;
+
+    @MockBean
+    DiscordNotifier discordNotifier;
 
     Member member;
 

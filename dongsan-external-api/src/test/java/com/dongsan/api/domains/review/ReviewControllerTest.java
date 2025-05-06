@@ -3,6 +3,7 @@ package com.dongsan.api.domains.review;
 import com.dongsan.api.domains.auth.AuthUserDto;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.auth.oauth2.CustomRequestEntityConverter;
+import com.dongsan.api.support.response.discord.DiscordNotifier;
 import com.dongsan.core.domains.member.Member;
 import com.dongsan.core.domains.review.CreateReview;
 import com.dongsan.core.domains.review.Rating;
@@ -55,6 +56,8 @@ class ReviewControllerTest {
     ReviewService reviewService;
     @MockBean
     CustomRequestEntityConverter customRequestEntityConverter;
+    @MockBean
+    DiscordNotifier discordNotifier;
 
     final Member member = MemberFixture.createMember();
     final CustomAuthUser customOAuth2User = new CustomAuthUser(new AuthUserDto(member));
