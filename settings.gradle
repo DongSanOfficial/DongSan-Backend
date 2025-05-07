@@ -2,6 +2,7 @@ rootProject.name = 'DongSan'
 
 include 'dongsan-external-api'
 include 'dongsan-core'
-include 'dongsan-domain:domain-rds'
+include 'dongsan-core:domain-rds'
+include 'dongsan-domain:domain-rdb'
 include 'dongsan-domain:domain-redis'
 include 'dongsan-domain:domain-file'

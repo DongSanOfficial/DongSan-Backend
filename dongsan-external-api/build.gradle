@@ -1,7 +1,8 @@
 dependencies {
     implementation project(":dongsan-core")
+    implementation project(":dongsan-core:domain-rds")
     implementation project(':dongsan-domain:domain-file')
-    runtimeOnly project(':dongsan-domain:domain-rds')
+    runtimeOnly project(':dongsan-domain:domain-rdb')
     runtimeOnly project(':dongsan-domain:domain-redis')
     testImplementation(testFixtures(project(":dongsan-core")))
 
@@ -26,6 +27,14 @@ dependencies {
 
     // feign (webhook용)
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.4'
+
+    // test container
+    testImplementation 'org.testcontainers:testcontainers:1.20.1'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.1'
+    testImplementation 'org.testcontainers:mysql:1.20.1'
+
+    // test 시 patch 가능하게
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.2'
 }
 
 // application.yml 설정 파일 복사
