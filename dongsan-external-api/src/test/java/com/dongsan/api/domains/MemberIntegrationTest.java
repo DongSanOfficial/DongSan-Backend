@@ -1,5 +1,6 @@
-package com.dongsan.api.domains.member;
+package com.dongsan.api.domains;
 
+import com.dongsan.api.domains.member.MemberProfileResponse;
 import com.dongsan.api.support.IntegrationTest;
 import com.dongsan.api.support.TestAuthHelper;
 import org.junit.jupiter.api.Assertions;
