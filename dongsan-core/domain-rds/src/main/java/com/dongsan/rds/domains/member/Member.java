@@ -19,10 +19,11 @@ public class Member extends BaseEntity {
     private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(20)")
     private MemberRole role;
 
-    //@Column(columnDefinition = "varchar(255)")
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(20)")
     private Provider provider;
 
     protected Member() {
@@ -66,5 +67,9 @@ public class Member extends BaseEntity {
 
     public MemberRole getRole() {
         return role;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

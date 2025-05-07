@@ -26,8 +26,6 @@ public class MemberCoreRepository implements MemberRepository {
     @Override
     public Member save(String email, String nickname, String profileImageUrl, MemberRole role, Provider provider) {
         Member member = new Member(email, nickname, profileImageUrl, role, provider);
-        System.out.println(role + " , " + provider);
-        System.out.println(member.getProvider());
         memberJpaRepository.save(member);
         return member;
     }

@@ -27,6 +27,10 @@ public class MemberService {
         return memberRepository.findById(memberId);
     }
 
+    public Optional<Member> getOptionalMemberByEmailAndProvider(String email, Provider provider) {
+        return memberRepository.findByEmailAndProvider(email, provider);
+    }
+
     public Optional<Member> getOptionalMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
@@ -36,12 +40,9 @@ public class MemberService {
         return memberRepository.save(email, nickname, profileImageUrl, role, provider);
     }
 
-    public Optional<Member> getOptionalMemberByEmailAndProvider(String email, Provider provider) {
-        return memberRepository.findByEmailAndProvider(email, provider);
-    }
-
     @Transactional
     public void patchNickname(Long memberId, String nickname) {
-        memberRepository.patchNickname(memberId, nickname);
+        Member member = getMember(memberId);
+        member.changeNickname(nickname);
     }
 }
