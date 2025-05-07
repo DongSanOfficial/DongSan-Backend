@@ -1,8 +1,8 @@
 package com.dongsan.api.domains.member;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.core.domains.member.Member;
-import com.dongsan.core.domains.member.MemberService;
+import com.dongsan.rds.domains.member.Member;
+import com.dongsan.rds.domains.member.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
