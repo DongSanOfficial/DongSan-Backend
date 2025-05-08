@@ -4,9 +4,9 @@ import com.dongsan.api.domains.auth.AuthUserDto;
 import com.dongsan.api.domains.auth.CustomAccessDeniedHandler;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.core.domains.auth.Provider;
-import com.dongsan.core.domains.member.Member;
-import com.dongsan.core.domains.member.MemberRole;
-import com.dongsan.core.domains.member.MemberService;
+import com.dongsan.rds.domains.member.Member;
+import com.dongsan.rds.domains.member.MemberRole;
+import com.dongsan.rds.domains.member.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         Member member = memberService.getOptionalMemberByEmailAndProvider(oAuth2Attributes.email(), provider)
                 .orElseGet(() -> memberService.save(oAuth2Attributes.email(), oAuth2Attributes.nickname(),
                         null, MemberRole.ROLE_USER, provider));
-        log.info("[AUTH] 로그인 이메일 : %s".formatted(member.email()));
+        log.info("[AUTH] 로그인 이메일 : %s".formatted(member.getEmail()));
         AuthUserDto user = new AuthUserDto(member);
         return new CustomAuthUser(user);
     }
