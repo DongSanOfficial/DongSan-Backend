@@ -24,26 +24,99 @@ public class WalkwayQueryDSLRepository {
 	private final JPAQueryFactory queryFactory;
 	private QWalkwayEntity walkwayEntity = QWalkwayEntity.walkwayEntity;
 
+	// 좋아요한 산책로 조회
 	public List<WalkwayEntity> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
 		return queryFactory.selectFrom(walkwayEntity)
 			.join(likedWalkwayEntity)
 			.on(likedWalkwayEntity.walkway.eq(walkwayEntity))
 			.where(
 				likedWalkwayEntity.member.id.eq(memberId),
-				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-					.or(walkwayEntity.member.id.eq(memberId)),
-				createdAtLt(lastCreatedAt)
+				this.getExposeCondition(memberId),
+				this.createdAtLt(lastCreatedAt)
 			)
 			.orderBy(walkwayEntity.createdAt.desc())
 			.limit(size)
 			.fetch();
 	}
 
+	// 유저의 산책로 조회
 	public List<WalkwayEntity> getUserWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
 		return queryFactory.selectFrom(walkwayEntity)
 			.where(walkwayEntity.member.id.eq(memberId), createdAtLt(lastCreatedAt))
 			.orderBy(walkwayEntity.createdAt.desc())
 			.limit(size)
+			.fetch();
+	}
+
+	// 좋아요 순 검색
+	public List<WalkwayEntity> searchWalkwaysLiked(SearchWalkwayQuery query) {
+		WalkwayEntity lastWalkwayEntity = this.getLastWalkwayEntity(query.lastWalkwayId());
+
+		return queryFactory.selectFrom(walkwayEntity)
+			.where(
+				this.getDistanceCondition(query.longitude(), query.latitude(), query.distance()),
+				this.getExposeCondition(query.userId()),
+				this.getLikedCondition(lastWalkwayEntity)
+			)
+			.limit(query.size())
+			.orderBy(walkwayEntity.likeCount.desc(), walkwayEntity.createdAt.desc())
+			.fetch();
+	}
+
+	// 별점 순 검색
+	public List<WalkwayEntity> searchWalkwaysRating(SearchWalkwayQuery query) {
+		WalkwayEntity lastWalkwayEntity = getLastWalkwayEntity(query.lastWalkwayId());
+
+		return queryFactory.selectFrom(walkwayEntity)
+			.where(
+				this.getDistanceCondition(query.longitude(), query.latitude(), query.distance()),
+				this.getExposeCondition(query.userId()),
+				this.getRatingCondition(lastWalkwayEntity)
+			)
+			.limit(query.size())
+			.orderBy(walkwayEntity.rating.desc(), walkwayEntity.createdAt.desc())
+			.fetch();
+	}
+
+	// 전체 조회 (거리계산 X)
+	public List<WalkwayEntity> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {
+		WalkwayEntity lastWalkwayEntity = this.getLastWalkwayEntity(lastWalkwayId);
+
+		return queryFactory.selectFrom(walkwayEntity)
+			.where(
+				this.getExposeCondition(memberId),
+				this.getLatestCondition(lastWalkwayEntity, lastWalkwayId)
+			)
+			.limit(size)
+			.orderBy(walkwayEntity.createdAt.desc())
+			.fetch();
+	}
+
+	// 좋아요한 산책로 조회 (거리계산 X)
+	public List<WalkwayEntity> getWalkwaysLiked(Integer size, Long lastWalkwayId, Long memberId) {
+		WalkwayEntity lastWalkwayEntity = this.getLastWalkwayEntity(lastWalkwayId);
+
+		return queryFactory.selectFrom(walkwayEntity)
+			.where(
+				this.getExposeCondition(memberId),
+				this.getLikedCondition(lastWalkwayEntity)
+			)
+			.limit(size)
+			.orderBy(walkwayEntity.likeCount.desc(), walkwayEntity.createdAt.desc())
+			.fetch();
+	}
+
+	// 별점순 산책로 조회 (거리계산 X)
+	public List<WalkwayEntity> getWalkwaysRating(Integer size, Long lastWalkwayId, Long memberId) {
+		WalkwayEntity lastWalkwayEntity = this.getLastWalkwayEntity(lastWalkwayId);
+
+		return queryFactory.selectFrom(walkwayEntity)
+			.where(
+				this.getExposeCondition(memberId),
+				this.getRatingCondition(lastWalkwayEntity)
+			)
+			.limit(size)
+			.orderBy(walkwayEntity.rating.desc(), walkwayEntity.createdAt.desc())
 			.fetch();
 	}
 
@@ -68,7 +141,7 @@ public class WalkwayQueryDSLRepository {
 	}
 
 	// 검색 산책로 시작지점 거리 계산
-	private BooleanExpression searchFilterDistance(Double longitude, Double latitude, Double distance) {
+	private BooleanExpression getDistanceCondition(Double longitude, Double latitude, Double distance) {
 		return Expressions.booleanTemplate(
 			"ST_Distance_Sphere({0}, ST_GeomFromText(concat('POINT(', {1}, ' ', {2}, ')'), 4326)) <= {3}",
 			walkwayEntity.startLocation,
@@ -78,133 +151,53 @@ public class WalkwayQueryDSLRepository {
 		);
 	}
 
-	// 좋아요 순 검색
-	public List<WalkwayEntity> searchWalkwaysLiked(SearchWalkwayQuery query) {
-		WalkwayEntity lastWalkwayEntity = null;
-		if (query.lastWalkwayId() != null) {
-			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
-				.where(walkwayEntity.id.eq(query.lastWalkwayId()))
-				.fetchOne();
+	// 마지막 산책로 엔티티 조회
+	private WalkwayEntity getLastWalkwayEntity(Long walkwayId) {
+		if (walkwayId == null) {
+			return null;
 		}
-
-		return queryFactory.select(walkwayEntity)
-			.from(walkwayEntity)
-			.where(
-				this.searchFilterDistance(query.longitude(), query.latitude(), query.distance()),
-				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-					.or(walkwayEntity.member.id.eq(query.userId())),
-				lastWalkwayEntity == null
-					? null
-					: walkwayEntity.likeCount.lt(lastWalkwayEntity.getLikeCount())
-					.or(walkwayEntity.likeCount.eq(lastWalkwayEntity.getLikeCount())
-						.and(createdAtLt(lastWalkwayEntity.getCreatedAt()))
-					)
-			)
-			.limit(query.size())
-			.orderBy(walkwayEntity.likeCount.desc(), walkwayEntity.createdAt.desc())
-			.fetch();
+		return queryFactory.selectFrom(walkwayEntity)
+			.where(walkwayEntity.id.eq(walkwayId))
+			.fetchOne();
 	}
 
-	// 별점 순 검색
-	public List<WalkwayEntity> searchWalkwaysRating(SearchWalkwayQuery query) {
-		WalkwayEntity lastWalkwayEntity = null;
-		if (query.lastWalkwayId() != null) {
-			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
-				.where(walkwayEntity.id.eq(query.lastWalkwayId()))
-				.fetchOne();
+	// 사용자에게 보여질 수 있는 산책로 조건 (공개 또는 본인이 작성한 산책로)
+	private BooleanExpression getExposeCondition(Long memberId) {
+		if (memberId == null) {
+			return walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC);
 		}
-
-		return queryFactory.select(walkwayEntity)
-			.from(walkwayEntity)
-			.where(
-				this.searchFilterDistance(query.longitude(), query.latitude(), query.distance()),
-				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-					.or(walkwayEntity.member.id.eq(query.userId())),
-				lastWalkwayEntity == null
-					? null
-					: walkwayEntity.rating.lt(lastWalkwayEntity.getRating())
-					.or(walkwayEntity.rating.eq(lastWalkwayEntity.getRating())
-						.and(createdAtLt(lastWalkwayEntity.getCreatedAt()))
-					)
-			)
-			.limit(query.size())
-			.orderBy(walkwayEntity.rating.desc(), walkwayEntity.createdAt.desc())
-			.fetch();
+		return walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
+			.or(walkwayEntity.member.id.eq(memberId));
 	}
 
-	// 전체 조회
-	public List<WalkwayEntity> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {
-		WalkwayEntity lastWalkwayEntity = null;
-		if (lastWalkwayId != null) {
-			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
-				.where(walkwayEntity.id.eq(lastWalkwayId))
-				.fetchOne();
+	// 최신순 조건
+	private BooleanExpression getLatestCondition(WalkwayEntity lastEntity, Long lastWalkwayId) {
+		if (lastEntity == null) {
+			return null;
 		}
-
-		return queryFactory.select(walkwayEntity)
-			.from(walkwayEntity)
-			.where(
-				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-					.or(walkwayEntity.member.id.eq(memberId)),
-				lastWalkwayEntity == null
-					? null
-					: walkwayEntity.createdAt.lt(lastWalkwayEntity.getCreatedAt())
-					.or(walkwayEntity.createdAt.eq(lastWalkwayEntity.getCreatedAt())
-						.and(walkwayIdLt(lastWalkwayId)))
-			)
-			.limit(size)
-			.orderBy(walkwayEntity.createdAt.desc())
-			.fetch();
+		return walkwayEntity.createdAt.lt(lastEntity.getCreatedAt())
+			.or(walkwayEntity.createdAt.eq(lastEntity.getCreatedAt())
+				.and(walkwayIdLt(lastWalkwayId)));
 	}
 
-	public List<WalkwayEntity> getWalkwaysLiked(Integer size, Long lastWalkwayId, Long memberId) {
-		WalkwayEntity lastWalkwayEntity = null;
-		if (lastWalkwayId != null) {
-			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
-				.where(walkwayEntity.id.eq(lastWalkwayId))
-				.fetchOne();
+	// 좋아요순 조건
+	private BooleanExpression getLikedCondition(WalkwayEntity lastEntity) {
+		if (lastEntity == null) {
+			return null;
 		}
-
-		return queryFactory.select(walkwayEntity)
-			.from(walkwayEntity)
-			.where(
-				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-					.or(walkwayEntity.member.id.eq(memberId)),
-				lastWalkwayEntity == null
-					? null
-					: walkwayEntity.likeCount.lt(lastWalkwayEntity.getLikeCount())
-					.or(walkwayEntity.likeCount.eq(lastWalkwayEntity.getLikeCount())
-						.and(createdAtLt(lastWalkwayEntity.getCreatedAt()))
-					)
-			)
-			.limit(size)
-			.orderBy(walkwayEntity.likeCount.desc(), walkwayEntity.createdAt.desc())
-			.fetch();
+		return walkwayEntity.likeCount.lt(lastEntity.getLikeCount())
+			.or(walkwayEntity.likeCount.eq(lastEntity.getLikeCount())
+				.and(createdAtLt(lastEntity.getCreatedAt())));
 	}
 
-	public List<WalkwayEntity> getWalkwaysRating(Integer size, Long lastWalkwayId, Long memberId) {
-		WalkwayEntity lastWalkwayEntity = null;
-		if (lastWalkwayId != null) {
-			lastWalkwayEntity = queryFactory.selectFrom(walkwayEntity)
-				.where(walkwayEntity.id.eq(lastWalkwayId))
-				.fetchOne();
+	// 별점순 조건
+	private BooleanExpression getRatingCondition(WalkwayEntity lastEntity) {
+		if (lastEntity == null) {
+			return null;
 		}
-
-		return queryFactory.select(walkwayEntity)
-			.from(walkwayEntity)
-			.where(
-				walkwayEntity.exposeLevel.eq(ExposeLevel.PUBLIC)
-					.or(walkwayEntity.member.id.eq(memberId)),
-				lastWalkwayEntity == null
-					? null
-					: walkwayEntity.rating.lt(lastWalkwayEntity.getRating())
-					.or(walkwayEntity.rating.eq(lastWalkwayEntity.getRating())
-						.and(createdAtLt(lastWalkwayEntity.getCreatedAt()))
-					)
-			)
-			.limit(size)
-			.orderBy(walkwayEntity.rating.desc(), walkwayEntity.createdAt.desc())
-			.fetch();
+		return walkwayEntity.rating.lt(lastEntity.getRating())
+			.or(walkwayEntity.rating.eq(lastEntity.getRating())
+				.and(createdAtLt(lastEntity.getCreatedAt())));
 	}
 
 }
