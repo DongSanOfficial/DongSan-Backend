@@ -19,16 +19,15 @@ public class WalkwayHistoryQueryDSLRepository {
 
 	private QWalkwayHistoryEntity walkwayHistory = QWalkwayHistoryEntity.walkwayHistoryEntity;
 
+	// 산책로의 리뷰 가능한 회원의 기록 조회
 	public List<WalkwayHistoryEntity> getCanReviewWalkwayHistories(Long walkwayId, Long memberId, int size,
 		LocalDateTime lastCreatedAt) {
 		return queryFactory.selectFrom(walkwayHistory)
 			.join(walkwayHistory.walkway)
 			.fetchJoin()
 			.where(
-				walkwayHistory.member.id.eq(memberId),
+				this.canReviewCondition(memberId),
 				walkwayHistory.walkway.id.eq(walkwayId),
-				walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0 / 3.0)),
-				walkwayHistory.isReviewed.eq(false),
 				createdAtLt(lastCreatedAt)
 			)
 			.limit(size)
@@ -36,15 +35,14 @@ public class WalkwayHistoryQueryDSLRepository {
 			.fetch();
 	}
 
+	// 모든 산책로의 리뷰 가능한 회원의 기록 조회
 	public List<WalkwayHistoryEntity> getUserCanReviewWalkwayHistories(Long memberId, int size,
 		LocalDateTime lastCreatedAt) {
 		return queryFactory.selectFrom(walkwayHistory)
 			.join(walkwayHistory.walkway)
 			.fetchJoin()
 			.where(
-				walkwayHistory.member.id.eq(memberId),
-				walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0 / 3.0)),
-				walkwayHistory.isReviewed.eq(false),
+				this.canReviewCondition(memberId),
 				walkwayHistory.walkway.exposeLevel.eq(ExposeLevel.PUBLIC),
 				createdAtLt(lastCreatedAt)
 			)
@@ -55,5 +53,11 @@ public class WalkwayHistoryQueryDSLRepository {
 
 	private BooleanExpression createdAtLt(LocalDateTime lastCreatedAt) {
 		return lastCreatedAt != null ? walkwayHistory.createdAt.lt(lastCreatedAt) : null;
+	}
+
+	private BooleanExpression canReviewCondition(Long memberId) {
+		return walkwayHistory.member.id.eq(memberId)
+			.and(walkwayHistory.isReviewed.eq(false))
+			.and(walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0 / 3.0)));
 	}
 }
