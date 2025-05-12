@@ -1,4 +1,4 @@
-package com.dongsan.rdb.config;
+package com.dongsan.rds.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

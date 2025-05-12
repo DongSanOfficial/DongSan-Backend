@@ -1,24 +1,24 @@
 package com.dongsan.api.domains.bookmark;
 
+import com.dongsan.rds.domains.bookmark.domain.Bookmark;
+
 import java.util.List;
 
-import com.dongsan.core.domains.bookmark.Bookmark;
-
 public record BookmarksNameResponse(
-	Long bookmarkId,
-	String title
+        Long bookmarkId,
+        String title
 ) {
-	public BookmarksNameResponse(Bookmark bookmark) {
-		this(
-			bookmark.bookmarkId(),
-			bookmark.title()
-		);
-	}
+    public BookmarksNameResponse(Bookmark bookmark) {
+        this(
+                bookmark.getId(),
+                bookmark.getName()
+        );
+    }
 
-	public static List<BookmarksNameResponse> from(List<Bookmark> bookmarks) {
-		return bookmarks.stream()
-			.map(BookmarksNameResponse::new)
-			.toList();
-	}
+    public static List<BookmarksNameResponse> from(List<Bookmark> bookmarks) {
+        return bookmarks.stream()
+                .map(BookmarksNameResponse::new)
+                .toList();
+    }
 }
 

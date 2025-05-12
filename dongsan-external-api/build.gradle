@@ -28,6 +28,9 @@ dependencies {
     // feign (webhook용)
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.4'
 
+    // tx
+    implementation 'org.springframework:spring-tx'
+
     // test container
     testImplementation 'org.testcontainers:testcontainers:1.20.1'
     testImplementation 'org.testcontainers:junit-jupiter:1.20.1'

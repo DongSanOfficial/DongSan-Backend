@@ -1,8 +1,8 @@
 package com.dongsan.rdb.domains.walkway;
 
 import com.dongsan.core.domains.walkway.*;
-import com.dongsan.rdb.domains.bookmark.MarkedWalkwayJpaRepository;
 import com.dongsan.rdb.domains.review.ReviewJpaRepository;
+import com.dongsan.rds.domains.bookmark.infrastructure.MarkedWalkwayJpaRepository;
 import com.dongsan.rds.domains.member.Member;
 import com.dongsan.rds.domains.member.MemberJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;

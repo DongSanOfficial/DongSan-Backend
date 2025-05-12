@@ -23,7 +23,7 @@
 //
 //import com.dongsan.common.support.RepositoryTest;
 //import com.dongsan.core.domains.bookmark.Bookmark;
-//import com.dongsan.core.domains.bookmark.BookmarkWithMarkedStatus;
+//import com.dongsan.rds.bookmark.BookmarkWithMarkedStatus;
 //import com.dongsan.core.domains.bookmark.MarkedWalkway;
 //import com.dongsan.core.domains.walkway.ExposeLevel;
 //import com.dongsan.rdb.domains.member.MemberEntity;
