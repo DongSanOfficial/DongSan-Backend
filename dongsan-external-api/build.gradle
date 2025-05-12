@@ -1,9 +1,11 @@
 dependencies {
     implementation project(":dongsan-core")
     implementation project(":dongsan-core:domain-rds")
-    implementation project(':dongsan-domain:domain-file')
+    implementation project(':dongsan-core:domain-redis')
+    implementation project(':dongsan-infra:infra-file')
+
     runtimeOnly project(':dongsan-domain:domain-rdb')
-    runtimeOnly project(':dongsan-domain:domain-redis')
+
     testImplementation(testFixtures(project(":dongsan-core")))
 
     // spring boot web
