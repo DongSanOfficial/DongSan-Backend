@@ -7,15 +7,14 @@ import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.response.*;
 import com.dongsan.api.support.response.CursorResponse;
-import com.dongsan.core.domains.image.Image;
-import com.dongsan.core.domains.image.ImageService;
 import com.dongsan.core.domains.walkway.*;
 import com.dongsan.core.support.util.CursorRequest;
 import com.dongsan.core.support.util.PagingResponse;
 import com.dongsan.file.service.S3FileService;
-import com.dongsan.rds.common.CursorPage;
-import com.dongsan.rds.domains.bookmark.BookmarkWithMarkedStatus;
-import com.dongsan.rds.domains.bookmark.service.BookmarkRdbService;
+import com.dongsan.rdb.common.CursorPage;
+import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
+import com.dongsan.rdb.domains.bookmark.service.BookmarkRdbService;
+import com.dongsan.rdb.domains.image.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +56,8 @@ public class WalkwayController {
             @Validated @RequestBody CreateWalkwayRequest createWalkwayRequest,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        Image image = imageService.getImage(createWalkwayRequest.courseImageId());
-        CreateWalkway createWalkway = createWalkwayRequest.toCreateWalkway(image, customOAuth2User.getMemberId());
+        String imageUrl = imageService.getImage(createWalkwayRequest.courseImageId()).getUrl();
+        CreateWalkway createWalkway = createWalkwayRequest.toCreateWalkway(imageUrl, customOAuth2User.getMemberId());
         Long walkwayId = walkwayService.createWalkway(createWalkway);
         return ResponseEntity.ok(new WalkwayIdResponse(walkwayId));
     }
@@ -71,7 +70,7 @@ public class WalkwayController {
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         String imageUrl = s3FileService.saveFile(courseImage);
-        Long imageId = imageService.createImage(imageUrl);
+        Long imageId = imageService.save(imageUrl);
         return ResponseEntity.ok(new CourseImageIdResponse(imageId));
     }
 

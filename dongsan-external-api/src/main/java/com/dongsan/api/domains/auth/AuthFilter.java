@@ -5,7 +5,7 @@ import com.dongsan.api.support.error.ApiException;
 import com.dongsan.core.domains.auth.TokenReader;
 import com.dongsan.core.domains.auth.TokenWriter;
 import com.dongsan.core.support.error.CoreException;
-import com.dongsan.rds.domains.member.Member;
+import com.dongsan.rdb.domains.member.Member;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

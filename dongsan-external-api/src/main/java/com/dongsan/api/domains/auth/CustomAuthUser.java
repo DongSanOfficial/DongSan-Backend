@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.auth;
 
-import com.dongsan.rds.domains.member.Member;
-import com.dongsan.rds.domains.member.MemberRole;
+import com.dongsan.rdb.domains.member.Member;
+import com.dongsan.rdb.domains.member.MemberRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
