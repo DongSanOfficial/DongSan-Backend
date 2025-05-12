@@ -14,7 +14,7 @@
 //import org.mockito.Mock;
 //import org.mockito.junit.jupiter.MockitoExtension;
 //
-//import com.dongsan.core.domains.image.Image;
+//import com.dongsan.rds.domains.image.Image;
 //import com.dongsan.core.support.error.CoreException;
 //
 //import fixture.ImageFixture;
