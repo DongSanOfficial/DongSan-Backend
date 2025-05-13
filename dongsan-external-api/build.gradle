@@ -1,9 +1,10 @@
 dependencies {
     implementation project(":dongsan-core")
-    implementation project(":dongsan-core:domain-rds")
-    implementation project(':dongsan-domain:domain-file')
-    runtimeOnly project(':dongsan-domain:domain-rdb')
-    runtimeOnly project(':dongsan-domain:domain-redis')
+    implementation project(":dongsan-core:domain-rdb")
+    implementation project(':dongsan-core:domain-redis')
+    implementation project(':dongsan-infra:infra-file')
+
+    runtimeOnly project(':dongsan-domain:domain-rds')
     testImplementation(testFixtures(project(":dongsan-core")))
 
     // spring boot web
@@ -27,6 +28,9 @@ dependencies {
 
     // feign (webhook용)
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.4'
+
+    // tx
+    implementation 'org.springframework:spring-tx'
 
     // test container
     testImplementation 'org.testcontainers:testcontainers:1.20.1'
