@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.dev;
 
-import com.dongsan.rds.domains.member.Member;
+import com.dongsan.rdb.domains.member.Member;
 
 public record MemberInfoResponse(
         Long memberId,

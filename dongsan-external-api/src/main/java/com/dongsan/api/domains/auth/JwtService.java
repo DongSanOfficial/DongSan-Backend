@@ -2,8 +2,8 @@ package com.dongsan.api.domains.auth;
 
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
-import com.dongsan.rds.domains.member.Member;
-import com.dongsan.rds.domains.member.MemberService;
+import com.dongsan.rdb.domains.member.Member;
+import com.dongsan.rdb.domains.member.MemberService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.io.Decoders;
