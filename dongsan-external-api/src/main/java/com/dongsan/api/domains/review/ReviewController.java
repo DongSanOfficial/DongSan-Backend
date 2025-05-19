@@ -6,10 +6,10 @@ import com.dongsan.api.domains.review.dto.CreateReviewResponse;
 import com.dongsan.api.domains.review.dto.WalkwayRatingResponse;
 import com.dongsan.api.domains.review.dto.WalkwayReviewsResponse;
 import com.dongsan.api.support.response.CursorResponse;
+import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.review.domain.Rating;
-import com.dongsan.rdb.domains.review.domain.Review;
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.rdb.support.util.CursorRequest;
-import com.dongsan.rdb.support.util.PagingResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +53,11 @@ public class ReviewController {
             @RequestParam(required = false, defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        PagingResponse<Review> response
+        CursorPage<ReviewWithMemberQuery> response
                 = reviewFacade.getWalkwayReviews(sort, walkwayId, customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
         return ResponseEntity.ok(
-                new CursorResponse<>(WalkwayReviewsResponse.from(response.data()), response.hasNext()));
+                new CursorResponse<>(WalkwayReviewsResponse.from(response.getData()), response.getHasNext()));
     }
 
     @Operation(summary = "리뷰 별점 보기")

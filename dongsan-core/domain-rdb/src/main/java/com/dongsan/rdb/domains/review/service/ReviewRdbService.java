@@ -1,17 +1,19 @@
 package com.dongsan.rdb.domains.review.service;
 
-import com.dongsan.rdb.domains.review.GetReviewsFactory;
-import com.dongsan.rdb.domains.review.ReviewSort;
+import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.review.domain.Rating;
 import com.dongsan.rdb.domains.review.domain.Review;
+import com.dongsan.rdb.domains.review.factory.GetReviewsFactory;
+import com.dongsan.rdb.domains.review.factory.ReviewSort;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewRepository;
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithWalkwayQuery;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,45 +36,27 @@ public class ReviewRdbService {
         return reviewRepository.save(review);
     }
 
-    public List<Review> getUserReviews(Integer size, LocalDateTime lastCreatedAt, Long memberId) {
-        return reviewRepository.getUserReviews(size, lastCreatedAt, memberId);
-    }
-
-    public boolean existsByReviewId(Long reviewId) {
-        return reviewRepository.existsById(reviewId);
-    }
-
-    public Map<Rating, Long> getWalkwaysRating(Long walkwayId) {
-        return reviewRepository.getWalkwayRating(walkwayId);
-    }
-
-    public List<Review> getWalkwayReviews(Integer size, Review review, Long walkwayId, ReviewSort sort) {
-        return getReviewsServiceFactory.getService(sort)
-                .search(size, review, walkwayId);
-    }
-
-    public void isReviewOwner(Long reviewId, Long memberId) {
-        boolean result = reviewRepository.existsByIdAndMemberId(reviewId, memberId);
-        if (!result) {
-            throw new CoreException(CoreErrorCode.NOT_REVIEW_OWNER);
+    public LocalDateTime getReviewCreatedAt(Long reviewId) {
+        if (reviewId == null) {
+            return null;
         }
+        return getReview(reviewId).getCreatedAt();
     }
 
     @Transactional(readOnly = true)
-    public PagingResponse<Review> getReviews(CursorRequest cursorRequest, Long memberId) {
-        LocalDateTime lastCreatedAt = null;
-        if (cursorRequest.lastId() != null) {
-            // reviewId 검증
-            // 1. 존재하는 reviewId 인지
-            Review review = reviewReader.getReview(cursorRequest.lastId());
-            // 2. 내가 작성한 review 인지 아닌지
-            reviewValidator.isReviewOwner(review.reviewId(), memberId);
-            lastCreatedAt = review.createdAt();
-        }
-        List<Review> reviews = reviewReader.getUserReviews(cursorRequest.size() + 1, lastCreatedAt, memberId);
-
-        return PagingResponse.from(reviews, cursorRequest.size());
+    public CursorPage<ReviewWithMemberQuery> getWalkwayReviews(Long walkwayId, ReviewSort sort, Review review, int size) {
+        return getReviewsServiceFactory.getService(sort)
+                .search(walkwayId, review, size);
     }
 
+    @Transactional(readOnly = true)
+    public Map<Rating, Long> getWalkwayRating(Long walkwayId) {
+        return reviewRepository.getWalkwayRating(walkwayId);
+    }
+
+    @Transactional(readOnly = true)
+    public CursorPage<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size) {
+        return reviewRepository.getUserReviews(memberId, lastCreatedAt, size);
+    }
 
 }

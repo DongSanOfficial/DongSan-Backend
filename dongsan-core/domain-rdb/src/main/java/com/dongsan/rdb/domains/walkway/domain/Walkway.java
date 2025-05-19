@@ -3,6 +3,8 @@ package com.dongsan.rdb.domains.walkway.domain;
 import com.dongsan.rdb.domains.common.BaseEntity;
 import com.dongsan.rdb.domains.member.Member;
 import com.dongsan.rdb.domains.walkway.ListStringConverter;
+import com.dongsan.rdb.support.error.CoreErrorCode;
+import com.dongsan.rdb.support.error.CoreException;
 import jakarta.persistence.*;
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
@@ -16,9 +18,7 @@ public class Walkway extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private Long memberId;
 
     @Column(nullable = false)
     private String name;
@@ -63,7 +63,7 @@ public class Walkway extends BaseEntity {
 
     // 연관관계 매핑도 생성 시 매핑합니다.
     public Walkway(String name, Double distance, Integer time, ExposeLevel exposeLevel, Point startLocation,
-                   Point endLocation, String memo, LineString course, String courseImageUrl, Member member,
+                   Point endLocation, String memo, LineString course, String courseImageUrl, Long memberId,
                    List<String> hashtags) {
         this.name = name;
         this.distance = distance;
@@ -77,54 +77,13 @@ public class Walkway extends BaseEntity {
         this.hashtags = hashtags;
 
         // 연관관계 매핑
-        this.member = member;
+        this.memberId = memberId;
 
         // 생성 시 default 값
         this.likeCount = 0;
         this.reviewCount = 0;
         this.rating = 0.0;
     }
-
-    public Walkway(CreateWalkway createWalkway, Member member) {
-        // 경로
-        LineString course = createWalkway.course();
-        Point startLocation = createWalkway.startLocation();
-        Point endLocation = createWalkway.endLocation();
-
-        course.setSRID(4326);
-        startLocation.setSRID(4326);
-        endLocation.setSRID(4326);
-
-        this.name = createWalkway.name();
-        this.distance = createWalkway.distance();
-        this.time = createWalkway.time();
-        this.exposeLevel = createWalkway.exposeLevel();
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
-        this.memo = createWalkway.memo();
-        this.course = course;
-        this.courseImageUrl = createWalkway.courseImageUrl();
-        this.hashtags = createWalkway.hashtags();
-
-        // 연관관계 매핑
-        this.member = member;
-
-        // 생성 시 default 값
-        this.likeCount = 0;
-        this.reviewCount = 0;
-        this.rating = 0.0;
-    }
-
-//    public Walkway toWalkway() {
-//        CourseInfo courseInfo = new CourseInfo(distance, time, startLocation, endLocation, course, courseImageUrl);
-//        Author author = new Author(member.getId());
-//        Stat stat = new Stat(likeCount, reviewCount, rating);
-//        return new Walkway(id, name, getCreatedAt(), memo, stat, hashtags, courseInfo, author, exposeLevel);
-//    }
-
-//    public ReviewedWalkway toReviewedWalkway() {
-//        return new ReviewedWalkway(id, name);
-//    }
 
     public void updateRatingAndReviewCount(Double rating, Integer reviewCount) {
         this.reviewCount = reviewCount;
@@ -144,6 +103,23 @@ public class Walkway extends BaseEntity {
         this.memo = memo;
         this.exposeLevel = exposeLevel;
         this.hashtags = hashtags;
+    }
+
+    public void validateAccess(Long memberId) {
+        validateOwner(memberId);
+        validateExposeLevel();
+    }
+
+    private void validateOwner(Long memberId) {
+        if (!this.memberId.equals(memberId)) {
+            throw new CoreException(CoreErrorCode.NOT_WALKWAY_OWNER);
+        }
+    }
+
+    private void validateExposeLevel() {
+        if (this.exposeLevel.equals(ExposeLevel.PRIVATE)) {
+            throw new CoreException(CoreErrorCode.WALKWAY_PRIVATE);
+        }
     }
 
     public Long getId() {

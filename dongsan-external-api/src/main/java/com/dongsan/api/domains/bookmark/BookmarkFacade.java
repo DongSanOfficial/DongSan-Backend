@@ -65,8 +65,7 @@ public class BookmarkFacade {
                                                                               CursorRequest paging) {
         walkwayService.validateWalkwayExists(walkwayId);
         LocalDateTime createdAt = bookmarkRdbService.getBookmarkCreatedAt(paging.lastId());
-        CursorPage<BookmarkWithMarkedStatus> bookmarks = bookmarkRdbService.getBookmarksWithMarkedWalkway(walkwayId, memberId, createdAt, paging.size());
-        return bookmarks;
+        return bookmarkRdbService.getBookmarksWithMarkedWalkway(walkwayId, memberId, createdAt, paging.size());
     }
 
 

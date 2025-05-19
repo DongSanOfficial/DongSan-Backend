@@ -1,5 +1,6 @@
 package com.dongsan.rdb.domains.walkway;
 
+import com.dongsan.rdb.domains.walkway.domain.Walkway;
 import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

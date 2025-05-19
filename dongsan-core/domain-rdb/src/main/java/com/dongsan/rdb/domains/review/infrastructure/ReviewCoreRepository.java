@@ -1,16 +1,14 @@
 package com.dongsan.rdb.domains.review.infrastructure;
 
-import com.dongsan.rdb.domains.member.Member;
-import com.dongsan.rdb.domains.member.MemberJpaRepository;
-import com.dongsan.rdb.domains.review.CreateReview;
+import com.dongsan.rdb.common.CursorPage;
+import com.dongsan.rdb.domains.member.QMember;
 import com.dongsan.rdb.domains.review.domain.QReview;
 import com.dongsan.rdb.domains.review.domain.Rating;
 import com.dongsan.rdb.domains.review.domain.Review;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
-import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayJpaRepository;
-import com.dongsan.rdb.domains.walkwayLog.WalkwayLog;
-import com.dongsan.rdb.domains.walkwayLog.WalkwayLogJpaRepository;
+import com.dongsan.rdb.domains.walkway.domain.QWalkway;
+import com.dongsan.rdb.domains.walkwayLog.QWalkwayLog;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +26,27 @@ import static com.querydsl.core.group.GroupBy.groupBy;
 public class ReviewCoreRepository implements ReviewRepository {
 
     private final ReviewJpaRepository reviewJpaRepository;
-    private final MemberJpaRepository memberJpaRepository;
-    private final WalkwayJpaRepository walkwayJpaRepository;
-    private final WalkwayLogJpaRepository walkwayLogJpaRepository;
     private final JPAQueryFactory queryFactory;
 
     private final QReview review = QReview.review;
+    private final QWalkway walkway = QWalkway.walkway;
+    private final QMember member = QMember.member;
+    private final QWalkwayLog walkwayLog = QWalkwayLog.walkwayLog;
 
     @Autowired
-    public ReviewCoreRepository(ReviewJpaRepository reviewJpaRepository, MemberJpaRepository memberJpaRepository,
-                                WalkwayJpaRepository walkwayJpaRepository,
-                                WalkwayLogJpaRepository walkwayLogJpaRepository, JPAQueryFactory queryFactory) {
+    public ReviewCoreRepository(ReviewJpaRepository reviewJpaRepository, JPAQueryFactory queryFactory) {
         this.reviewJpaRepository = reviewJpaRepository;
-        this.memberJpaRepository = memberJpaRepository;
-        this.walkwayJpaRepository = walkwayJpaRepository;
-        this.walkwayLogJpaRepository = walkwayLogJpaRepository;
         this.queryFactory = queryFactory;
     }
 
     @Override
     public Long save(Review review) {
         return reviewJpaRepository.save(review).getId();
+    }
+
+    @Override
+    public Optional<Review> findById(Long reviewId) {
+        return reviewJpaRepository.findById(reviewId);
     }
 
     /**
@@ -66,33 +64,27 @@ public class ReviewCoreRepository implements ReviewRepository {
      * @return 사용자가 작성한 리뷰들
      */
     @Override
-    public List<Review> getUserReviews(Integer size, LocalDateTime lastCreatedAt, Long memberId) {
-        List<Review> reviewEntities = queryFactory.selectFrom(review)
-                .join(review.walkway)
-                .fetchJoin()
-                .join(review.member)
-                .fetchJoin()
-                .where(review.member.id.eq(memberId),
+    public CursorPage<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size) {
+        List<ReviewWithWalkwayQuery> result = queryFactory.select(Projections.constructor(ReviewWithWalkwayQuery.class,
+                        review.id,
+                        walkway.id,
+                        walkway.name,
+                        review.createdAt,
+                        review.rating,
+                        review.content))
+                .from(review)
+                .join(walkwayLog).on(review.walkwayLogId.eq(walkwayLog.id))
+                .join(walkway).on(walkwayLog.walkwayId.eq(walkway.id))
+                .join(member).on(walkwayLog.memberId.eq(member.id))
+                .where(member.id.eq(memberId),
                         createdAtLt(lastCreatedAt),
-                        review.walkway.member.id.eq(memberId)
-                                .or(review.walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
-                .limit(size)
+                        walkway.memberId.eq(memberId)
+                                .or(walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
+                .limit(size + 1)
                 .orderBy(review.createdAt.desc())
                 .fetch();
 
-        return reviewEntities.stream()
-                .map(Review::toReview)
-                .toList();
-    }
-
-    /**
-     * reviewId보다 작은 reviewId를 검색하는 조건
-     *
-     * @param reviewId 마지막으로 가져온 reviewId
-     * @return 조건 만족 안하면 null 반환, where 절에서 null은 무시된다.
-     */
-    private BooleanExpression reviewIdLt(Long reviewId) {
-        return reviewId != null ? review.id.lt(reviewId) : null;
+        return new CursorPage<>(result, size);
     }
 
     /**
@@ -105,54 +97,72 @@ public class ReviewCoreRepository implements ReviewRepository {
         return createdAt != null ? review.createdAt.lt(createdAt) : null;
     }
 
+    // 여기 member 조인하는거 취소 하고, 상단 레이어에서 쿼리 추가로 날려서 매핑 가능 (성능 테스트 해보고 분리할지 말지 고민)
     @Override
-    public List<Review> getWalkwayReviewsLatest(Integer size, Long walkwayId, LocalDateTime lastCreatedAt) {
-        List<Review> reviewEntities = queryFactory.selectFrom(review)
-                .join(review.walkway)
-                .fetchJoin()
-                .join(review.member)
-                .fetchJoin()
-                .where(review.walkway.id.eq(walkwayId),
+    public CursorPage<ReviewWithMemberQuery> getWalkwayReviewsLatest(Long walkwayId, LocalDateTime lastCreatedAt, int size) {
+        List<ReviewWithMemberQuery> result = queryFactory.select(Projections.constructor(ReviewWithMemberQuery.class,
+                        review.id,
+                        member.id,
+                        member.nickname,
+                        review.createdAt,
+                        review.rating,
+                        review.content
+                ))
+                .from(review)
+                .join(walkwayLog).on(review.walkwayLogId.eq(walkwayLog.id))
+                .join(member).on(walkwayLog.memberId.eq(member.id))
+                .where(walkwayLog.walkwayId.eq(walkwayId),
                         createdAtLt(lastCreatedAt)
                 )
-                .limit(size)
+                .limit(size + 1)
                 .orderBy(review.createdAt.desc())
                 .fetch();
 
-        return reviewEntities.stream()
-                .map(Review::toReview)
-                .toList();
+        return new CursorPage<>(result, size);
     }
 
+    // 여기 member 조인하는거 취소 하고, 상단 레이어에서 쿼리 추가로 날려서 매핑 가능 (성능 테스트 해보고 분리할지 말지 고민)
+    // (rating DESC, createdAt DESC)
     @Override
-    public List<Review> getWalkwayReviewsRating(Integer size, Long walkwayId, LocalDateTime lastCreatedAt,
-                                                Rating lastRating) {
-        List<Review> reviewEntities = queryFactory.selectFrom(review)
-                .join(review.walkway)
-                .fetchJoin()
-                .join(review.member)
-                .fetchJoin()
-                .where(review.walkway.id.eq(walkwayId),
-                        lastRating == null
-                                ? null
-                                : review.rating.lt(lastRating.getNum())
-                                .or(review.rating.eq(lastRating.getNum())
-                                        .and(createdAtLt(lastCreatedAt))
-                                )
+    public CursorPage<ReviewWithMemberQuery> getWalkwayReviewsRating(Long walkwayId, Integer lastRating,
+                                                                     LocalDateTime lastCreatedAt, int size) {
+        List<ReviewWithMemberQuery> result = queryFactory.select(Projections.constructor(ReviewWithMemberQuery.class,
+                        review.id,
+                        member.id,
+                        member.nickname,
+                        review.createdAt,
+                        review.rating,
+                        review.content
+                ))
+                .from(review)
+                .join(walkwayLog).on(review.walkwayLogId.eq(walkwayLog.id))
+                .join(member).on(walkwayLog.memberId.eq(member.id))
+                .where(walkwayLog.walkwayId.eq(walkwayId),
+                        ratingLtCreatedAtLt(lastRating, lastCreatedAt)
                 )
-                .limit(size)
+                .limit(size + 1)
                 .orderBy(review.rating.desc(), review.createdAt.desc())
                 .fetch();
 
-        return reviewEntities.stream()
-                .map(Review::toReview)
-                .toList();
+        return new CursorPage<>(result, size);
+    }
+
+    /**
+     * (rating DESC, createdAt DESC)
+     */
+    private BooleanExpression ratingLtCreatedAtLt(Integer lastRating, LocalDateTime lastCreatedAt) {
+        if (lastCreatedAt == null) {
+            return null;
+        }
+        return review.rating.lt(lastRating)
+                .or(review.rating.eq(lastRating).and(createdAtLt(lastCreatedAt)));
     }
 
     @Override
     public Map<Rating, Long> getWalkwayRating(Long walkwayId) {
         Map<Integer, Long> rawResult = queryFactory.from(review)
-                .where(review.walkway.id.eq(walkwayId))
+                .join(walkwayLog).on(review.walkwayLogId.eq(walkwayLog.id))
+                .where(walkwayLog.walkwayId.eq(walkwayId))
                 .groupBy(review.rating)
                 .transform(groupBy(review.rating).as(review.rating.count()));
 
@@ -161,33 +171,4 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .collect(Collectors.toMap(entry -> Rating.numOf(entry.getKey()), Map.Entry::getValue));
     }
 
-    @Override
-    public Optional<Review> findById(Long reviewId) {
-        return reviewJpaRepository.findById(reviewId)
-                .map(Review::toReview);
-    }
-
-    @Override
-    public boolean existsById(Long reviewId) {
-        return reviewJpaRepository.existsById(reviewId);
-    }
-
-    @Override
-    public boolean existsByIdAndMemberId(Long reviewId, Long memberId) {
-        return reviewJpaRepository.existsByIdAndMemberId(reviewId, memberId);
-    }
-
-    @Override
-    public Long save(CreateReview createReview) {
-        Member member = memberJpaRepository.getReferenceById(createReview.memberId());
-        Walkway walkway = walkwayJpaRepository.getReferenceById(createReview.walkwayId());
-        WalkwayLog walkwayLog = walkwayLogJpaRepository.getReferenceById(
-                createReview.walkwayHistoryId());
-
-        Review review = new Review(createReview.rating(), createReview.content(), member,
-                walkway, walkwayLog);
-        reviewJpaRepository.save(review);
-
-        return review.getId();
-    }
 }

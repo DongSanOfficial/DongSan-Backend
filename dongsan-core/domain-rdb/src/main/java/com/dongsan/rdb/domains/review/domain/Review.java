@@ -49,4 +49,12 @@ public class Review extends BaseEntity {
     public Long getId() {
         return id;
     }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public String getContent() {
+        return content;
+    }
 }

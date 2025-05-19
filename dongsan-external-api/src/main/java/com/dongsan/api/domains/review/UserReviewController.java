@@ -3,8 +3,9 @@ package com.dongsan.api.domains.review;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.review.dto.MyReviewResponse;
 import com.dongsan.api.support.response.CursorResponse;
+import com.dongsan.rdb.common.CursorPage;
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithWalkwayQuery;
 import com.dongsan.rdb.support.util.CursorRequest;
-import com.dongsan.rdb.support.util.PagingResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "마이페이지")
 @Validated
 public class UserReviewController {
-    private final UserReviewService userReviewService;
+    private final UserReviewFacade userReviewFacade;
 
-    public UserReviewController(UserReviewService userReviewService) {
-        this.userReviewService = userReviewService;
+    public UserReviewController(UserReviewFacade userReviewFacade) {
+        this.userReviewFacade = userReviewFacade;
     }
 
     /**
@@ -36,9 +37,9 @@ public class UserReviewController {
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        PagingResponse<Review> response = userReviewService.getReviews(new CursorRequest(lastId, size),
+        CursorPage<ReviewWithWalkwayQuery> response = userReviewFacade.getUserReviews(new CursorRequest(lastId, size),
                 customOAuth2User.getMemberId());
-        return ResponseEntity.ok(new CursorResponse<>(MyReviewResponse.from(response.data()), response.hasNext()));
+        return ResponseEntity.ok(new CursorResponse<>(MyReviewResponse.from(response.getData()), response.getHasNext()));
     }
 
 }

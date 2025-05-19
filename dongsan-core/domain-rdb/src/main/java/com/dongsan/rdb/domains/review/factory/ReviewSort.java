@@ -1,4 +1,4 @@
-package com.dongsan.rdb.domains.review;
+package com.dongsan.rdb.domains.review.factory;
 
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;

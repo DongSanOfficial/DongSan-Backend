@@ -1,5 +1,6 @@
 package com.dongsan.api.domains.review.dto;
 
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.rdb.support.format.TimeFormat;
 
 import java.time.format.DateTimeFormatter;
@@ -13,21 +14,19 @@ public record WalkwayReviewsResponse(
         Integer rating,
         String content
 ) {
-    public WalkwayReviewsResponse(Review review) {
+    public WalkwayReviewsResponse(ReviewWithMemberQuery query) {
         this(
-                review.reviewId(),
-                review.reviewer()
-                        .nickname(),
-                review.createdAt()
+                query.reviewId(),
+                query.nickname(),
+                query.createdAt()
                         .format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
-                TimeFormat.formatTimeString(review.createdAt()),
-                review.rating()
-                        .getNum(),
-                review.content()
+                TimeFormat.formatTimeString(query.createdAt()),
+                query.rating(),
+                query.content()
         );
     }
 
-    public static List<WalkwayReviewsResponse> from(List<Review> reviews) {
+    public static List<WalkwayReviewsResponse> from(List<ReviewWithMemberQuery> reviews) {
         return reviews.stream()
                 .map(WalkwayReviewsResponse::new)
                 .toList();

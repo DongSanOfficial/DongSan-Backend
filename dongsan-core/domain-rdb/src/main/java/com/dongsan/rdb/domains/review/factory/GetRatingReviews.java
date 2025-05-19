@@ -1,14 +1,14 @@
-package com.dongsan.rdb.domains.review;
+package com.dongsan.rdb.domains.review.factory;
 
-import com.dongsan.rdb.domains.review.domain.Rating;
+import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.review.domain.Review;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewRepository;
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 public class GetRatingReviews implements GetReviews {
@@ -26,13 +26,13 @@ public class GetRatingReviews implements GetReviews {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Review> search(Integer size, Review review, Long walkwayId) {
+    public CursorPage<ReviewWithMemberQuery> search(Long walkwayId, Review review, int size) {
         LocalDateTime lastCreatedAt = null;
-        Rating rating = null;
+        Integer rating = null;
         if (review != null) {
-            lastCreatedAt = review.createdAt();
-            rating = review.rating();
+            lastCreatedAt = review.getCreatedAt();
+            rating = review.getRating();
         }
-        return reviewRepository.getWalkwayReviewsRating(size, walkwayId, lastCreatedAt, rating);
+        return reviewRepository.getWalkwayReviewsRating(walkwayId, rating, lastCreatedAt, size);
     }
 }

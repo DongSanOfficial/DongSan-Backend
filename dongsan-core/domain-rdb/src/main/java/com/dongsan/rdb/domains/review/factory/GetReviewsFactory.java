@@ -1,4 +1,4 @@
-package com.dongsan.rdb.domains.review;
+package com.dongsan.rdb.domains.review.factory;
 
 import org.springframework.stereotype.Component;
 

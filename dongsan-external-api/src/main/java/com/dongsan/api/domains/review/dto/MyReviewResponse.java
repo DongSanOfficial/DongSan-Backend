@@ -1,5 +1,7 @@
 package com.dongsan.api.domains.review.dto;
 
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithWalkwayQuery;
+
 import java.util.List;
 
 public record MyReviewResponse(
@@ -10,22 +12,18 @@ public record MyReviewResponse(
         Integer rating,
         String content
 ) {
-    public MyReviewResponse(Review review) {
+    public MyReviewResponse(ReviewWithWalkwayQuery query) {
         this(
-                review.reviewId(),
-                review.reviewedWalkway()
-                        .walkwayId(),
-                review.reviewedWalkway()
-                        .walkwayName(),
-                review.createdAt()
-                        .toString(),
-                review.rating()
-                        .getNum(),
-                review.content()
+                query.reviewId(),
+                query.walkwayId(),
+                query.walkwayName(),
+                query.createdAt().toString(),
+                query.rating(),
+                query.content()
         );
     }
 
-    public static List<MyReviewResponse> from(List<Review> reviews) {
+    public static List<MyReviewResponse> from(List<ReviewWithWalkwayQuery> reviews) {
         return reviews.stream()
                 .map(MyReviewResponse::new)
                 .toList();
