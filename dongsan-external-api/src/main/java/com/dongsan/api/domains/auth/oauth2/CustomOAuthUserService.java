@@ -3,7 +3,7 @@ package com.dongsan.api.domains.auth.oauth2;
 import com.dongsan.api.domains.auth.AuthUserDto;
 import com.dongsan.api.domains.auth.CustomAccessDeniedHandler;
 import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.core.domains.auth.Provider;
+import com.dongsan.rdb.domains.auth.Provider;
 import com.dongsan.rdb.domains.member.Member;
 import com.dongsan.rdb.domains.member.MemberRole;
 import com.dongsan.rdb.domains.member.MemberService;

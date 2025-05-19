@@ -3,7 +3,7 @@ package com.dongsan.api.domains.walkway.dto.response;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.dongsan.core.domains.walkway.Walkway;
+import com.dongsan.rdb.domains.walkway.Walkway;
 
 public record MyWalkwayResponse(
 	Long walkwayId,

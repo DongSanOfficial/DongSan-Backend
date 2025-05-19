@@ -1,6 +1,6 @@
 package com.dongsan.rdb.domains.member;
 
-import com.dongsan.core.domains.auth.Provider;
+import com.dongsan.rdb.domains.auth.Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

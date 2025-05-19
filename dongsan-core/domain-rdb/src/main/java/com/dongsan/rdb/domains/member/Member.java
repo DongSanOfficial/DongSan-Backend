@@ -1,6 +1,6 @@
 package com.dongsan.rdb.domains.member;
 
-import com.dongsan.core.domains.auth.Provider;
+import com.dongsan.rdb.domains.auth.Provider;
 import com.dongsan.rdb.domains.common.BaseEntity;
 import jakarta.persistence.*;
 

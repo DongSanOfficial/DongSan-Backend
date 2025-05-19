@@ -1,8 +1,8 @@
 package com.dongsan.rdb.domains.member;
 
-import com.dongsan.core.domains.auth.Provider;
-import com.dongsan.core.support.error.CoreErrorCode;
-import com.dongsan.core.support.error.CoreException;
+import com.dongsan.rdb.domains.auth.Provider;
+import com.dongsan.rdb.support.error.CoreErrorCode;
+import com.dongsan.rdb.support.error.CoreException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

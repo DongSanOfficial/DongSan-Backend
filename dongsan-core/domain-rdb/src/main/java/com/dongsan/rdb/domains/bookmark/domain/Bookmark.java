@@ -1,7 +1,7 @@
 package com.dongsan.rdb.domains.bookmark.domain;
 
-import com.dongsan.core.support.error.CoreErrorCode;
-import com.dongsan.core.support.error.CoreException;
+import com.dongsan.rdb.support.error.CoreErrorCode;
+import com.dongsan.rdb.support.error.CoreException;
 import com.dongsan.rdb.domains.common.BaseEntity;
 import jakarta.persistence.*;
 

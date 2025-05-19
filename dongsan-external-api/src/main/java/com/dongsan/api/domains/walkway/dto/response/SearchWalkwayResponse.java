@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dongsan.api.domains.walkway.dto.WalkwayCoordinate;
-import com.dongsan.core.domains.walkway.Walkway;
+import com.dongsan.rdb.domains.walkway.Walkway;
 
 public record SearchWalkwayResponse(
 	Long walkwayId,

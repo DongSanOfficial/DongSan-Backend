@@ -1,7 +1,7 @@
 package com.dongsan.rdb.domains.bookmark.service;
 
-import com.dongsan.core.support.error.CoreErrorCode;
-import com.dongsan.core.support.error.CoreException;
+import com.dongsan.rdb.support.error.CoreErrorCode;
+import com.dongsan.rdb.support.error.CoreException;
 import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.rdb.domains.bookmark.domain.Bookmark;

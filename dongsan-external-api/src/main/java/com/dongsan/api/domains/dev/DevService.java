@@ -4,7 +4,7 @@ import com.dongsan.api.domains.auth.CookieService;
 import com.dongsan.api.domains.auth.JwtService;
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
-import com.dongsan.core.domains.auth.TokenWriter;
+import com.dongsan.rdb.domains.auth.TokenWriter;
 import com.dongsan.file.service.S3FileService;
 import com.dongsan.rdb.domains.member.Member;
 import com.dongsan.rdb.domains.member.MemberService;
