@@ -21,7 +21,7 @@ public class RecruitPost extends BaseEntity {
 
     private LocalTime time;
 
-    private Integer limit;
+    private Integer capacity;
 
     protected RecruitPost() {
     }

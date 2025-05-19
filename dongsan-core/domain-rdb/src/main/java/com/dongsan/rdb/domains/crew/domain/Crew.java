@@ -19,7 +19,7 @@ public abstract class Crew extends BaseEntity {
 
     private String rule;
 
-    private Integer limit;
+    private Integer capacity;
 
     protected Crew() {
     }
