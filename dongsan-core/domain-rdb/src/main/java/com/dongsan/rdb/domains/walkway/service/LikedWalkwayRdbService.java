@@ -39,4 +39,8 @@ public class LikedWalkwayRdbService {
         LikedWalkway likedWalkway = optionalLikedWalkway.get();
         likedWalkwayRepository.delete(likedWalkway);
     }
+
+    public boolean isLiked(Long memberId, Long walkwayId) {
+        return getOptionalLikedWalkway(memberId, walkwayId).isPresent();
+    }
 }

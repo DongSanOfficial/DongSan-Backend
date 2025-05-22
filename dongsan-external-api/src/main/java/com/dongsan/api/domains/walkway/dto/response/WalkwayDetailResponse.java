@@ -1,9 +1,9 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
-import com.dongsan.api.domains.walkway.LineStringMapper;
-import com.dongsan.api.domains.walkway.dto.WalkwayCoordinate;
-import com.dongsan.rdb.domains.walkway.Walkway;
+import com.dongsan.rdb.domains.walkway.LineStringMapper;
+import com.dongsan.rdb.domains.walkway.WalkwayCoordinate;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
+import com.dongsan.rdb.domains.walkway.domain.Walkway;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -23,6 +23,7 @@ public record WalkwayDetailResponse(
         List<WalkwayCoordinate> course,
         boolean marked
 ) {
+    // TODO
     public WalkwayDetailResponse(Walkway walkway, boolean isLiked, boolean isMarked) {
         this(
                 walkway.createdAt()

@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.walkway.dto.request;
 
-import com.dongsan.rdb.domains.walkway.UpdateWalkway;
+import com.dongsan.rdb.domains.walkway.UpdateWalkwayCommand;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,8 +15,8 @@ public record UpdateWalkwayRequest(
         List<String> hashtags,
         ExposeLevel exposeLevel
 ) {
-    public UpdateWalkway toUpdateWalkway(Long walkwayId) {
-        return new UpdateWalkway(
+    public UpdateWalkwayCommand toUpdateWalkway(Long walkwayId) {
+        return new UpdateWalkwayCommand(
                 walkwayId,
                 this.name(),
                 this.memo(),

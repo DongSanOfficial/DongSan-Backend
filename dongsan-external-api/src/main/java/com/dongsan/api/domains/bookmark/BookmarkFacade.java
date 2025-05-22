@@ -1,6 +1,5 @@
 package com.dongsan.api.domains.bookmark;
 
-import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.rdb.domains.bookmark.domain.Bookmark;
 import com.dongsan.rdb.domains.bookmark.service.BookmarkRdbService;
 import com.dongsan.rdb.domains.walkway.service.WalkwayService;
@@ -59,14 +58,5 @@ public class BookmarkFacade {
         // TODO : 따로 매핑 필요
         return null;
     }
-
-
-    public CursorPage<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long memberId, Long walkwayId,
-                                                                              CursorRequest paging) {
-        walkwayService.validateWalkwayExists(walkwayId);
-        LocalDateTime createdAt = bookmarkRdbService.getBookmarkCreatedAt(paging.lastId());
-        return bookmarkRdbService.getBookmarksWithMarkedWalkway(walkwayId, memberId, createdAt, paging.size());
-    }
-
 
 }

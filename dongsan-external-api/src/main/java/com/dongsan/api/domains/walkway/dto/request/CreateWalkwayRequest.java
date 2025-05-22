@@ -1,14 +1,12 @@
 package com.dongsan.api.domains.walkway.dto.request;
 
-import com.dongsan.api.domains.walkway.LineStringMapper;
-import com.dongsan.api.domains.walkway.dto.WalkwayCoordinate;
+import com.dongsan.rdb.domains.walkway.CreateWalkwayCommand;
+import com.dongsan.rdb.domains.walkway.WalkwayCoordinate;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Point;
 
 import java.util.List;
 
@@ -27,28 +25,19 @@ public record CreateWalkwayRequest(
         ExposeLevel exposeLevel,
         List<WalkwayCoordinate> course
 ) {
-    public CreateWalkway toCreateWalkway(String imageUrl, Long memberId) {
 
-        LineString course = LineStringMapper.toLineString(this.course());
-        Point startLocation = course.getStartPoint();
-        Point endLocation = course.getEndPoint();
-
-        course.setSRID(4326);
-        startLocation.setSRID(4326);
-        endLocation.setSRID(4326);
-
-        return new CreateWalkway(
-                this.name(),
-                this.distance(),
-                this.time(),
-                this.exposeLevel(),
-                startLocation,
-                endLocation,
-                this.memo(),
+    public CreateWalkwayCommand toCreateWalkwayCommand(String imageUrl, Long memberId) {
+        return new CreateWalkwayCommand(
+                name,
+                memo,
+                distance,
+                time,
+                hashtags,
+                exposeLevel,
                 course,
                 imageUrl,
-                this.hashtags(),
                 memberId
         );
     }
+
 }

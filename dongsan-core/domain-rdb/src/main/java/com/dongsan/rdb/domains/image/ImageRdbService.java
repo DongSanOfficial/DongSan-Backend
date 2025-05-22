@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class ImageService {
+public class ImageRdbService {
     private final ImageRepository imageRepository;
 
-    public ImageService(ImageRepository imageRepository) {
+    public ImageRdbService(ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
     }
 

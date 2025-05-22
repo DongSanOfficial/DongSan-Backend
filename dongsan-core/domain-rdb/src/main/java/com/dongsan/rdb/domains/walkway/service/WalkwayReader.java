@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class WalkwayReader {
@@ -42,10 +41,6 @@ public class WalkwayReader {
 
     public boolean existsLikedWalkway(Long memberId, Long walkwayId) {
         return walkwayRepository.existsLikedWalkway(memberId, walkwayId);
-    }
-
-    public Map<Long, Boolean> existsLikedWalkways(Long memberId, List<Long> walkwayIds) {
-        return walkwayRepository.existsLikedWalkways(memberId, walkwayIds);
     }
 
     public List<Walkway> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {

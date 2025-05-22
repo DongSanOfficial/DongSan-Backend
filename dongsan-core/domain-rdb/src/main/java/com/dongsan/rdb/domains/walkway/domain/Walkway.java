@@ -32,10 +32,7 @@ public class Walkway extends BaseEntity {
     }
 
     public void updateWalkway(String name, String memo, ExposeLevel exposeLevel, List<String> hashtags) {
-        this.name = name;
-        this.memo = memo;
-        this.exposeLevel = exposeLevel;
-        this.hashtags = hashtags;
+        walkwayInfo.updateInfo(name, memo, exposeLevel, hashtags);
     }
 
     public void validateAccess(Long memberId) {
@@ -59,5 +56,9 @@ public class Walkway extends BaseEntity {
         return id;
     }
 
-
+    public void isOwner(Long memberId) {
+        if (!this.memberId.equals(memberId)) {
+            throw new CoreException(CoreErrorCode.NOT_WALKWAY_OWNER);
+        }
+    }
 }
