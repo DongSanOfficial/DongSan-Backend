@@ -1,7 +1,6 @@
 package com.dongsan.rdb.domains.walkway.domain;
 
 import com.dongsan.rdb.domains.common.BaseEntity;
-import com.dongsan.rdb.domains.member.Member;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,32 +10,19 @@ public class LikedWalkway extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    private Long memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "walkway_id")
-    private Walkway walkway;
+    private Long walkwayId;
 
     protected LikedWalkway() {
     }
 
-    // 생성 시 연관관계 매핑 진행
-    public LikedWalkway(Member member, Walkway walkway) {
-        this.member = member;
-        this.walkway = walkway;
+    public LikedWalkway(Long memberId, Long walkwayId) {
+        this.memberId = memberId;
+        this.walkwayId = walkwayId;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Member getMemberEntity() {
-        return member;
-    }
-
-    public Walkway getWalkwayEntity() {
-        return walkway;
     }
 }

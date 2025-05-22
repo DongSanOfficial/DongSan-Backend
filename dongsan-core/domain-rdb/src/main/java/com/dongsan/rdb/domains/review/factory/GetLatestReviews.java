@@ -1,9 +1,9 @@
 package com.dongsan.rdb.domains.review.factory;
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.review.domain.Review;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewRepository;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
+import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

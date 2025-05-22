@@ -1,7 +1,7 @@
 package com.dongsan.rdb.domains.bookmark.domain;
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
+import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

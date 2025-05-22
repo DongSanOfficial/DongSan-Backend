@@ -1,13 +1,13 @@
 package com.dongsan.rdb.domains.bookmark.infrastructure;
 
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedWalkwayParam;
 import com.dongsan.rdb.domains.bookmark.domain.Bookmark;
 import com.dongsan.rdb.domains.bookmark.domain.BookmarkRepository;
 import com.dongsan.rdb.domains.bookmark.domain.QBookmark;
 import com.dongsan.rdb.domains.bookmark.domain.QMarkedWalkway;
+import com.dongsan.rdb.support.util.CursorPage;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

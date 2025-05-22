@@ -5,8 +5,10 @@ import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayRepository;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class WalkwayRdbService {
     private final WalkwayRepository walkwayRepository;
 
@@ -18,4 +20,6 @@ public class WalkwayRdbService {
         return walkwayRepository.getWalkway(walkwayId)
                 .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_NOT_FOUND));
     }
+
+
 }

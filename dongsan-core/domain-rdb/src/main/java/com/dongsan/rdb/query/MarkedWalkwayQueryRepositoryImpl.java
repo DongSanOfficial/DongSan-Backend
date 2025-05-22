@@ -1,7 +1,7 @@
 package com.dongsan.rdb.query;
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.bookmark.domain.QMarkedWalkway;
+import com.dongsan.rdb.support.util.CursorPage;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;

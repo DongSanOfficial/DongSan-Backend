@@ -1,11 +1,11 @@
 package com.dongsan.api.domains.bookmark;
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.rdb.domains.bookmark.domain.Bookmark;
 import com.dongsan.rdb.domains.bookmark.service.BookmarkRdbService;
 import com.dongsan.rdb.domains.walkway.service.WalkwayService;
 import com.dongsan.rdb.query.MarkedWalkwayParam;
+import com.dongsan.rdb.support.util.CursorPage;
 import com.dongsan.rdb.support.util.CursorRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

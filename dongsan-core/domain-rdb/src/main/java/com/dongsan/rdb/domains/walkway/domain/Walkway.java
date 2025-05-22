@@ -1,13 +1,9 @@
 package com.dongsan.rdb.domains.walkway.domain;
 
 import com.dongsan.rdb.domains.common.BaseEntity;
-import com.dongsan.rdb.domains.member.Member;
-import com.dongsan.rdb.domains.walkway.ListStringConverter;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
 import jakarta.persistence.*;
-import org.locationtech.jts.geom.LineString;
-import org.locationtech.jts.geom.Point;
 
 import java.util.List;
 
@@ -20,82 +16,19 @@ public class Walkway extends BaseEntity {
 
     private Long memberId;
 
-    @Column(nullable = false)
-    private String name;
+    @Embedded
+    private WalkwayInfo walkwayInfo;
 
-    @Column(nullable = false)
-    private Double distance;
-
-    @Column(nullable = false)
-    private Integer time; // 초
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ExposeLevel exposeLevel;
-
-    @Column(nullable = false)
-    private Point startLocation;
-
-    @Column(nullable = false)
-    private Point endLocation;
-
-    private String memo;
-
-    @Column(nullable = false)
-    private Integer likeCount;
-
-    @Column(nullable = false)
-    private Integer reviewCount;
-
-    @Column(nullable = false)
-    private Double rating;
-
-    @Column(nullable = false)
-    private LineString course;
-
-    private String courseImageUrl;
-
-    @Convert(converter = ListStringConverter.class)
-    private List<String> hashtags;
+    @Embedded
+    private WalkwayGeometry geometry;
 
     protected Walkway() {
     }
 
-    // 연관관계 매핑도 생성 시 매핑합니다.
-    public Walkway(String name, Double distance, Integer time, ExposeLevel exposeLevel, Point startLocation,
-                   Point endLocation, String memo, LineString course, String courseImageUrl, Long memberId,
-                   List<String> hashtags) {
-        this.name = name;
-        this.distance = distance;
-        this.time = time;
-        this.exposeLevel = exposeLevel;
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
-        this.memo = memo;
-        this.course = course;
-        this.courseImageUrl = courseImageUrl;
-        this.hashtags = hashtags;
-
-        // 연관관계 매핑
+    public Walkway(Long memberId, WalkwayInfo walkwayInfo, WalkwayGeometry geometry) {
         this.memberId = memberId;
-
-        // 생성 시 default 값
-        this.likeCount = 0;
-        this.reviewCount = 0;
-        this.rating = 0.0;
-    }
-
-    public void updateRatingAndReviewCount(Double rating, Integer reviewCount) {
-        this.reviewCount = reviewCount;
-        this.rating = rating;
-    }
-
-    public void increaseLikeCount() {
-        this.likeCount++;
-    }
-
-    public void decreaseLikeCount() {
-        this.likeCount--;
+        this.walkwayInfo = walkwayInfo;
+        this.geometry = geometry;
     }
 
     public void updateWalkway(String name, String memo, ExposeLevel exposeLevel, List<String> hashtags) {
@@ -126,39 +59,5 @@ public class Walkway extends BaseEntity {
         return id;
     }
 
-    public Integer getLikeCount() {
-        return likeCount;
-    }
 
-    public Double getRating() {
-        return rating;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Double getDistance() {
-        return distance;
-    }
-
-    public String getCourseImageUrl() {
-        return courseImageUrl;
-    }
-
-    public List<String> getHashtags() {
-        return hashtags;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public ExposeLevel getExposeLevel() {
-        return exposeLevel;
-    }
-
-    public Integer getReviewCount() {
-        return reviewCount;
-    }
 }

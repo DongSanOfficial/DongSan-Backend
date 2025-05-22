@@ -1,6 +1,5 @@
 package com.dongsan.rdb.domains.walkway.service;
 
-import com.dongsan.core.support.util.PagingResponse;
 import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.rdb.domains.walkway.UpdateWalkway;
 import com.dongsan.rdb.domains.walkway.WalkwaySort;
@@ -61,26 +60,6 @@ public class WalkwayService {
 
     public Map<Long, Boolean> existsLikedWalkways(Long memberId, List<Long> walkwayIds) {
         return walkwayReader.existsLikedWalkways(memberId, walkwayIds);
-    }
-
-    @Transactional
-    public void createLikedWalkway(Long memberId, Long walkwayId) {
-        Walkway walkway = walkwayReader.getWalkway(walkwayId);
-        walkwayValidator.validateWalkwayAccess(walkway, memberId);
-        boolean isLiked = walkwayReader.existsLikedWalkway(memberId, walkwayId);
-        if (!isLiked) {
-            walkwayWriter.saveLikedWalkway(memberId, walkwayId);
-        }
-    }
-
-    @Transactional
-    public void deleteLikedWalkway(Long memberId, Long walkwayId) {
-        Walkway walkway = walkwayReader.getWalkway(walkwayId);
-        walkwayValidator.validateWalkwayAccess(walkway, memberId);
-        boolean isLiked = walkwayReader.existsLikedWalkway(memberId, walkwayId);
-        if (isLiked) {
-            walkwayWriter.deleteLikedWalkway(memberId, walkwayId);
-        }
     }
 
     @Transactional(readOnly = true)

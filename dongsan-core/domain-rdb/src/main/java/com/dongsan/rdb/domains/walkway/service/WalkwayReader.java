@@ -1,9 +1,9 @@
 package com.dongsan.rdb.domains.walkway.service;
 
-import com.dongsan.rdb.domains.walkway.SearchWalkwayFactory;
 import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.rdb.domains.walkway.WalkwaySort;
 import com.dongsan.rdb.domains.walkway.domain.Walkway;
+import com.dongsan.rdb.domains.walkway.factory.SearchWalkwayFactory;
 import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayRepository;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;

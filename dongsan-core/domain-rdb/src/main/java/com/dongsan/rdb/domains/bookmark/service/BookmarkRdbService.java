@@ -1,14 +1,14 @@
 package com.dongsan.rdb.domains.bookmark.service;
 
-import com.dongsan.rdb.support.error.CoreErrorCode;
-import com.dongsan.rdb.support.error.CoreException;
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.rdb.domains.bookmark.domain.Bookmark;
 import com.dongsan.rdb.domains.bookmark.domain.BookmarkRepository;
 import com.dongsan.rdb.domains.bookmark.domain.MarkedWalkwayRepository;
 import com.dongsan.rdb.query.MarkedWalkwayParam;
 import com.dongsan.rdb.query.MarkedWalkwayQueryRepository;
+import com.dongsan.rdb.support.error.CoreErrorCode;
+import com.dongsan.rdb.support.error.CoreException;
+import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,25 +1,19 @@
 package com.dongsan.api.domains.walkway;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.api.domains.bookmark.BookmarkFacade;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.response.*;
 import com.dongsan.api.support.response.CursorResponse;
-import com.dongsan.file.service.S3FileService;
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
-import com.dongsan.rdb.domains.bookmark.service.BookmarkRdbService;
-import com.dongsan.rdb.domains.image.ImageService;
 import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.rdb.domains.walkway.UpdateWalkway;
-import com.dongsan.rdb.domains.walkway.service.WalkwayService;
+import com.dongsan.rdb.support.util.CursorPage;
 import com.dongsan.rdb.support.util.CursorRequest;
 import com.dongsan.rdb.support.util.PagingResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,20 +30,10 @@ import java.util.Map;
 @Validated
 public class WalkwayController {
 
-    private final WalkwayService walkwayService;
-    private final BookmarkRdbService bookmarkRdbService;
-    private final BookmarkFacade bookmarkFacade;
-    private final S3FileService s3FileService;
-    private final ImageService imageService;
+    private final WalkwayFacade walkwayFacade;
 
-    @Autowired
-    public WalkwayController(WalkwayService walkwayService, BookmarkRdbService bookmarkRdbService,
-                             BookmarkFacade bookmarkFacade, S3FileService s3FileService, ImageService imageService) {
-        this.walkwayService = walkwayService;
-        this.bookmarkRdbService = bookmarkRdbService;
-        this.bookmarkFacade = bookmarkFacade;
-        this.s3FileService = s3FileService;
-        this.imageService = imageService;
+    public WalkwayController(WalkwayFacade walkwayFacade) {
+        this.walkwayFacade = walkwayFacade;
     }
 
     @Operation(summary = "산책로 등록")

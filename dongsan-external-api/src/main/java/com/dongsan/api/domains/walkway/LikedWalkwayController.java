@@ -1,10 +1,8 @@
 package com.dongsan.api.domains.walkway;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.rdb.domains.walkway.service.WalkwayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -15,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "산책로")
 @Validated
 public class LikedWalkwayController {
-    @Autowired
-    public LikedWalkwayController(WalkwayService walkwayService) {
-        this.walkwayService = walkwayService;
-    }
 
-    private final WalkwayService walkwayService;
+    private final LikedWalkwayFacade likedWalkwayFacade;
+
+    public LikedWalkwayController(LikedWalkwayFacade likedWalkwayFacade) {
+        this.likedWalkwayFacade = likedWalkwayFacade;
+    }
 
     @Operation(summary = "산책로 좋아요")
     @PostMapping("/{walkwayId}/likes")
@@ -28,7 +26,7 @@ public class LikedWalkwayController {
             @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        walkwayService.createLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
+        likedWalkwayFacade.createLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
         return ResponseEntity.ok()
                 .build();
     }
@@ -39,7 +37,7 @@ public class LikedWalkwayController {
             @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        walkwayService.deleteLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
+        likedWalkwayFacade.deleteLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
         return ResponseEntity.ok()
                 .build();
     }

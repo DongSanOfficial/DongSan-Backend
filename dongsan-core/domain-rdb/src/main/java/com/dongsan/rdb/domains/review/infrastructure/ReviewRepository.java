@@ -1,8 +1,8 @@
 package com.dongsan.rdb.domains.review.infrastructure;
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.review.domain.Rating;
 import com.dongsan.rdb.domains.review.domain.Review;
+import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

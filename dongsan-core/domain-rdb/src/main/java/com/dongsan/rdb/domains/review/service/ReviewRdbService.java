@@ -1,6 +1,5 @@
 package com.dongsan.rdb.domains.review.service;
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.review.domain.Rating;
 import com.dongsan.rdb.domains.review.domain.Review;
 import com.dongsan.rdb.domains.review.factory.GetReviewsFactory;
@@ -10,6 +9,7 @@ import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewWithWalkwayQuery;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
+import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

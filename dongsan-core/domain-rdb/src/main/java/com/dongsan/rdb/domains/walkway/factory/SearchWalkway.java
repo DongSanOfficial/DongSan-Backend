@@ -1,5 +1,7 @@
-package com.dongsan.rdb.domains.walkway;
+package com.dongsan.rdb.domains.walkway.factory;
 
+import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
+import com.dongsan.rdb.domains.walkway.WalkwaySort;
 import com.dongsan.rdb.domains.walkway.domain.Walkway;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.dongsan.rdb.common;
+package com.dongsan.rdb.support.util;
 
 import java.util.List;
 

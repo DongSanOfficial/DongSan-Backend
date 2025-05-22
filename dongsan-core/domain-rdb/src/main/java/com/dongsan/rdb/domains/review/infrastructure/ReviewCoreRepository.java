@@ -1,6 +1,5 @@
 package com.dongsan.rdb.domains.review.infrastructure;
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.member.QMember;
 import com.dongsan.rdb.domains.review.domain.QReview;
 import com.dongsan.rdb.domains.review.domain.Rating;
@@ -8,6 +7,7 @@ import com.dongsan.rdb.domains.review.domain.Review;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
 import com.dongsan.rdb.domains.walkway.domain.QWalkway;
 import com.dongsan.rdb.domains.walkwayLog.QWalkwayLog;
+import com.dongsan.rdb.support.util.CursorPage;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

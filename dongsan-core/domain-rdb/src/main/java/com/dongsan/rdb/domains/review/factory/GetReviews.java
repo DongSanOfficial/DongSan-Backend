@@ -1,8 +1,8 @@
 package com.dongsan.rdb.domains.review.factory;
 
-import com.dongsan.rdb.common.CursorPage;
 import com.dongsan.rdb.domains.review.domain.Review;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
+import com.dongsan.rdb.support.util.CursorPage;
 
 public interface GetReviews {
     ReviewSort getSortType();
