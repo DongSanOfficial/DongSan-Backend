@@ -26,11 +26,25 @@ public class WalkwayLog extends BaseEntity {
     }
 
     public WalkwayLog(Long memberId, Long walkwayId, Integer time, Double distance) {
+        validateTime(time);
+        validateDistance(distance);
+
         this.memberId = memberId;
         this.walkwayId = walkwayId;
-
         this.time = time;
         this.distance = distance;
+    }
+
+    private void validateTime(Integer time) {
+        if (time == null || time <= 0) {
+            throw new CoreException(CoreErrorCode.CANT_CREATE_WALKWAY_HISTORY);
+        }
+    }
+
+    private void validateDistance(Double distance) {
+        if (distance == null || distance <= 0) {
+            throw new CoreException(CoreErrorCode.CANT_CREATE_WALKWAY_HISTORY);
+        }
     }
 
     public Long getId() {
@@ -41,6 +55,10 @@ public class WalkwayLog extends BaseEntity {
         if (!this.walkwayId.equals(walkwayId) || !this.memberId.equals(memberId)) {
             throw new CoreException(CoreErrorCode.INVALID_ACCESS);
         }
+    }
+
+    public boolean isSufficientDistance(Double walkwayDistance) {
+        return this.distance >= walkwayDistance * 2 / 3;
     }
 
     public void validateSufficientDistance(Double walkwayDistance) {

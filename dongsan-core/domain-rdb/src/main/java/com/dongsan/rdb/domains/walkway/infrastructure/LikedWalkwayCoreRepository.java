@@ -27,4 +27,14 @@ public class LikedWalkwayCoreRepository implements LikedWalkwayRepository {
     public void delete(LikedWalkway likedWalkway) {
         likedWalkwayJpaRepository.delete(likedWalkway);
     }
+
+    @Override
+    public void deleteAllInBatchByWalkwayId(Long walkwayId) {
+        likedWalkwayJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
+    }
+
+    @Override
+    public int countByWalkwayId(Long walkwayId) {
+        return likedWalkwayJpaRepository.countByWalkwayId(walkwayId);
+    }
 }

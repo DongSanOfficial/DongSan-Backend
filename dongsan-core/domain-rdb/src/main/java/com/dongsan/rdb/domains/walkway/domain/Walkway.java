@@ -47,18 +47,36 @@ public class Walkway extends BaseEntity {
     }
 
     private void validateExposeLevel() {
-        if (this.exposeLevel.equals(ExposeLevel.PRIVATE)) {
-            throw new CoreException(CoreErrorCode.WALKWAY_PRIVATE);
-        }
-    }
-
-    public Long getId() {
-        return id;
+        walkwayInfo.validateExposeLevel();
     }
 
     public void isOwner(Long memberId) {
         if (!this.memberId.equals(memberId)) {
             throw new CoreException(CoreErrorCode.NOT_WALKWAY_OWNER);
         }
+    }
+
+    public Double getDistance() {
+        return this.walkwayInfo.getDistance();
+    }
+
+    public WalkwaySnapshot snapshot() {
+        return new WalkwaySnapshot(
+                id,
+                memberId,
+                walkwayInfo.getName(),
+                walkwayInfo.getMemo(),
+                walkwayInfo.getExposeLevel(),
+                walkwayInfo.getHashtags(),
+                walkwayInfo.getDistance(),
+                walkwayInfo.getTime(),
+                geometry.getCourse(),
+                geometry.getCourseImageUrl(),
+                getCreatedAt()
+        );
+    }
+
+    public Long getId() {
+        return id;
     }
 }

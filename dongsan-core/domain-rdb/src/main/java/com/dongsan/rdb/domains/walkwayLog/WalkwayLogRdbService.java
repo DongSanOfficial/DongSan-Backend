@@ -24,5 +24,13 @@ public class WalkwayLogRdbService {
         }
     }
 
+    public WalkwayLog save(Long walkwayId, Long memberId, Double distance, Integer time) {
+        WalkwayLog walkwayLog = new WalkwayLog(memberId, walkwayId, time, distance);
+        walkwayLogRepository.save(walkwayLog);
+        return walkwayLog;
+    }
 
+    public void deleteAllInBatchByWalkwayId(Long walkwayId) {
+        walkwayLogRepository.deleteAllInBatchByWalkwayId(walkwayId);
+    }
 }

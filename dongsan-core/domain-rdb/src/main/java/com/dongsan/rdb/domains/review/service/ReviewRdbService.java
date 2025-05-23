@@ -2,6 +2,7 @@ package com.dongsan.rdb.domains.review.service;
 
 import com.dongsan.rdb.domains.review.domain.Rating;
 import com.dongsan.rdb.domains.review.domain.Review;
+import com.dongsan.rdb.domains.review.domain.ReviewStat;
 import com.dongsan.rdb.domains.review.factory.GetReviewsFactory;
 import com.dongsan.rdb.domains.review.factory.ReviewSort;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewRepository;
@@ -59,4 +60,13 @@ public class ReviewRdbService {
         return reviewRepository.getUserReviews(memberId, lastCreatedAt, size);
     }
 
+    public void deleteAllInBatchByWalkwayId(Long walkwayId) {
+        reviewRepository.deleteAllInBatchByWalkwayId(walkwayId);
+    }
+
+    @Transactional(readOnly = true)
+    public ReviewStat getReviewStat(Long walkwayId) {
+        Map<Rating, Long> countPerRating = getWalkwayRating(walkwayId);
+        return ReviewStat.from(countPerRating);
+    }
 }

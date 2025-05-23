@@ -1,9 +1,10 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
+import com.dongsan.rdb.domains.review.domain.ReviewStat;
 import com.dongsan.rdb.domains.walkway.LineStringMapper;
 import com.dongsan.rdb.domains.walkway.WalkwayCoordinate;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
+import com.dongsan.rdb.domains.walkway.domain.WalkwaySnapshot;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,17 +15,39 @@ public record WalkwayDetailResponse(
         Double distance,
         String name,
         String memo,
-        Double rating,
-        Boolean isLiked,
-        Integer reviewCount,
-        Integer likeCount,
+        double rating,
+        boolean isLiked,
+        int reviewCount,
+        int likeCount,
         List<String> hashtags,
         ExposeLevel accessLevel,
         List<WalkwayCoordinate> course,
         boolean marked
 ) {
+
+    public WalkwayDetailResponse(WalkwaySnapshot walkway, boolean isLike, boolean isMarked, ReviewStat reviewStat, int likeCount) {
+        this(
+                walkway.createdAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
+                walkway.time(),
+                walkway.distance(),
+                walkway.name(),
+                walkway.memo(),
+                reviewStat.rating(),
+                isLike,
+                reviewStat.reviewCount(),
+                likeCount,
+                walkway.hashtags()
+                        .stream()
+                        .map(hashtag -> "#" + hashtag)
+                        .toList(),
+                walkway.exposeLevel(),
+                LineStringMapper.toList(walkway.course()),
+                isMarked
+        );
+    }
+
     // TODO
-    public WalkwayDetailResponse(Walkway walkway, boolean isLiked, boolean isMarked) {
+    public WalkwayDetailResponse(WalkwaySnapshot walkway, boolean isLiked, boolean isMarked) {
         this(
                 walkway.createdAt()
                         .format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
@@ -51,4 +74,6 @@ public record WalkwayDetailResponse(
                 isMarked
         );
     }
+
+
 }

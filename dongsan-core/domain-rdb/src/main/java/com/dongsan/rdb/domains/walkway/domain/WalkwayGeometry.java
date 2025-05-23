@@ -36,4 +36,12 @@ public class WalkwayGeometry {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
     }
+
+    public LineString getCourse() {
+        return course;
+    }
+
+    public String getCourseImageUrl() {
+        return courseImageUrl;
+    }
 }

@@ -21,4 +21,6 @@ public interface MarkedWalkwayRepository {
     void excludeWalkway(Long bookmarkId, Long walkwayId);
 
     void deleteAllByBookmarkId(Long bookmarkId);
+
+    void deleteAllInBatchByWalkwayId(Long walkwayId);
 }

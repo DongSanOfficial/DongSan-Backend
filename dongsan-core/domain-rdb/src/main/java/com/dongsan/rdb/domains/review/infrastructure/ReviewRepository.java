@@ -23,4 +23,5 @@ public interface ReviewRepository {
 
     Map<Rating, Long> getWalkwayRating(Long walkwayId);
 
+    void deleteAllInBatchByWalkwayId(Long walkwayId);
 }

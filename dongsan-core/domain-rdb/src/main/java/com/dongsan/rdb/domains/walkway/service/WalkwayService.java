@@ -59,25 +59,6 @@ public class WalkwayService {
         return PagingResponse.from(walkways, size);
     }
 
-    @Transactional
-    public Long createWalkwayHistory(CreateWalkwayHistory createWalkwayHistory) {
-        walkwayValidator.validateWalkwayExists(createWalkwayHistory.walkwayId());
-        return walkwayWriter.saveWalkwayHistory(createWalkwayHistory);
-    }
-
-    public PagingResponse<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
-                                                                     Long lastWalkwayHistoryId) {
-        walkwayValidator.validateWalkwayPrivate(walkwayId);
-        LocalDateTime lastCreatedAt = null;
-        if (lastWalkwayHistoryId != null) {
-            WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(lastWalkwayHistoryId);
-            lastCreatedAt = walkwayHistory.createdAt();
-        }
-        List<WalkwayHistory> walkwayHistories = walkwayReader.getCanReviewWalkwayHistory(walkwayId, memberId, size + 1,
-                lastCreatedAt);
-        return PagingResponse.from(walkwayHistories, size);
-    }
-
     public PagingResponse<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, Long lastWalkwayHistoryId,
                                                                          int size) {
         LocalDateTime lastCreatedAt = null;
@@ -88,13 +69,6 @@ public class WalkwayService {
         List<WalkwayHistory> walkwayHistories = walkwayReader.getUserCanReviewWalkwayHistory(memberId, size + 1,
                 lastCreatedAt);
         return PagingResponse.from(walkwayHistories, size);
-    }
-
-    public boolean isCanReview(Long walkwayHistoryId) {
-        WalkwayHistory walkwayHistory = walkwayReader.getWalkwayHistory(walkwayHistoryId);
-        return walkwayHistory.distance() >= (walkwayHistory.walkway()
-                .courseInfo()
-                .distance()) * 2 / 3;
     }
 
     @Transactional(readOnly = true)

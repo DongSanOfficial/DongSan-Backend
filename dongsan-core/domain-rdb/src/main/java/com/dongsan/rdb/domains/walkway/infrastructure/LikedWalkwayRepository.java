@@ -12,4 +12,8 @@ public interface LikedWalkwayRepository {
     void save(LikedWalkway likedWalkway);
 
     void delete(LikedWalkway likedWalkway);
+
+    void deleteAllInBatchByWalkwayId(Long walkwayId);
+
+    int countByWalkwayId(Long walkwayId);
 }

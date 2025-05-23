@@ -1,6 +1,8 @@
 package com.dongsan.rdb.domains.walkway.domain;
 
 import com.dongsan.rdb.domains.walkway.ListStringConverter;
+import com.dongsan.rdb.support.error.CoreErrorCode;
+import com.dongsan.rdb.support.error.CoreException;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -97,5 +99,29 @@ public class WalkwayInfo {
         if (this.exposeLevel.equals(ExposeLevel.PRIVATE)) {
             throw new CoreException(CoreErrorCode.WALKWAY_PRIVATE);
         }
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public ExposeLevel getExposeLevel() {
+        return exposeLevel;
+    }
+
+    public List<String> getHashtags() {
+        return hashtags;
+    }
+
+    public Integer getTime() {
+        return time;
     }
 }

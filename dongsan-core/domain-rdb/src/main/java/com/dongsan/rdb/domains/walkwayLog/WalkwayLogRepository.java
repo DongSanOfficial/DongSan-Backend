@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface WalkwayLogRepository {
     Optional<WalkwayLog> findById(Long walkwayHistoryId);
 
-    Long saveWalkwayHistory(CreateWalkwayHistory createWalkwayHistory);
+    Long save(WalkwayLog walkwayLog);
 
     List<WalkwayLog> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
                                                 LocalDateTime lastCreatedAt);
@@ -21,4 +21,6 @@ public interface WalkwayLogRepository {
     void updateWalkwayHistoryIsReviewed(Long walkwayHistoryId, boolean isReviewed);
 
     boolean isReviewed(Long walkwayLogId);
+
+    void deleteAllInBatchByWalkwayId(Long walkwayId);
 }

@@ -43,4 +43,12 @@ public class LikedWalkwayRdbService {
     public boolean isLiked(Long memberId, Long walkwayId) {
         return getOptionalLikedWalkway(memberId, walkwayId).isPresent();
     }
+
+    public void deleteAllInBatchByWalkwayId(Long walkwayId) {
+        likedWalkwayRepository.deleteAllInBatchByWalkwayId(walkwayId);
+    }
+
+    public int countLikes(Long walkwayId) {
+        return likedWalkwayRepository.countByWalkwayId(walkwayId);
+    }
 }

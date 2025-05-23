@@ -95,8 +95,9 @@ public class BookmarkRdbService {
     }
 
     public CursorPage<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long walkwayId, Long memberId,
-                                                                              LocalDateTime createdAt,
+                                                                              Long lastId,
                                                                               int size) {
+        LocalDateTime createdAt = getBookmarkCreatedAt(lastId);
         return bookmarkRepository.getBookmarksWithMarkedStatus(walkwayId, memberId, createdAt, size);
     }
 
@@ -116,6 +117,10 @@ public class BookmarkRdbService {
         if (!markedWalkwayRepository.isWalkwayAdded(bookmarkId, walkwayId)) {
             throw new CoreException(CoreErrorCode.WALKWAY_NOT_EXIST_IN_BOOKMARK);
         }
+    }
+
+    public void deleteAllMarkedWalkwayInBatchByWalkwayId(Long walkwayId) {
+        markedWalkwayRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
 //    public Map<Long, Boolean> existsMarkedWalkways(Long walkwayId, List<Long> bookmarkIds) {

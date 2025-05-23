@@ -10,9 +10,11 @@ import java.util.Optional;
 public interface LikedWalkwayJpaRepository extends JpaRepository<LikedWalkway, Long> {
     Optional<LikedWalkway> findByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
 
-    void deleteByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
+    int countByWalkwayId(Long walkwayId);
 
-    Boolean existsByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
+    boolean existsByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
+
+    void deleteByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
 
     void deleteAllInBatchByWalkwayId(Long walkwayId);
 }

@@ -5,8 +5,6 @@ import com.dongsan.rdb.domains.walkway.WalkwaySort;
 import com.dongsan.rdb.domains.walkway.domain.Walkway;
 import com.dongsan.rdb.domains.walkway.factory.SearchWalkwayFactory;
 import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayRepository;
-import com.dongsan.rdb.support.error.CoreErrorCode;
-import com.dongsan.rdb.support.error.CoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,16 +43,6 @@ public class WalkwayReader {
 
     public List<Walkway> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
         return walkwayRepository.getUserLikedWalkway(memberId, size, lastCreatedAt);
-    }
-
-    public WalkwayHistory getWalkwayHistory(Long walkwayHistoryId) {
-        return walkwayRepository.getWalkwayHistory(walkwayHistoryId)
-                .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_LOG_NOT_FOUND));
-    }
-
-    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
-                                                           LocalDateTime lastCreatedAt) {
-        return walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
     }
 
     public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt) {

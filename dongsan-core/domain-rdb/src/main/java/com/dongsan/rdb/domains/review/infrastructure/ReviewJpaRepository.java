@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewJpaRepository extends JpaRepository<Review, Long> {
-    //void deleteAllInBatchByWalkwayId(Long walkwayId);
+//    void deleteAllInBatchByWalkwayId(Long walkwayId);
 }

@@ -171,4 +171,10 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .collect(Collectors.toMap(entry -> Rating.numOf(entry.getKey()), Map.Entry::getValue));
     }
 
+    // TODO : 조인으로 처리
+    @Override
+    public void deleteAllInBatchByWalkwayId(Long walkwayId) {
+        //return reviewJpaRepository.
+    }
+
 }

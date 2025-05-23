@@ -3,7 +3,6 @@ package com.dongsan.rdb.domains.walkway.service;
 import com.dongsan.rdb.domains.walkway.CreateWalkwayCommand;
 import com.dongsan.rdb.domains.walkway.LineStringMapper;
 import com.dongsan.rdb.domains.walkway.UpdateWalkwayCommand;
-import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
 import com.dongsan.rdb.domains.walkway.domain.Walkway;
 import com.dongsan.rdb.domains.walkway.domain.WalkwayGeometry;
 import com.dongsan.rdb.domains.walkway.domain.WalkwayInfo;
@@ -53,21 +52,7 @@ public class WalkwayRdbService {
         Walkway walkway = getWalkway(walkwayId);
         walkway.isOwner(memberId);
         walkwayRepository.delete(walkway);
-
-//        walkwayJpaRepository.deleteById(walkwayId);
-//        reviewJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
-//        walkwayLogJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
-//        likedWalkwayJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
-//        markedWalkwayJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
-    private void validateWalkwayPrivate(Long walkwayId) {
-        Walkway walkway = walkwayRepository.getWalkway(walkwayId)
-                .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_NOT_FOUND));
 
-        if (walkway.exposeLevel()
-                .equals(ExposeLevel.PRIVATE)) {
-            throw new CoreException(CoreErrorCode.WALKWAY_PRIVATE);
-        }
-    }
 }

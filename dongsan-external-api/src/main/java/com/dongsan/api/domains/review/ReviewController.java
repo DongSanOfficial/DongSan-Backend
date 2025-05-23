@@ -67,6 +67,6 @@ public class ReviewController {
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         Map<Rating, Long> ratingCounts = reviewFacade.getWalkwayRating(walkwayId, customOAuth2User.getMemberId());
-        return ResponseEntity.ok(WalkwayRatingResponse.from(ratingCounts));
+        return ResponseEntity.ok(WalkwayRatingResponse.from(ratingCounts)); // ReviewStat 과 동일 로직
     }
 }

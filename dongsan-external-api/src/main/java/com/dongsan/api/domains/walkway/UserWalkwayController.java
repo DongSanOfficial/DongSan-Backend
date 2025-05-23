@@ -26,6 +26,8 @@ public class UserWalkwayController {
         this.walkwayService = walkwayService;
     }
 
+    // 🌈
+
     /**
      * 내가 등록한 산책로 조회
      *
@@ -43,6 +45,8 @@ public class UserWalkwayController {
         PagingResponse<Walkway> response = walkwayService.getUserWalkway(customOAuth2User.getMemberId(), size, lastId);
         return ResponseEntity.ok(new CursorResponse<>(MyWalkwayResponse.from(response.data()), response.hasNext()));
     }
+
+    // 🌈
 
     /**
      * 내가 좋아요한 산책로 상세 보기
@@ -63,6 +67,7 @@ public class UserWalkwayController {
         return ResponseEntity.ok(new CursorResponse<>(MyWalkwayResponse.from(response.data()), response.hasNext()));
     }
 
+    // 🌈
     @Operation(summary = "회원의 리뷰 작성 가능한 산책로 이용 기록 모두 보기")
     @GetMapping("/history")
     public ResponseEntity<GetWalkwayHistoriesResponse> getUserWalkwayHistory(
@@ -74,5 +79,9 @@ public class UserWalkwayController {
                 customOAuth2User.getMemberId(), lastId, size);
         return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response.data(), response.hasNext()));
     }
+
+    // 나의 그동안 산책한 내역 조회
+
+    // 나의 그동안 산책한 내역 with (리뷰 작성 가능 여뷰, 리뷰를 작성했다면 그 id까지)
 
 }

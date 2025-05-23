@@ -1,8 +1,6 @@
 package com.dongsan.rdb.domains.walkwayLog;
 
-import com.dongsan.rdb.domains.member.Member;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -16,7 +14,7 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
     private final WalkwayLogJpaRepository walkwayLogJpaRepository;
     private final JPAQueryFactory queryFactory;
 
-    //private final QWalkwayLog
+    private QWalkwayLog walkwayLog = QWalkwayLog.walkwayLog;
 
     public WalkwayLogCoreRepository(WalkwayLogJpaRepository walkwayLogJpaRepository, JPAQueryFactory queryFactory) {
         this.walkwayLogJpaRepository = walkwayLogJpaRepository;
@@ -29,28 +27,21 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
     }
 
     @Override
-    public Long saveWalkwayHistory(CreateWalkwayHistory createWalkwayHistory) {
-        Member member = memberJpaRepository.getReferenceById(createWalkwayHistory.memberId());
-        Walkway walkway = walkwayJpaRepository.getReferenceById(createWalkwayHistory.walkwayId());
-
-        WalkwayLog walkwayLog
-                = new WalkwayLog(member, walkway, createWalkwayHistory.distance(),
-                createWalkwayHistory.time());
-        walkwayLogJpaRepository.save(walkwayLog);
-        return walkwayLog.getId();
+    public Long save(WalkwayLog walkwayLog) {
+        return walkwayLogJpaRepository.save(walkwayLog).getId();
     }
+
 
     @Override
     public List<WalkwayLog> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
                                                        LocalDateTime lastCreatedAt) {
-        return walkwayHistoryQueryDSLRepository.getCanReviewWalkwayHistories(
+        return getCanReviewWalkwayHistories(
                 walkwayId, memberId, size, lastCreatedAt);
     }
 
     @Override
     public List<WalkwayLog> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt) {
-        return walkwayHistoryQueryDSLRepository.getUserCanReviewWalkwayHistories(
-                memberId, size, lastCreatedAt);
+        return getUserCanReviewWalkwayHistories(memberId, size, lastCreatedAt);
     }
 
 
@@ -66,7 +57,11 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
         return walkwayLogJpaRepository.existsByWalkwayLogId(walkwayLogId);
     }
 
-    private QWalkwayHistoryEntity walkwayHistory = QWalkwayHistoryEntity.walkwayHistoryEntity;
+    @Override
+    public void deleteAllInBatchByWalkwayId(Long walkwayId) {
+        walkwayLogJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
+    }
+
 
     // 산책로의 리뷰 가능한 회원의 기록 조회
     public List<WalkwayLog> getCanReviewWalkwayHistories(Long walkwayId, Long memberId, int size,
