@@ -3,9 +3,8 @@ package com.dongsan.rdb.domains.bookmark.service;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.rdb.domains.bookmark.domain.Bookmark;
 import com.dongsan.rdb.domains.bookmark.domain.BookmarkRepository;
+import com.dongsan.rdb.domains.bookmark.domain.MarkedWalkway;
 import com.dongsan.rdb.domains.bookmark.domain.MarkedWalkwayRepository;
-import com.dongsan.rdb.query.MarkedWalkwayParam;
-import com.dongsan.rdb.query.MarkedWalkwayQueryRepository;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
 import com.dongsan.rdb.support.util.CursorPage;
@@ -19,12 +18,10 @@ import java.time.LocalDateTime;
 public class BookmarkRdbService {
     private final BookmarkRepository bookmarkRepository;
     private final MarkedWalkwayRepository markedWalkwayRepository;
-    private final MarkedWalkwayQueryRepository markedWalkwayQueryRepository;
 
-    public BookmarkRdbService(BookmarkRepository bookmarkRepository, MarkedWalkwayRepository markedWalkwayRepository, MarkedWalkwayQueryRepository markedWalkwayQueryRepository) {
+    public BookmarkRdbService(BookmarkRepository bookmarkRepository, MarkedWalkwayRepository markedWalkwayRepository) {
         this.bookmarkRepository = bookmarkRepository;
         this.markedWalkwayRepository = markedWalkwayRepository;
-        this.markedWalkwayQueryRepository = markedWalkwayQueryRepository;
     }
 
     public Bookmark getBookmark(Long bookmarkId) {
@@ -86,19 +83,20 @@ public class BookmarkRdbService {
         return markedWalkwayRepository.existsByMemberIdAndWalkwayId(memberId, walkwayId);
     }
 
-    public CursorPage<Bookmark> getUserBookmark(Long memberId, LocalDateTime lastCreatedAt, int size) {
+    public CursorPage<Bookmark> getUserBookmark(Long memberId, Long lastBookmarkId, int size) {
+        LocalDateTime lastCreatedAt = getBookmarkCreatedAt(lastBookmarkId);
         return bookmarkRepository.getUserBookmarks(memberId, lastCreatedAt, size);
     }
 
-    public CursorPage<MarkedWalkwayParam> getBookmarkWalkway(Long memberId, Long bookmarkId, LocalDateTime lastCreatedAt, int size) {
-        return markedWalkwayQueryRepository.getBookmarkWalkway(memberId, bookmarkId, lastCreatedAt, size);
+    public CursorPage<MarkedWalkway> getBookmarkWalkway(Long memberId, Long bookmarkId, Long lastWalkwayId, int size) {
+        LocalDateTime lastCreatedAt = getBookmarkedDate(bookmarkId, lastWalkwayId);
+        return markedWalkwayRepository.getBookmarkWalkway(memberId, bookmarkId, lastCreatedAt, size);
     }
 
     public CursorPage<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long walkwayId, Long memberId,
-                                                                              Long lastId,
-                                                                              int size) {
-        LocalDateTime createdAt = getBookmarkCreatedAt(lastId);
-        return bookmarkRepository.getBookmarksWithMarkedStatus(walkwayId, memberId, createdAt, size);
+                                                                              Long lastBookmarkId, int size) {
+        LocalDateTime lastCreatedAt = getBookmarkCreatedAt(lastBookmarkId);
+        return bookmarkRepository.getBookmarksWithMarkedStatus(walkwayId, memberId, lastCreatedAt, size);
     }
 
     private void validateUniqueName(Long memberId, String name) {
@@ -122,9 +120,5 @@ public class BookmarkRdbService {
     public void deleteAllMarkedWalkwayInBatchByWalkwayId(Long walkwayId) {
         markedWalkwayRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
-
-//    public Map<Long, Boolean> existsMarkedWalkways(Long walkwayId, List<Long> bookmarkIds) {
-//        return markedWalkwayRepository.existsMarkedWalkway(walkwayId, bookmarkIds);
-//    }
 
 }

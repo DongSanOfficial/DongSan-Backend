@@ -5,7 +5,6 @@ import com.dongsan.rdb.domains.walkway.domain.LikedWalkwayRepository;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@Transactional
 public class LikedWalkwayRdbService {
     private final LikedWalkwayRepository likedWalkwayRepository;
 

@@ -1,5 +1,6 @@
 package com.dongsan.rdb.domains.bookmark.domain;
 
+import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,8 @@ import java.util.Optional;
 public interface MarkedWalkwayRepository {
 
     Optional<LocalDateTime> getBookmarkedDate(Long bookmarkId, Long walkwayId);
+
+    CursorPage<MarkedWalkway> getBookmarkWalkway(Long memberId, Long bookmarkId, LocalDateTime lastCreatedAt, int size);
 
     boolean existsByMemberIdAndWalkwayId(Long memberId, Long walkwayId);
 

@@ -57,7 +57,6 @@ public class WalkwayRdbService {
         return walkwayRepository.save(walkway);
     }
 
-    // TODO : 이렇게 하면 hashtag 바로 수정되나..? 그리고 필드 굳이 다 넘길 필요 있는지도 고민
     public void update(UpdateWalkwayCommand command, Long memberId) {
         Walkway walkway = getWalkway(command.walkwayId());
         walkway.isOwner(memberId);

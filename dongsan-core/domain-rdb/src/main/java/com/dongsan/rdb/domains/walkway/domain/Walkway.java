@@ -32,22 +32,13 @@ public class Walkway extends BaseEntity {
     }
 
     public void updateWalkway(String name, String memo, ExposeLevel exposeLevel, List<String> hashtags) {
-        walkwayInfo.updateInfo(name, memo, exposeLevel, hashtags);
+        walkwayInfo.updateWalkwayInfo(name, memo, exposeLevel, hashtags);
     }
 
     public void validateAccess(Long memberId) {
-        validateOwner(memberId);
-        validateExposeLevel();
-    }
-
-    private void validateOwner(Long memberId) {
-        if (!this.memberId.equals(memberId)) {
-            throw new CoreException(CoreErrorCode.NOT_WALKWAY_OWNER);
+        if (!this.memberId.equals(memberId) && this.walkwayInfo.getExposeLevel().equals(ExposeLevel.PRIVATE)) {
+            throw new CoreException(CoreErrorCode.WALKWAY_CANT_ACCESS);
         }
-    }
-
-    private void validateExposeLevel() {
-        walkwayInfo.validateExposeLevel();
     }
 
     public void isOwner(Long memberId) {
@@ -57,7 +48,7 @@ public class Walkway extends BaseEntity {
     }
 
     public Double getDistance() {
-        return this.walkwayInfo.getDistance();
+        return this.walkwayInfo.getDistanceKm();
     }
 
     public WalkwaySnapshot snapshot() {
@@ -68,8 +59,8 @@ public class Walkway extends BaseEntity {
                 walkwayInfo.getMemo(),
                 walkwayInfo.getExposeLevel(),
                 walkwayInfo.getHashtags(),
-                walkwayInfo.getDistance(),
-                walkwayInfo.getTime(),
+                walkwayInfo.getDistanceKm(),
+                walkwayInfo.getTimeSec(),
                 geometry.getCourse(),
                 geometry.getCourseImageUrl(),
                 getCreatedAt(),

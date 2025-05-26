@@ -13,6 +13,7 @@ public record UpdateWalkwayRequest(
         String memo,
         @NotNull
         List<String> hashtags,
+        @NotNull
         ExposeLevel exposeLevel
 ) {
     public UpdateWalkwayCommand toUpdateWalkway(Long walkwayId) {

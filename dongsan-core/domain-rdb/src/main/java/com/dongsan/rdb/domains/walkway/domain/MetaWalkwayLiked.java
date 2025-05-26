@@ -14,11 +14,29 @@ public class MetaWalkwayLiked extends BaseEntity {
 
     private Integer likeCount;
 
+    protected MetaWalkwayLiked() {
+    }
+
+    public MetaWalkwayLiked(Long walkwayId) {
+        this.walkwayId = walkwayId;
+        this.likeCount = 0;
+    }
+
     public Integer getLikeCount() {
         return likeCount;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
     }
 }

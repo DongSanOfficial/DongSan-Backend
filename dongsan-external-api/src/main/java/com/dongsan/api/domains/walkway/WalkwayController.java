@@ -96,13 +96,11 @@ public class WalkwayController {
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         CursorPage<BookmarkWithMarkedStatus> response
-                = walkwayFacade.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId,
-                new CursorRequest(lastId, size));
+                = walkwayFacade.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorRequest(lastId, size));
         return ResponseEntity.ok(
                 new CursorResponse<>(BookmarksWithMarkedWalkwayResponse.from(response.getData()), response.getHasNext()));
     }
 
-    // 🌈
     @Operation(summary = "산책로 검색")
     @GetMapping("")
     public ResponseEntity<CursorPage<SearchWalkwayResponse>> searchWalkway(
@@ -120,7 +118,6 @@ public class WalkwayController {
         return ResponseEntity.ok(response);
     }
 
-    // 🌈
     @Operation(summary = "산책로 조회 (위치 기반 X)")
     @GetMapping("/all")
     public ResponseEntity<CursorPage<SearchWalkwayResponse>> getWalkwaysLatest(

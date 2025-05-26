@@ -16,8 +16,7 @@ public interface BookmarkRepository {
     CursorPage<Bookmark> getUserBookmarks(Long memberId, LocalDateTime lastCreatedAt, int size);
 
     CursorPage<BookmarkWithMarkedStatus> getBookmarksWithMarkedStatus(Long walkwayId, Long memberId,
-                                                                      LocalDateTime createdAt,
-                                                                      int size);
+                                                                      LocalDateTime createdAt, int size);
 
     boolean existsByMemberIdAndName(Long memberId, String name);
 

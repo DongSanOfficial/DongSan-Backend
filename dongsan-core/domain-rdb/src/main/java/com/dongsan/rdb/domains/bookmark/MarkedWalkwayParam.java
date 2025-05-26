@@ -1,4 +1,4 @@
-package com.dongsan.rdb.query;
+package com.dongsan.rdb.domains.bookmark;
 
 import java.time.LocalDateTime;
 import java.util.List;

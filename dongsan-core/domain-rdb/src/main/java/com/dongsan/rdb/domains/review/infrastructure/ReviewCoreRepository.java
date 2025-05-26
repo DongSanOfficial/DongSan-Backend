@@ -217,10 +217,9 @@ public class ReviewCoreRepository implements ReviewRepository {
         return reviewJpaRepository.existsByWalkwayLogId(walkwayLogId);
     }
 
-    // TODO : 조인으로 처리
     @Override
     public void deleteAllInBatchByWalkwayId(Long walkwayId) {
-        //return reviewJpaRepository.
+        reviewJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
 }
