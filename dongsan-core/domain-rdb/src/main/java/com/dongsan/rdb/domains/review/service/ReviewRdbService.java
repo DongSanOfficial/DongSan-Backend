@@ -1,10 +1,10 @@
 package com.dongsan.rdb.domains.review.service;
 
 import com.dongsan.rdb.domains.review.domain.Review;
+import com.dongsan.rdb.domains.review.domain.ReviewRepository;
 import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
 import com.dongsan.rdb.domains.review.factory.GetReviewsFactory;
 import com.dongsan.rdb.domains.review.factory.ReviewSort;
-import com.dongsan.rdb.domains.review.infrastructure.ReviewRepository;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewWithWalkwayQuery;
 import com.dongsan.rdb.support.error.CoreErrorCode;
@@ -68,5 +68,12 @@ public class ReviewRdbService {
     // {walkwayLogId, Review}
     public Map<Long, Review> getReviews(List<Long> walkwayLogIds) {
         return reviewRepository.getReviews(walkwayLogIds);
+    }
+
+    public void validateReviewWritable(Long walkwayLogId) {
+        boolean isReviewed = reviewRepository.isReviewed(walkwayLogId);
+        if (isReviewed) {
+            throw new CoreException(CoreErrorCode.ALREADY_REVIEWED);
+        }
     }
 }

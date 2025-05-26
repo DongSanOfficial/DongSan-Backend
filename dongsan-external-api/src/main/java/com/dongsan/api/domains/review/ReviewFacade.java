@@ -34,7 +34,7 @@ public class ReviewFacade {
         WalkwayLog walkwayLog = walkwayLogRdbService.getWalkwayLog(request.walkwayLogId());
         walkwayLog.validateRelation(memberId, walkwayId);
         walkwayLog.validateSufficientDistance(walkway.getDistance());
-        walkwayLogRdbService.validateReviewWritable(walkwayLog.getId());
+        reviewRdbService.validateReviewWritable(walkwayLog.getId());
 
         // TODO : 히스토리 어떻게 쌓을건지 고민 필요
         return reviewRdbService.save(request.walkwayLogId(), request.rating(), request.content());

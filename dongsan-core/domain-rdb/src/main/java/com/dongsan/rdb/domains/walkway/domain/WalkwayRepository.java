@@ -1,7 +1,6 @@
-package com.dongsan.rdb.domains.walkway.infrastructure;
+package com.dongsan.rdb.domains.walkway.domain;
 
 import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
 import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Repository;
 
@@ -15,10 +14,6 @@ public interface WalkwayRepository {
     Long save(Walkway walkway);
 
     Optional<Walkway> getWalkway(Long walkwayId);
-
-    boolean existsWalkway(Long walkwayId);
-
-    boolean existsWalkway(Long walkwayId, Long memberId);
 
     CursorPage<Walkway> searchWalkwaysLiked(SearchWalkwayQuery searchWalkwayQuery, Long lastWalkwayId, int size);
 
@@ -35,9 +30,7 @@ public interface WalkwayRepository {
     CursorPage<Walkway> getWalkwaysByRating(Long memberId, Long lastWalkwayId, int size);
 
     Map<Long, Walkway> getWalkways(List<Long> walkwayIds);
-
-    //void updateWalkwayRating(Integer reviewCount, Double rating, Long walkwayId);
-
+    
     void delete(Walkway walkway);
 
 }

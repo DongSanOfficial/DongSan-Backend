@@ -1,7 +1,7 @@
-package com.dongsan.rdb.domains.review.infrastructure;
+package com.dongsan.rdb.domains.review.domain;
 
-import com.dongsan.rdb.domains.review.domain.Review;
-import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
+import com.dongsan.rdb.domains.review.infrastructure.ReviewWithWalkwayQuery;
 import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Repository;
 
@@ -29,4 +29,6 @@ public interface ReviewRepository {
     void deleteAllInBatchByWalkwayId(Long walkwayId);
 
     Map<Long, Review> getReviews(List<Long> walkwayLogIds);
+
+    boolean isReviewed(Long walkwayLogId);
 }

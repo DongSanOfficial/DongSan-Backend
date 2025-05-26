@@ -136,29 +136,4 @@ public class WalkwayFacade {
         return new CursorPage<>(response, walkways.getHasNext());
     }
 
-
-    //    public PagingResponse<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
-//                                                                     Long lastWalkwayHistoryId) {
-//
-//        LocalDateTime lastCreatedAt = null;
-//        if (lastWalkwayHistoryId != null) {
-//            WalkwayHistory walkwayHistory = getWalkwayHistory(lastWalkwayHistoryId);
-//            lastCreatedAt = walkwayHistory.createdAt();
-//        }
-//        List<WalkwayHistory> walkwayHistories = getCanReviewWalkwayHistory(walkwayId, memberId, size + 1,
-//                lastCreatedAt);
-//        return PagingResponse.from(walkwayHistories, size);
-//    }
-//
-//    public WalkwayHistory getWalkwayHistory(Long walkwayHistoryId) {
-//        return walkwayRepository.getWalkwayHistory(walkwayHistoryId)
-//                .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_LOG_NOT_FOUND));
-//    }
-//
-//    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
-//                                                           LocalDateTime lastCreatedAt) {
-//        return walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
-//    }
-
-
 }

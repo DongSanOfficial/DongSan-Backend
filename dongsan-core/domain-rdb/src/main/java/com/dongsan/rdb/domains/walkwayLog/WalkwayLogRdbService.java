@@ -27,13 +27,6 @@ public class WalkwayLogRdbService {
         return optionalWalkwayLog.map(BaseEntity::getCreatedAt).orElse(null);
     }
 
-    public void validateReviewWritable(Long walkwayId) {
-        boolean isReviewed = walkwayLogRepository.isReviewed(walkwayId);
-        if (isReviewed) {
-            throw new CoreException(CoreErrorCode.ALREADY_REVIEWED);
-        }
-    }
-
     public WalkwayLog save(Long walkwayId, Long memberId, Double distance, Integer time) {
         WalkwayLog walkwayLog = new WalkwayLog(memberId, walkwayId, time, distance);
         walkwayLogRepository.save(walkwayLog);

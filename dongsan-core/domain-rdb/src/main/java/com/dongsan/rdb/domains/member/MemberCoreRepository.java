@@ -34,9 +34,4 @@ public class MemberCoreRepository implements MemberRepository {
     public Optional<Member> findByEmailAndProvider(String email, Provider provider) {
         return memberJpaRepository.findByEmailAndProvider(email, provider);
     }
-
-    @Override
-    public void patchNickname(Long memberId, String nickname) {
-        memberJpaRepository.updateNickname(memberId, nickname);
-    }
 }

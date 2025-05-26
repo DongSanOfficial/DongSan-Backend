@@ -43,16 +43,6 @@ public class WalkwayCoreRepository implements WalkwayRepository {
         return walkwayJpaRepository.findById(walkwayId);
     }
 
-    @Override
-    public boolean existsWalkway(Long walkwayId) {
-        return walkwayJpaRepository.existsById(walkwayId);
-    }
-
-    @Override
-    public boolean existsWalkway(Long walkwayId, Long memberId) {
-        return walkwayJpaRepository.existsByIdAndMemberId(walkwayId, memberId);
-    }
-
     // 좋아요 순 검색
     @Override
     public CursorPage<Walkway> searchWalkwaysLiked(SearchWalkwayQuery query, Long lastWalkwayId, int size) {

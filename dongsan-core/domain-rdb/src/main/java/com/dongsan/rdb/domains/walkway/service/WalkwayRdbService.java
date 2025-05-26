@@ -6,7 +6,7 @@ import com.dongsan.rdb.domains.walkway.UpdateWalkwayCommand;
 import com.dongsan.rdb.domains.walkway.domain.Walkway;
 import com.dongsan.rdb.domains.walkway.domain.WalkwayGeometry;
 import com.dongsan.rdb.domains.walkway.domain.WalkwayInfo;
-import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayRepository;
+import com.dongsan.rdb.domains.walkway.domain.WalkwayRepository;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
 import com.dongsan.rdb.support.util.CursorPage;

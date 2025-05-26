@@ -30,11 +30,7 @@ public class MemberService {
     public Optional<Member> getOptionalMemberByEmailAndProvider(String email, Provider provider) {
         return memberRepository.findByEmailAndProvider(email, provider);
     }
-
-    public Optional<Member> getOptionalMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
-    }
-
+    
     @Transactional
     public Member save(String email, String nickname, String profileImageUrl, MemberRole role, Provider provider) {
         return memberRepository.save(email, nickname, profileImageUrl, role, provider);

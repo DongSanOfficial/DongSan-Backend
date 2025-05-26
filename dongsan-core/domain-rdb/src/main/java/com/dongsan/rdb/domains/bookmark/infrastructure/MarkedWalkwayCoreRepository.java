@@ -70,28 +70,4 @@ public class MarkedWalkwayCoreRepository implements MarkedWalkwayRepository {
         markedWalkwayJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
-    // 산책로가 북마크에 추가되었는지 유무
-//    public Map<Long, Boolean> existsMarkedWalkway(Long walkwayId, List<Long> bookmarkIds) {
-//        List<Tuple> result = queryFactory
-//                .select(
-//                        bookmark.id,
-//                        markedWalkway.id.isNotNull()
-//                )
-//                .from(bookmark)
-//                .leftJoin(markedWalkway)
-//                .on(markedWalkway.walkway.id.eq(walkwayId))
-//                .on(markedWalkway.bookmark.id.eq(bookmark.id))
-//                .where(bookmark.id.in(bookmarkIds))
-//                .fetch();
-//
-//        // 결과를 Map<Long, Boolean>으로 변환
-//        Map<Long, Boolean> resultMap = new HashMap<>();
-//        for (Tuple tuple : result) {
-//            Long bookmarkId = tuple.get(bookmark.id);
-//            Boolean marked = tuple.get(markedWalkway.id.isNotNull());
-//            resultMap.put(bookmarkId, marked);
-//        }
-//
-//        return resultMap;
-//    }
 }

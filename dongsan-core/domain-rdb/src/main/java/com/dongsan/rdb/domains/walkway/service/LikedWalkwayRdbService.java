@@ -1,7 +1,7 @@
 package com.dongsan.rdb.domains.walkway.service;
 
 import com.dongsan.rdb.domains.walkway.domain.LikedWalkway;
-import com.dongsan.rdb.domains.walkway.infrastructure.LikedWalkwayRepository;
+import com.dongsan.rdb.domains.walkway.domain.LikedWalkwayRepository;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
 import org.springframework.stereotype.Service;

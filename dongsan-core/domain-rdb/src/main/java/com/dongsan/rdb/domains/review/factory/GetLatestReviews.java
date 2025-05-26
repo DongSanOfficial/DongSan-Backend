@@ -1,7 +1,7 @@
 package com.dongsan.rdb.domains.review.factory;
 
 import com.dongsan.rdb.domains.review.domain.Review;
-import com.dongsan.rdb.domains.review.infrastructure.ReviewRepository;
+import com.dongsan.rdb.domains.review.domain.ReviewRepository;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.beans.factory.annotation.Autowired;

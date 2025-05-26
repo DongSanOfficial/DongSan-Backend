@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 public interface WalkwayLogJpaRepository extends JpaRepository<WalkwayLog, Long> {
     void deleteAllInBatchByWalkwayId(Long walkwayId);
 
-    boolean existsByWalkwayLogId(Long walkwayLogId);
 }

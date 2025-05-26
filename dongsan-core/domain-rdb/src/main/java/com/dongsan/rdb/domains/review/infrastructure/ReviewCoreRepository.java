@@ -1,10 +1,7 @@
 package com.dongsan.rdb.domains.review.infrastructure;
 
 import com.dongsan.rdb.domains.member.QMember;
-import com.dongsan.rdb.domains.review.domain.QReview;
-import com.dongsan.rdb.domains.review.domain.Rating;
-import com.dongsan.rdb.domains.review.domain.Review;
-import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
+import com.dongsan.rdb.domains.review.domain.*;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
 import com.dongsan.rdb.domains.walkway.domain.QWalkway;
 import com.dongsan.rdb.domains.walkwayLog.QWalkwayLog;
@@ -210,9 +207,14 @@ public class ReviewCoreRepository implements ReviewRepository {
         List<Review> result = queryFactory.selectFrom(review)
                 .where(review.walkwayLogId.in(walkwayLogIds))
                 .fetch();
-        
+
         return result.stream()
                 .collect(Collectors.toMap(Review::getWalkwayLogId, Function.identity()));
+    }
+
+    @Override
+    public boolean isReviewed(Long walkwayLogId) {
+        return reviewJpaRepository.existsByWalkwayLogId(walkwayLogId);
     }
 
     // TODO : 조인으로 처리

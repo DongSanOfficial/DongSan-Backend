@@ -15,5 +15,4 @@ public interface MemberRepository {
 
     Optional<Member> findByEmailAndProvider(String email, Provider provider);
 
-    void patchNickname(Long memberId, String nickname);
 }

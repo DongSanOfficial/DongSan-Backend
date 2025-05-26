@@ -14,15 +14,6 @@ public interface WalkwayLogRepository {
 
     CursorPage<WalkwayLog> getUserWalkwayLog(Long memberId, LocalDateTime lastCreatedAt, int size);
 
-    boolean isReviewed(Long walkwayLogId);
-
     void deleteAllInBatchByWalkwayId(Long walkwayId);
-
-//    List<WalkwayLog> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
-//                                                LocalDateTime lastCreatedAt);
-
-//    List<WalkwayLog> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt);
-
-//    void updateWalkwayHistoryIsReviewed(Long walkwayHistoryId, boolean isReviewed);
 
 }

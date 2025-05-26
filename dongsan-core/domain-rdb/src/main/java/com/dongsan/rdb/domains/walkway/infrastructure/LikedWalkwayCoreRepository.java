@@ -1,6 +1,7 @@
 package com.dongsan.rdb.domains.walkway.infrastructure;
 
 import com.dongsan.rdb.domains.walkway.domain.LikedWalkway;
+import com.dongsan.rdb.domains.walkway.domain.LikedWalkwayRepository;
 import com.dongsan.rdb.domains.walkway.domain.QLikedWalkway;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
