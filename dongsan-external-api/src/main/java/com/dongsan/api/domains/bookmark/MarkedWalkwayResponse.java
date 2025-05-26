@@ -1,9 +1,9 @@
 package com.dongsan.api.domains.bookmark;
 
-import com.dongsan.rdb.domains.bookmark.domain.MarkedWalkway;
-import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
-import com.dongsan.rdb.domains.walkway.domain.WalkwaySnapshot;
+import com.dongsan.domain.domains.bookmark.domain.MarkedWalkway;
+import com.dongsan.domain.domains.review.domain.ReviewStatistic;
+import com.dongsan.domain.domains.walkway.domain.Walkway;
+import com.dongsan.domain.domains.walkway.domain.WalkwaySnapshot;
 
 import java.time.LocalDateTime;
 import java.util.List;

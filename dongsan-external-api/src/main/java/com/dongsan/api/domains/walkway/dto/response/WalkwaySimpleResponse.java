@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
-import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
-import com.dongsan.rdb.domains.walkway.domain.WalkwaySnapshot;
+import com.dongsan.domain.domains.review.domain.ReviewStatistic;
+import com.dongsan.domain.domains.walkway.domain.WalkwaySnapshot;
 
 import java.time.LocalDate;
 import java.util.List;

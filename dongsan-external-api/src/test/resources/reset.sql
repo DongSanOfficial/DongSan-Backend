@@ -18,7 +18,7 @@ FROM review;
 DELETE
 FROM walkway;
 DELETE
-FROM walkway_history;
+FROM walkway_log;
 
 -- AUTO_INCREMENT 초기화
 ALTER TABLE bookmark AUTO_INCREMENT = 1;
@@ -28,7 +28,7 @@ ALTER TABLE marked_walkway AUTO_INCREMENT = 1;
 ALTER TABLE member AUTO_INCREMENT = 1;
 ALTER TABLE review AUTO_INCREMENT = 1;
 ALTER TABLE walkway AUTO_INCREMENT = 1;
-ALTER TABLE walkway_history AUTO_INCREMENT = 1;
+ALTER TABLE walkway_log AUTO_INCREMENT = 1;
 
 -- 외래 키 제약 조건 다시 활성화
 SET

@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.bookmark;
 
-import com.dongsan.rdb.domains.bookmark.domain.Bookmark;
+import com.dongsan.domain.domains.bookmark.domain.Bookmark;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.walkway.dto.request;
 
-import com.dongsan.rdb.domains.walkway.UpdateWalkwayCommand;
-import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
+import com.dongsan.domain.domains.walkway.UpdateWalkwayCommand;
+import com.dongsan.domain.domains.walkway.domain.ExposeLevel;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.dongsan.api.domains.walkway;
 
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
-import com.dongsan.rdb.domains.walkway.service.LikedWalkwayRdbService;
-import com.dongsan.rdb.domains.walkway.service.MetaWalkwayLikedRdbService;
-import com.dongsan.rdb.domains.walkway.service.WalkwayRdbService;
+import com.dongsan.domain.domains.walkway.domain.Walkway;
+import com.dongsan.domain.domains.walkway.service.LikedWalkwayRdbService;
+import com.dongsan.domain.domains.walkway.service.MetaWalkwayLikedRdbService;
+import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

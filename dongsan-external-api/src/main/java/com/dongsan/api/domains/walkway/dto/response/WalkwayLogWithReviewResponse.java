@@ -1,10 +1,10 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
-import com.dongsan.rdb.domains.review.domain.Review;
-import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
-import com.dongsan.rdb.domains.walkway.domain.WalkwaySnapshot;
-import com.dongsan.rdb.domains.walkwayLog.WalkwayLog;
+import com.dongsan.domain.domains.review.domain.Review;
+import com.dongsan.domain.domains.review.domain.ReviewStatistic;
+import com.dongsan.domain.domains.walkway.domain.Walkway;
+import com.dongsan.domain.domains.walkway.domain.WalkwaySnapshot;
+import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

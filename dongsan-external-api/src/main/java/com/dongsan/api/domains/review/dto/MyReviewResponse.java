@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.review.dto;
 
-import com.dongsan.rdb.domains.review.infrastructure.ReviewWithWalkwayQuery;
+import com.dongsan.domain.domains.review.infrastructure.ReviewWithWalkwayQuery;
 
 import java.util.List;
 

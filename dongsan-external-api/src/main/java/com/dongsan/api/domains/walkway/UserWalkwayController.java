@@ -3,8 +3,8 @@ package com.dongsan.api.domains.walkway;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayLogWithReviewResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwaySimpleResponse;
-import com.dongsan.rdb.support.util.CursorPage;
-import com.dongsan.rdb.support.util.CursorRequest;
+import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +46,7 @@ public class UserWalkwayController {
         return ResponseEntity.ok(response);
     }
 
-    
+
     @Operation(summary = "산책로 이용 내역 및 리뷰 작성 여부 조회")
     @GetMapping("/history")
     public ResponseEntity<CursorPage<WalkwayLogWithReviewResponse>> getUserWalkwayHistory(

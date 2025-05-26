@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
-import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
+import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedStatus;
 
 import java.util.List;
 

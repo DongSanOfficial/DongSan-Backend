@@ -1,6 +1,6 @@
 package com.dongsan.api.support.validation;
 
-import com.dongsan.rdb.domains.review.domain.Rating;
+import com.dongsan.domain.domains.review.domain.Rating;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;

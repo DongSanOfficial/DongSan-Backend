@@ -1,10 +1,10 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
-import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
-import com.dongsan.rdb.domains.walkway.LineStringMapper;
-import com.dongsan.rdb.domains.walkway.WalkwayCoordinate;
-import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
-import com.dongsan.rdb.domains.walkway.domain.WalkwaySnapshot;
+import com.dongsan.domain.domains.review.domain.ReviewStatistic;
+import com.dongsan.domain.domains.walkway.LineStringMapper;
+import com.dongsan.domain.domains.walkway.WalkwayCoordinate;
+import com.dongsan.domain.domains.walkway.domain.ExposeLevel;
+import com.dongsan.domain.domains.walkway.domain.WalkwaySnapshot;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

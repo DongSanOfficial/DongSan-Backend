@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.auth;
 
-import com.dongsan.rdb.domains.member.Member;
-import com.dongsan.rdb.domains.member.MemberRole;
+import com.dongsan.domain.domains.member.Member;
+import com.dongsan.domain.domains.member.MemberRole;
 
 public record AuthUserDto(
         Long memberId,

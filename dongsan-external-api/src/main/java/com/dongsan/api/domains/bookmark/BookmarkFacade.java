@@ -1,15 +1,15 @@
 package com.dongsan.api.domains.bookmark;
 
-import com.dongsan.rdb.domains.bookmark.domain.Bookmark;
-import com.dongsan.rdb.domains.bookmark.domain.MarkedWalkway;
-import com.dongsan.rdb.domains.bookmark.service.BookmarkRdbService;
-import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
-import com.dongsan.rdb.domains.review.service.ReviewRdbService;
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
-import com.dongsan.rdb.domains.walkway.service.LikedWalkwayRdbService;
-import com.dongsan.rdb.domains.walkway.service.WalkwayRdbService;
-import com.dongsan.rdb.support.util.CursorPage;
-import com.dongsan.rdb.support.util.CursorRequest;
+import com.dongsan.domain.domains.bookmark.domain.Bookmark;
+import com.dongsan.domain.domains.bookmark.domain.MarkedWalkway;
+import com.dongsan.domain.domains.bookmark.service.BookmarkRdbService;
+import com.dongsan.domain.domains.review.domain.ReviewStatistic;
+import com.dongsan.domain.domains.review.service.ReviewRdbService;
+import com.dongsan.domain.domains.walkway.domain.Walkway;
+import com.dongsan.domain.domains.walkway.service.LikedWalkwayRdbService;
+import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
+import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

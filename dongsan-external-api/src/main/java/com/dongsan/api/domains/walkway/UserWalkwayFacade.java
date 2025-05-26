@@ -2,17 +2,17 @@ package com.dongsan.api.domains.walkway;
 
 import com.dongsan.api.domains.walkway.dto.response.WalkwayLogWithReviewResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwaySimpleResponse;
-import com.dongsan.rdb.domains.review.domain.Review;
-import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
-import com.dongsan.rdb.domains.review.service.ReviewRdbService;
-import com.dongsan.rdb.domains.walkway.domain.Walkway;
-import com.dongsan.rdb.domains.walkway.domain.WalkwaySnapshot;
-import com.dongsan.rdb.domains.walkway.service.LikedWalkwayRdbService;
-import com.dongsan.rdb.domains.walkway.service.WalkwayRdbService;
-import com.dongsan.rdb.domains.walkwayLog.WalkwayLog;
-import com.dongsan.rdb.domains.walkwayLog.WalkwayLogRdbService;
-import com.dongsan.rdb.support.util.CursorPage;
-import com.dongsan.rdb.support.util.CursorRequest;
+import com.dongsan.domain.domains.review.domain.Review;
+import com.dongsan.domain.domains.review.domain.ReviewStatistic;
+import com.dongsan.domain.domains.review.service.ReviewRdbService;
+import com.dongsan.domain.domains.walkway.domain.Walkway;
+import com.dongsan.domain.domains.walkway.domain.WalkwaySnapshot;
+import com.dongsan.domain.domains.walkway.service.LikedWalkwayRdbService;
+import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
+import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
+import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
+import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
