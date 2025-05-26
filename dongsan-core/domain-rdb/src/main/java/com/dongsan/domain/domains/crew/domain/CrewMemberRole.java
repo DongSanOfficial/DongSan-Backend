@@ -1,4 +1,4 @@
-package com.dongsan.rdb.domains.crew.domain;
+package com.dongsan.domain.domains.crew.domain;
 
 public enum CrewMemberRole {
     MANAGER,

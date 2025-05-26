@@ -1,6 +1,6 @@
-package com.dongsan.rdb.domains.crew.domain;
+package com.dongsan.domain.domains.crew.domain;
 
-import com.dongsan.rdb.domains.common.BaseEntity;
+import com.dongsan.domain.domains.common.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
