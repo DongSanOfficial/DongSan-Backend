@@ -1,6 +1,7 @@
 package com.dongsan.api.domains.walkway;
 
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
+import com.dongsan.api.domains.walkway.dto.response.SearchWalkwayResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayDetailResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayHistoryResponse;
 import com.dongsan.file.service.S3FileService;
@@ -14,21 +15,21 @@ import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.rdb.domains.walkway.UpdateWalkwayCommand;
 import com.dongsan.rdb.domains.walkway.WalkwaySort;
 import com.dongsan.rdb.domains.walkway.domain.Walkway;
+import com.dongsan.rdb.domains.walkway.domain.WalkwaySnapshot;
+import com.dongsan.rdb.domains.walkway.factory.SearchWalkwayFactory;
 import com.dongsan.rdb.domains.walkway.service.LikedWalkwayRdbService;
 import com.dongsan.rdb.domains.walkway.service.WalkwayRdbService;
 import com.dongsan.rdb.domains.walkwayLog.WalkwayLog;
 import com.dongsan.rdb.domains.walkwayLog.WalkwayLogRdbService;
-import com.dongsan.rdb.support.error.CoreErrorCode;
-import com.dongsan.rdb.support.error.CoreException;
 import com.dongsan.rdb.support.util.CursorPage;
 import com.dongsan.rdb.support.util.CursorRequest;
-import com.dongsan.rdb.support.util.PagingResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -40,11 +41,12 @@ public class WalkwayFacade {
     private final ReviewRdbService reviewRdbService;
     private final S3FileService s3FileService;
     private final ImageRdbService imageRdbService;
+    private final SearchWalkwayFactory searchWalkwayFactory;
 
     public WalkwayFacade(WalkwayRdbService walkwayRdbService, LikedWalkwayRdbService likedWalkwayRdbService,
                          BookmarkRdbService bookmarkRdbService, WalkwayLogRdbService walkwayLogRdbService,
                          ReviewRdbService reviewRdbService, S3FileService s3FileService,
-                         ImageRdbService imageRdbService) {
+                         ImageRdbService imageRdbService, SearchWalkwayFactory searchWalkwayFactory) {
         this.walkwayRdbService = walkwayRdbService;
         this.likedWalkwayRdbService = likedWalkwayRdbService;
         this.bookmarkRdbService = bookmarkRdbService;
@@ -52,6 +54,7 @@ public class WalkwayFacade {
         this.reviewRdbService = reviewRdbService;
         this.s3FileService = s3FileService;
         this.imageRdbService = imageRdbService;
+        this.searchWalkwayFactory = searchWalkwayFactory;
     }
 
     public Long createWalkway(CreateWalkwayRequest createWalkwayRequest, Long memberId) {
@@ -101,49 +104,61 @@ public class WalkwayFacade {
         return new WalkwayHistoryResponse(walkwayId, canReview);
     }
 
-    public PagingResponse<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
-                                                                     Long lastWalkwayHistoryId) {
+    public CursorPage<SearchWalkwayResponse> searchWalkway(SearchWalkwayQuery searchQuery, CursorRequest paging) {
+        CursorPage<Walkway> walkways = searchWalkwayFactory.getService(searchQuery.sort()).search(searchQuery, paging);
+        List<Long> walkwayIds = walkways.getData().stream().map(Walkway::getId).toList();
+        List<WalkwaySnapshot> walkwaySnapshots = walkways.getData().stream().map(Walkway::snapshot).toList();
 
-        LocalDateTime lastCreatedAt = null;
-        if (lastWalkwayHistoryId != null) {
-            WalkwayHistory walkwayHistory = getWalkwayHistory(lastWalkwayHistoryId);
-            lastCreatedAt = walkwayHistory.createdAt();
-        }
-        List<WalkwayHistory> walkwayHistories = getCanReviewWalkwayHistory(walkwayId, memberId, size + 1,
-                lastCreatedAt);
-        return PagingResponse.from(walkwayHistories, size);
-    }
+        Map<Long, ReviewStatistic> reviewStatMap = reviewRdbService.getReviewStats(walkwayIds);
+        Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
+        Set<Long> likedWalkwaySet = likedWalkwayRdbService.likedWalkways(searchQuery.memberId(), walkwayIds);
 
-    public WalkwayHistory getWalkwayHistory(Long walkwayHistoryId) {
-        return walkwayRepository.getWalkwayHistory(walkwayHistoryId)
-                .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_LOG_NOT_FOUND));
-    }
-
-    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
-                                                           LocalDateTime lastCreatedAt) {
-        return walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
-    }
-
-    public PagingResponse<Walkway> searchWalkway(String sortType, SearchWalkwayQuery searchWalkwayQuery) {
-        if (searchWalkwayQuery.lastWalkwayId() != null) {
-            walkwayValidator.validateWalkwayExists(searchWalkwayQuery.lastWalkwayId());
-        }
-
-        WalkwaySort sort = WalkwaySort.typeOf(sortType);
-        List<Walkway> walkways = walkwayReader.searchWalkway(searchWalkwayQuery, sort);
-        return PagingResponse.from(walkways, searchWalkwayQuery.size());
+        List<SearchWalkwayResponse> response = SearchWalkwayResponse.from(walkwaySnapshots, reviewStatMap, likeCountMap, likedWalkwaySet);
+        return new CursorPage<>(response, walkways.getHasNext());
     }
 
     @Transactional(readOnly = true)
-    public PagingResponse<Walkway> getWalkways(Integer size, Long lastWalkwayId, Long memberId, String sort) {
-        List<Walkway> walkways = switch (sort) {
-            case "liked" -> walkwayReader.getWalkwaysLiked(size + 1, lastWalkwayId, memberId);
-            case "rating" -> walkwayReader.getWalkwaysRating(size + 1, lastWalkwayId, memberId);
-            default -> walkwayReader.getWalkwaysLatest(size + 1, lastWalkwayId, memberId);
+    public CursorPage<SearchWalkwayResponse> getWalkwaysLatest(Long memberId, String sortType, CursorRequest paging) {
+        WalkwaySort sort = WalkwaySort.typeOf(sortType);
+        CursorPage<Walkway> walkways = switch (sort) {
+            case LIKED -> walkwayRdbService.getWalkwaysLiked(memberId, paging.lastId(), paging.size());
+            case RATING -> walkwayRdbService.getWalkwaysRating(memberId, paging.lastId(), paging.size());
+            case LATEST -> walkwayRdbService.getWalkwaysLatest(memberId, paging.lastId(), paging.size());
         };
+        List<Long> walkwayIds = walkways.getData().stream().map(Walkway::getId).toList();
+        List<WalkwaySnapshot> walkwaySnapshots = walkways.getData().stream().map(Walkway::snapshot).toList();
 
-        return PagingResponse.from(walkways, size);
+        Map<Long, ReviewStatistic> reviewStatMap = reviewRdbService.getReviewStats(walkwayIds);
+        Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
+        Set<Long> likedWalkwaySet = likedWalkwayRdbService.likedWalkways(memberId, walkwayIds);
+
+        List<SearchWalkwayResponse> response = SearchWalkwayResponse.from(walkwaySnapshots, reviewStatMap, likeCountMap, likedWalkwaySet);
+        return new CursorPage<>(response, walkways.getHasNext());
     }
+
+
+    //    public PagingResponse<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
+//                                                                     Long lastWalkwayHistoryId) {
+//
+//        LocalDateTime lastCreatedAt = null;
+//        if (lastWalkwayHistoryId != null) {
+//            WalkwayHistory walkwayHistory = getWalkwayHistory(lastWalkwayHistoryId);
+//            lastCreatedAt = walkwayHistory.createdAt();
+//        }
+//        List<WalkwayHistory> walkwayHistories = getCanReviewWalkwayHistory(walkwayId, memberId, size + 1,
+//                lastCreatedAt);
+//        return PagingResponse.from(walkwayHistories, size);
+//    }
+//
+//    public WalkwayHistory getWalkwayHistory(Long walkwayHistoryId) {
+//        return walkwayRepository.getWalkwayHistory(walkwayHistoryId)
+//                .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_LOG_NOT_FOUND));
+//    }
+//
+//    public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
+//                                                           LocalDateTime lastCreatedAt) {
+//        return walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
+//    }
 
 
 }

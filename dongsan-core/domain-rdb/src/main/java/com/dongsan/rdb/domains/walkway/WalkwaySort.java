@@ -7,7 +7,8 @@ import java.util.Arrays;
 
 public enum WalkwaySort {
     LIKED("liked"),
-    RATING("rating");
+    RATING("rating"),
+    LATEST("latest");
 
     private final String type;
 

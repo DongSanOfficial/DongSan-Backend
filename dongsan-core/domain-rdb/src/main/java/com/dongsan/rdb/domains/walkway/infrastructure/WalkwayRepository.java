@@ -20,19 +20,19 @@ public interface WalkwayRepository {
 
     boolean existsWalkway(Long walkwayId, Long memberId);
 
-    List<Walkway> searchWalkwaysLiked(SearchWalkwayQuery searchWalkwayQuery);
+    CursorPage<Walkway> searchWalkwaysLiked(SearchWalkwayQuery searchWalkwayQuery, Long lastWalkwayId, int size);
 
-    List<Walkway> searchWalkwaysRating(SearchWalkwayQuery searchWalkwayQuery);
+    CursorPage<Walkway> searchWalkwaysRating(SearchWalkwayQuery searchWalkwayQuery, Long lastWalkwayId, int size);
 
     CursorPage<Walkway> getUserLikedWalkway(Long memberId, LocalDateTime lastCreatedAt, int size);
 
     CursorPage<Walkway> getUserWalkway(Long memberId, LocalDateTime lastCreatedAt, int size);
 
-    List<Walkway> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId);
+    CursorPage<Walkway> getWalkwaysByLatest(Long memberId, Long lastWalkwayId, int size);
 
-    List<Walkway> getWalkwaysLiked(Integer size, Long lastWalkwayId, Long memberId);
+    CursorPage<Walkway> getWalkwaysByLiked(Long memberId, Long lastWalkwayId, int size);
 
-    List<Walkway> getWalkwaysRating(Integer size, Long lastWalkwayId, Long memberId);
+    CursorPage<Walkway> getWalkwaysByRating(Long memberId, Long lastWalkwayId, int size);
 
     Map<Long, Walkway> getWalkways(List<Long> walkwayIds);
 

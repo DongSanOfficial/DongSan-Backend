@@ -72,7 +72,9 @@ public class Walkway extends BaseEntity {
                 walkwayInfo.getTime(),
                 geometry.getCourse(),
                 geometry.getCourseImageUrl(),
-                getCreatedAt()
+                getCreatedAt(),
+                geometry.getStartLocation(),
+                geometry.getEndLocation()
         );
     }
 

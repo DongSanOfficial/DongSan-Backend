@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -57,5 +58,10 @@ public class LikedWalkwayRdbService {
     // {walkwayId, likeCount}
     public Map<Long, Long> countLikesMap(List<Long> walkwayIds) {
         return likedWalkwayRepository.countByWalkwayIds(walkwayIds);
+    }
+
+    // {walkwayId, ...}
+    public Set<Long> likedWalkways(Long memberId, List<Long> walkwayIds) {
+        return likedWalkwayRepository.getLikedWalkways(memberId, walkwayIds);
     }
 }

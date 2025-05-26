@@ -1,11 +1,20 @@
 package com.dongsan.rdb.domains.walkway;
 
 public record SearchWalkwayQuery(
-	Long userId,
-	Double longitude,
-	Double latitude,
-	Double distance,
-	Long lastWalkwayId,
-	int size
+        Long memberId,
+        WalkwaySort sort,
+        Double longitude,
+        Double latitude,
+        Double distance
 ) {
+    public SearchWalkwayQuery(Long memberId, String sortType, Double longitude, Double latitude, Double distance) {
+        this(
+                memberId,
+                WalkwaySort.typeOf(sortType),
+                longitude,
+                latitude,
+                distance
+        );
+    }
+
 }

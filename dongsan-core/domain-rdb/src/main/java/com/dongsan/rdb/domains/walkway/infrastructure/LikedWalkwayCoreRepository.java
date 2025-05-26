@@ -5,9 +5,7 @@ import com.dongsan.rdb.domains.walkway.domain.QLikedWalkway;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
 
@@ -54,5 +52,22 @@ public class LikedWalkwayCoreRepository implements LikedWalkwayRepository {
                 .where(likedWalkway.walkwayId.in(walkwayIds))
                 .groupBy(likedWalkway.walkwayId)
                 .transform(groupBy(likedWalkway.walkwayId).as(likedWalkway.count()));
+    }
+
+    @Override
+    public Set<Long> getLikedWalkways(Long memberId, List<Long> walkwayIds) {
+        if (walkwayIds == null || walkwayIds.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        List<Long> likedWalkwayIds = queryFactory
+                .select(likedWalkway.walkwayId)
+                .from(likedWalkway)
+                .where(likedWalkway.memberId.eq(memberId),
+                        likedWalkway.walkwayId.in(walkwayIds)
+                )
+                .fetch();
+
+        return new HashSet<>(likedWalkwayIds);
     }
 }

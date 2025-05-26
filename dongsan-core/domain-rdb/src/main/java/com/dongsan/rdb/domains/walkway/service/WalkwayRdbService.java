@@ -84,4 +84,19 @@ public class WalkwayRdbService {
     public Map<Long, Walkway> getWalkways(List<Long> walkwayIds) {
         return walkwayRepository.getWalkways(walkwayIds);
     }
+
+
+    public CursorPage<Walkway> getWalkwaysLatest(Long memberId, Long lastWalkwayId, int size) {
+        return walkwayRepository.getWalkwaysByLatest(memberId, lastWalkwayId, size);
+    }
+
+    public CursorPage<Walkway> getWalkwaysLiked(Long memberId, Long lastWalkwayId, int size) {
+        return walkwayRepository.getWalkwaysByLiked(memberId, lastWalkwayId, size);
+    }
+
+    public CursorPage<Walkway> getWalkwaysRating(Long memberId, Long lastWalkwayId, int size) {
+        return walkwayRepository.getWalkwaysByRating(memberId, lastWalkwayId, size);
+    }
+
+
 }

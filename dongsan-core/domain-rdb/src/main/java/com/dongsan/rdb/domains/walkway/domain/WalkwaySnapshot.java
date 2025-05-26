@@ -1,6 +1,7 @@
 package com.dongsan.rdb.domains.walkway.domain;
 
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +17,8 @@ public record WalkwaySnapshot(
         int time,
         LineString course,
         String courseImageUrl,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        Point startLocation,
+        Point endLocation
 ) {
 }

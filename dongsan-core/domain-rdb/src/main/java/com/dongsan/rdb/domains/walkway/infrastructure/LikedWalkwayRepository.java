@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface LikedWalkwayRepository {
@@ -20,4 +21,6 @@ public interface LikedWalkwayRepository {
     int countByWalkwayId(Long walkwayId);
 
     Map<Long, Long> countByWalkwayIds(List<Long> walkwayIds);
+
+    Set<Long> getLikedWalkways(Long memberId, List<Long> walkwayIds);
 }

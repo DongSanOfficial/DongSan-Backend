@@ -44,4 +44,12 @@ public class WalkwayGeometry {
     public String getCourseImageUrl() {
         return courseImageUrl;
     }
+
+    public Point getStartLocation() {
+        return startLocation;
+    }
+
+    public Point getEndLocation() {
+        return endLocation;
+    }
 }

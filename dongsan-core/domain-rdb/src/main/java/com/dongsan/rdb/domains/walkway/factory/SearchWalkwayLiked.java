@@ -4,10 +4,10 @@ import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.rdb.domains.walkway.WalkwaySort;
 import com.dongsan.rdb.domains.walkway.domain.Walkway;
 import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayRepository;
+import com.dongsan.rdb.support.util.CursorPage;
+import com.dongsan.rdb.support.util.CursorRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class SearchWalkwayLiked implements SearchWalkway {
@@ -25,7 +25,7 @@ public class SearchWalkwayLiked implements SearchWalkway {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Walkway> search(SearchWalkwayQuery searchWalkwayQuery) {
-        return walkwayRepository.searchWalkwaysLiked(searchWalkwayQuery);
+    public CursorPage<Walkway> search(SearchWalkwayQuery searchWalkwayQuery, CursorRequest paging) {
+        return walkwayRepository.searchWalkwaysLiked(searchWalkwayQuery, paging.lastId(), paging.size());
     }
 }

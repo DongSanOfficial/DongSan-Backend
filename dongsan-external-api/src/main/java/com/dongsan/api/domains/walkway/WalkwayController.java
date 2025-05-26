@@ -11,7 +11,6 @@ import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.rdb.domains.walkway.UpdateWalkwayCommand;
 import com.dongsan.rdb.support.util.CursorPage;
 import com.dongsan.rdb.support.util.CursorRequest;
-import com.dongsan.rdb.support.util.PagingResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -20,9 +19,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/walkways")
@@ -109,7 +105,7 @@ public class WalkwayController {
     // 🌈
     @Operation(summary = "산책로 검색")
     @GetMapping("")
-    public ResponseEntity<CursorResponse<SearchWalkwayResponse>> searchWalkway(
+    public ResponseEntity<CursorPage<SearchWalkwayResponse>> searchWalkway(
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "latitude") Double latitude,
             @RequestParam(name = "longitude") Double longitude,
@@ -119,39 +115,22 @@ public class WalkwayController {
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         SearchWalkwayQuery searchWalkwayQuery
-                = new SearchWalkwayQuery(customOAuth2User.getMemberId(), longitude, latitude, distance, lastId, size + 1);
-        PagingResponse<Walkway> response = walkwayService.searchWalkway(sort, searchWalkwayQuery);
-
-        List<Long> walkwayIds = response.data()
-                .stream()
-                .map(Walkway::walkwayId)
-                .toList();
-        Map<Long, Boolean> isLiked = walkwayService.existsLikedWalkways(customOAuth2User.getMemberId(), walkwayIds);
-
-        return ResponseEntity.ok(new CursorResponse<>(SearchWalkwayResponse.from(response.data(), isLiked),
-                response.hasNext()));
+                = new SearchWalkwayQuery(customOAuth2User.getMemberId(), sort, latitude, longitude, distance);
+        CursorPage<SearchWalkwayResponse> response = walkwayFacade.searchWalkway(searchWalkwayQuery, new CursorRequest(lastId, size));
+        return ResponseEntity.ok(response);
     }
 
     // 🌈
     @Operation(summary = "산책로 조회 (위치 기반 X)")
     @GetMapping("/all")
-    public ResponseEntity<CursorResponse<SearchWalkwayResponse>> getWalkwaysLatest(
+    public ResponseEntity<CursorPage<SearchWalkwayResponse>> getWalkwaysLatest(
             @RequestParam(name = "sort", defaultValue = "latest") String sort,
             @RequestParam(name = "lastId", required = false) Long lastId,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        PagingResponse<Walkway> response = walkwayService.getWalkways(size, lastId,
-                customOAuth2User.getMemberId(), sort);
-
-        List<Long> walkwayIds = response.data()
-                .stream()
-                .map(Walkway::walkwayId)
-                .toList();
-        Map<Long, Boolean> isLiked = walkwayService.existsLikedWalkways(customOAuth2User.getMemberId(), walkwayIds);
-
-        return ResponseEntity.ok(new CursorResponse<>(SearchWalkwayResponse.from(response.data(), isLiked),
-                response.hasNext()));
+        CursorPage<SearchWalkwayResponse> response = walkwayFacade.getWalkwaysLatest(customOAuth2User.getMemberId(), sort, new CursorRequest(lastId, size));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "산책로 이용 기록")
