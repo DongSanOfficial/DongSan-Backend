@@ -4,7 +4,7 @@ import com.dongsan.rdb.domains.review.RatingCalculator;
 
 import java.util.Map;
 
-public record ReviewStat(
+public record ReviewStatistic(
         double rating,
         int reviewCount,
         long five,
@@ -13,7 +13,7 @@ public record ReviewStat(
         long two,
         long one
 ) {
-    public static ReviewStat from(Map<Rating, Long> countPerRating) {
+    public static ReviewStatistic from(Map<Rating, Long> countPerRating) {
         int totalReviewCount = RatingCalculator.calculateTotalReviewCount(countPerRating);
         double avgRating = totalReviewCount > 0
                 ? Math.round(RatingCalculator.calculateAverageRating(countPerRating) * 10.0) / 10.0
@@ -30,6 +30,6 @@ public record ReviewStat(
         long oneRate =
                 totalReviewCount == 0.0 ? 0L : countPerRating.getOrDefault(Rating.ONE, 0L) * 100 / totalReviewCount;
 
-        return new ReviewStat(avgRating, totalReviewCount, fiveRate, fourRate, threeRate, twoRate, oneRate);
+        return new ReviewStatistic(avgRating, totalReviewCount, fiveRate, fourRate, threeRate, twoRate, oneRate);
     }
 }

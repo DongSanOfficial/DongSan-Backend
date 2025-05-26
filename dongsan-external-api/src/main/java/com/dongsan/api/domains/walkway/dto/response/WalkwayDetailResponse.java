@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.walkway.dto.response;
 
-import com.dongsan.rdb.domains.review.domain.ReviewStat;
+import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
 import com.dongsan.rdb.domains.walkway.LineStringMapper;
 import com.dongsan.rdb.domains.walkway.WalkwayCoordinate;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
@@ -25,16 +25,16 @@ public record WalkwayDetailResponse(
         boolean marked
 ) {
 
-    public WalkwayDetailResponse(WalkwaySnapshot walkway, boolean isLike, boolean isMarked, ReviewStat reviewStat, int likeCount) {
+    public WalkwayDetailResponse(WalkwaySnapshot walkway, boolean isLike, boolean isMarked, ReviewStatistic reviewStatistic, int likeCount) {
         this(
                 walkway.createdAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
                 walkway.time(),
                 walkway.distance(),
                 walkway.name(),
                 walkway.memo(),
-                reviewStat.rating(),
+                reviewStatistic.rating(),
                 isLike,
-                reviewStat.reviewCount(),
+                reviewStatistic.reviewCount(),
                 likeCount,
                 walkway.hashtags()
                         .stream()
@@ -45,35 +45,5 @@ public record WalkwayDetailResponse(
                 isMarked
         );
     }
-
-    // TODO
-    public WalkwayDetailResponse(WalkwaySnapshot walkway, boolean isLiked, boolean isMarked) {
-        this(
-                walkway.createdAt()
-                        .format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
-                walkway.courseInfo()
-                        .time(),
-                walkway.courseInfo()
-                        .distance(),
-                walkway.name(),
-                walkway.memo(),
-                walkway.stat()
-                        .rating(),
-                isLiked,
-                walkway.stat()
-                        .reviewCount(),
-                walkway.stat()
-                        .likeCount(),
-                walkway.hashtags()
-                        .stream()
-                        .map(hashtag -> "#" + hashtag)
-                        .toList(),
-                walkway.exposeLevel(),
-                LineStringMapper.toList(walkway.courseInfo()
-                        .course()),
-                isMarked
-        );
-    }
-
 
 }

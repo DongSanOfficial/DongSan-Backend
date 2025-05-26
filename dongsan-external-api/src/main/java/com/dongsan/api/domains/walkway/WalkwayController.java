@@ -80,7 +80,7 @@ public class WalkwayController {
         return ResponseEntity.ok()
                 .build();
     }
-    
+
     @Operation(summary = "산책로 단건 조회")
     @GetMapping("/{walkwayId}")
     public ResponseEntity<WalkwayDetailResponse> getWalkway(
@@ -154,7 +154,6 @@ public class WalkwayController {
                 response.hasNext()));
     }
 
-    // #### 산책로 이용 기록 ####
     @Operation(summary = "산책로 이용 기록")
     @PostMapping("/{walkwayId}/history")
     public ResponseEntity<WalkwayHistoryResponse> createHistory(

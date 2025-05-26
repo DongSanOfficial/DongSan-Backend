@@ -8,7 +8,6 @@ import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -24,10 +23,6 @@ public class WalkwayReader {
     private final SearchWalkwayFactory searchWalkwayFactory;
 
 
-    public List<Walkway> getUserWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
-        return walkwayRepository.getUserWalkway(memberId, size, lastCreatedAt);
-    }
-
     public boolean existsWalkway(Long walkwayId) {
         return walkwayRepository.existsWalkway(walkwayId);
     }
@@ -39,14 +34,6 @@ public class WalkwayReader {
 
     public boolean existsLikedWalkway(Long memberId, Long walkwayId) {
         return walkwayRepository.existsLikedWalkway(memberId, walkwayId);
-    }
-
-    public List<Walkway> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
-        return walkwayRepository.getUserLikedWalkway(memberId, size, lastCreatedAt);
-    }
-
-    public List<WalkwayHistory> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt) {
-        return walkwayRepository.getUserCanReviewWalkwayHistory(memberId, size, lastCreatedAt);
     }
 
     public List<Walkway> getWalkwaysLatest(Integer size, Long lastWalkwayId, Long memberId) {

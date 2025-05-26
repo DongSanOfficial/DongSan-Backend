@@ -4,10 +4,12 @@ import com.dongsan.rdb.domains.member.QMember;
 import com.dongsan.rdb.domains.review.domain.QReview;
 import com.dongsan.rdb.domains.review.domain.Rating;
 import com.dongsan.rdb.domains.review.domain.Review;
+import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
 import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
 import com.dongsan.rdb.domains.walkway.domain.QWalkway;
 import com.dongsan.rdb.domains.walkwayLog.QWalkwayLog;
 import com.dongsan.rdb.support.util.CursorPage;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,9 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.querydsl.core.group.GroupBy.groupBy;
@@ -68,7 +72,7 @@ public class ReviewCoreRepository implements ReviewRepository {
         List<ReviewWithWalkwayQuery> result = queryFactory.select(Projections.constructor(ReviewWithWalkwayQuery.class,
                         review.id,
                         walkway.id,
-                        walkway.name,
+                        walkway.walkwayInfo.name,
                         review.createdAt,
                         review.rating,
                         review.content))
@@ -79,7 +83,7 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .where(member.id.eq(memberId),
                         createdAtLt(lastCreatedAt),
                         walkway.memberId.eq(memberId)
-                                .or(walkway.exposeLevel.eq(ExposeLevel.PUBLIC)))
+                                .or(walkway.walkwayInfo.exposeLevel.eq(ExposeLevel.PUBLIC)))
                 .limit(size + 1)
                 .orderBy(review.createdAt.desc())
                 .fetch();
@@ -159,16 +163,56 @@ public class ReviewCoreRepository implements ReviewRepository {
     }
 
     @Override
-    public Map<Rating, Long> getWalkwayRating(Long walkwayId) {
+    public ReviewStatistic getReviewStat(Long walkwayId) {
         Map<Integer, Long> rawResult = queryFactory.from(review)
                 .join(walkwayLog).on(review.walkwayLogId.eq(walkwayLog.id))
                 .where(walkwayLog.walkwayId.eq(walkwayId))
                 .groupBy(review.rating)
                 .transform(groupBy(review.rating).as(review.rating.count()));
 
-        return rawResult.entrySet()
+        Map<Rating, Long> map = rawResult.entrySet()
                 .stream()
                 .collect(Collectors.toMap(entry -> Rating.numOf(entry.getKey()), Map.Entry::getValue));
+        return ReviewStatistic.from(map);
+    }
+
+    @Override
+    public Map<Long, ReviewStatistic> getReviewStats(List<Long> walkwayIds) {
+        List<Tuple> results = queryFactory
+                .select(walkwayLog.walkwayId, review.rating, review.count())
+                .from(review)
+                .join(walkwayLog).on(review.walkwayLogId.eq(walkwayLog.id))
+                .where(walkwayLog.walkwayId.in(walkwayIds))
+                .groupBy(walkwayLog.walkwayId, review.rating)
+                .fetch();
+
+        Map<Long, Map<Rating, Long>> statsPerWalkway = new HashMap<>();
+        for (Tuple tuple : results) {
+            Long walkwayId = tuple.get(walkwayLog.walkwayId);
+            Integer ratingValue = tuple.get(review.rating);
+            Long count = tuple.get(review.count());
+
+            Rating rating = Rating.numOf(ratingValue);
+            statsPerWalkway.computeIfAbsent(walkwayId, k -> new HashMap<>())
+                    .put(rating, count);
+        }
+
+        return statsPerWalkway.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> ReviewStatistic.from(entry.getValue())
+                ));
+    }
+
+    // walkwayLogId에 해당하는 review가 없으면 map에 key(Id)가 없음
+    @Override
+    public Map<Long, Review> getReviews(List<Long> walkwayLogIds) {
+        List<Review> result = queryFactory.selectFrom(review)
+                .where(review.walkwayLogId.in(walkwayLogIds))
+                .fetch();
+        
+        return result.stream()
+                .collect(Collectors.toMap(Review::getWalkwayLogId, Function.identity()));
     }
 
     // TODO : 조인으로 처리

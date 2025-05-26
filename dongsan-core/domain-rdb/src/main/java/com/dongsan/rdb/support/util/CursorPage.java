@@ -11,6 +11,11 @@ public class CursorPage<T> {
         this.data = hasNext ? List.copyOf(data.subList(0, size)) : List.copyOf(data);
     }
 
+    public CursorPage(List<T> data, boolean hasNext) {
+        this.data = List.copyOf(data);
+        this.hasNext = hasNext;
+    }
+
     public List<T> getData() {
         return data;
     }

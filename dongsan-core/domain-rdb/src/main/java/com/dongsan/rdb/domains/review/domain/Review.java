@@ -57,4 +57,8 @@ public class Review extends BaseEntity {
     public String getContent() {
         return content;
     }
+
+    public Long getWalkwayLogId() {
+        return walkwayLogId;
+    }
 }

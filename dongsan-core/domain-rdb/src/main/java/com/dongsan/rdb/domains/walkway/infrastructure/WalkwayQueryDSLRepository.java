@@ -9,7 +9,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.dongsan.rdb.domains.walkway.QLikedWalkwayEntity.*;
@@ -24,29 +23,6 @@ public class WalkwayQueryDSLRepository {
     private final JPAQueryFactory queryFactory;
     private QWalkwayEntity walkwayEntity = QWalkwayEntity.walkwayEntity;
 
-    // 좋아요한 산책로 조회
-    public List<Walkway> getUserLikedWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
-        return queryFactory.selectFrom(walkwayEntity)
-                .join(QLikedWalkwayEntity.likedWalkwayEntity)
-                .on(QLikedWalkwayEntity.likedWalkwayEntity.walkway.eq(walkwayEntity))
-                .where(
-                        QLikedWalkwayEntity.likedWalkwayEntity.member.id.eq(memberId),
-                        this.getExposeCondition(memberId),
-                        this.createdAtLt(lastCreatedAt)
-                )
-                .orderBy(walkwayEntity.createdAt.desc())
-                .limit(size)
-                .fetch();
-    }
-
-    // 유저의 산책로 조회
-    public List<Walkway> getUserWalkway(Long memberId, Integer size, LocalDateTime lastCreatedAt) {
-        return queryFactory.selectFrom(walkwayEntity)
-                .where(walkwayEntity.member.id.eq(memberId), createdAtLt(lastCreatedAt))
-                .orderBy(walkwayEntity.createdAt.desc())
-                .limit(size)
-                .fetch();
-    }
 
     // 좋아요 순 검색
     public List<Walkway> searchWalkwaysLiked(SearchWalkwayQuery query) {
@@ -130,15 +106,6 @@ public class WalkwayQueryDSLRepository {
         return walkwayId != null ? walkwayEntity.id.lt(walkwayId) : null;
     }
 
-    /**
-     * lastCreatedAt 보다 작은 createdAt 를 가진 walkway를 조회하는 조건
-     *
-     * @param createdAt 마지막으로 가져온 createdAt
-     * @return 조건 만족 안하면 null 반환, where 절에서 null은 무시된다.
-     */
-    private BooleanExpression createdAtLt(LocalDateTime createdAt) {
-        return createdAt != null ? walkwayEntity.createdAt.lt(createdAt) : null;
-    }
 
     // 검색 산책로 시작지점 거리 계산
     private BooleanExpression getDistanceCondition(Double longitude, Double latitude, Double distance) {

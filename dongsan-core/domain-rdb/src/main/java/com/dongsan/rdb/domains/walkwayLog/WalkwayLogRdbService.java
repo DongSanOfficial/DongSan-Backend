@@ -1,8 +1,13 @@
 package com.dongsan.rdb.domains.walkwayLog;
 
+import com.dongsan.rdb.domains.common.BaseEntity;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
+import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class WalkwayLogRdbService {
@@ -15,6 +20,11 @@ public class WalkwayLogRdbService {
     public WalkwayLog getWalkwayLog(Long walkwayLogId) {
         return walkwayLogRepository.findById(walkwayLogId)
                 .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_LOG_NOT_FOUND));
+    }
+
+    public LocalDateTime getWalkwayLogCreatedAt(Long walkwayLogId) {
+        Optional<WalkwayLog> optionalWalkwayLog = walkwayLogRepository.findById(walkwayLogId);
+        return optionalWalkwayLog.map(BaseEntity::getCreatedAt).orElse(null);
     }
 
     public void validateReviewWritable(Long walkwayId) {
@@ -33,4 +43,10 @@ public class WalkwayLogRdbService {
     public void deleteAllInBatchByWalkwayId(Long walkwayId) {
         walkwayLogRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
+
+    public CursorPage<WalkwayLog> getUserWalkwayLog(Long memberId, Long lastWalkwayLogId, int size) {
+        LocalDateTime lastCreatedAt = getWalkwayLogCreatedAt(lastWalkwayLogId);
+        return walkwayLogRepository.getUserWalkwayLog(memberId, lastCreatedAt, size);
+    }
+
 }

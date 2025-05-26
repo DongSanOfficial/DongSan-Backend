@@ -7,14 +7,15 @@ import com.dongsan.file.service.S3FileService;
 import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
 import com.dongsan.rdb.domains.bookmark.service.BookmarkRdbService;
 import com.dongsan.rdb.domains.image.ImageRdbService;
-import com.dongsan.rdb.domains.review.domain.ReviewStat;
+import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
 import com.dongsan.rdb.domains.review.service.ReviewRdbService;
 import com.dongsan.rdb.domains.walkway.CreateWalkwayCommand;
+import com.dongsan.rdb.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.rdb.domains.walkway.UpdateWalkwayCommand;
+import com.dongsan.rdb.domains.walkway.WalkwaySort;
 import com.dongsan.rdb.domains.walkway.domain.Walkway;
 import com.dongsan.rdb.domains.walkway.service.LikedWalkwayRdbService;
 import com.dongsan.rdb.domains.walkway.service.WalkwayRdbService;
-import com.dongsan.rdb.domains.walkway.service.WalkwayService;
 import com.dongsan.rdb.domains.walkwayLog.WalkwayLog;
 import com.dongsan.rdb.domains.walkwayLog.WalkwayLogRdbService;
 import com.dongsan.rdb.support.error.CoreErrorCode;
@@ -40,7 +41,10 @@ public class WalkwayFacade {
     private final S3FileService s3FileService;
     private final ImageRdbService imageRdbService;
 
-    public WalkwayFacade(WalkwayRdbService walkwayRdbService, WalkwayService walkwayService, LikedWalkwayRdbService likedWalkwayRdbService, BookmarkRdbService bookmarkRdbService, WalkwayLogRdbService walkwayLogRdbService, ReviewRdbService reviewRdbService, S3FileService s3FileService, ImageRdbService imageRdbService) {
+    public WalkwayFacade(WalkwayRdbService walkwayRdbService, LikedWalkwayRdbService likedWalkwayRdbService,
+                         BookmarkRdbService bookmarkRdbService, WalkwayLogRdbService walkwayLogRdbService,
+                         ReviewRdbService reviewRdbService, S3FileService s3FileService,
+                         ImageRdbService imageRdbService) {
         this.walkwayRdbService = walkwayRdbService;
         this.likedWalkwayRdbService = likedWalkwayRdbService;
         this.bookmarkRdbService = bookmarkRdbService;
@@ -83,11 +87,11 @@ public class WalkwayFacade {
     @Transactional(readOnly = true)
     public WalkwayDetailResponse getWalkwayDetail(Long walkwayId, Long memberId) {
         Walkway walkway = walkwayRdbService.getWalkwayWithAccessValidation(walkwayId, memberId);
-        ReviewStat reviewStat = reviewRdbService.getReviewStat(walkwayId);
+        ReviewStatistic reviewStatistic = reviewRdbService.getReviewStat(walkwayId);
         int likeCount = likedWalkwayRdbService.countLikes(walkwayId);
         boolean isLike = likedWalkwayRdbService.isLiked(memberId, walkwayId);
         boolean isMarked = bookmarkRdbService.wasEverBookmarked(memberId, walkwayId);
-        return new WalkwayDetailResponse(walkway.snapshot(), isLike, isMarked, reviewStat, likeCount);
+        return new WalkwayDetailResponse(walkway.snapshot(), isLike, isMarked, reviewStatistic, likeCount);
     }
 
     public WalkwayHistoryResponse createHistoryLog(Long walkwayId, Long memberId, Double distance, Integer time) {
@@ -118,6 +122,27 @@ public class WalkwayFacade {
     public List<WalkwayHistory> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
                                                            LocalDateTime lastCreatedAt) {
         return walkwayRepository.getCanReviewWalkwayHistory(walkwayId, memberId, size, lastCreatedAt);
+    }
+
+    public PagingResponse<Walkway> searchWalkway(String sortType, SearchWalkwayQuery searchWalkwayQuery) {
+        if (searchWalkwayQuery.lastWalkwayId() != null) {
+            walkwayValidator.validateWalkwayExists(searchWalkwayQuery.lastWalkwayId());
+        }
+
+        WalkwaySort sort = WalkwaySort.typeOf(sortType);
+        List<Walkway> walkways = walkwayReader.searchWalkway(searchWalkwayQuery, sort);
+        return PagingResponse.from(walkways, searchWalkwayQuery.size());
+    }
+
+    @Transactional(readOnly = true)
+    public PagingResponse<Walkway> getWalkways(Integer size, Long lastWalkwayId, Long memberId, String sort) {
+        List<Walkway> walkways = switch (sort) {
+            case "liked" -> walkwayReader.getWalkwaysLiked(size + 1, lastWalkwayId, memberId);
+            case "rating" -> walkwayReader.getWalkwaysRating(size + 1, lastWalkwayId, memberId);
+            default -> walkwayReader.getWalkwaysLatest(size + 1, lastWalkwayId, memberId);
+        };
+
+        return PagingResponse.from(walkways, size);
     }
 
 

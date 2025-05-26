@@ -1,8 +1,7 @@
 package com.dongsan.rdb.domains.review.service;
 
-import com.dongsan.rdb.domains.review.domain.Rating;
 import com.dongsan.rdb.domains.review.domain.Review;
-import com.dongsan.rdb.domains.review.domain.ReviewStat;
+import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
 import com.dongsan.rdb.domains.review.factory.GetReviewsFactory;
 import com.dongsan.rdb.domains.review.factory.ReviewSort;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewRepository;
@@ -12,9 +11,9 @@ import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
 import com.dongsan.rdb.support.util.CursorPage;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -44,18 +43,11 @@ public class ReviewRdbService {
         return getReview(reviewId).getCreatedAt();
     }
 
-    @Transactional(readOnly = true)
     public CursorPage<ReviewWithMemberQuery> getWalkwayReviews(Long walkwayId, ReviewSort sort, Review review, int size) {
         return getReviewsServiceFactory.getService(sort)
                 .search(walkwayId, review, size);
     }
 
-    @Transactional(readOnly = true)
-    public Map<Rating, Long> getWalkwayRating(Long walkwayId) {
-        return reviewRepository.getWalkwayRating(walkwayId);
-    }
-
-    @Transactional(readOnly = true)
     public CursorPage<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size) {
         return reviewRepository.getUserReviews(memberId, lastCreatedAt, size);
     }
@@ -64,9 +56,17 @@ public class ReviewRdbService {
         reviewRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
-    @Transactional(readOnly = true)
-    public ReviewStat getReviewStat(Long walkwayId) {
-        Map<Rating, Long> countPerRating = getWalkwayRating(walkwayId);
-        return ReviewStat.from(countPerRating);
+    public ReviewStatistic getReviewStat(Long walkwayId) {
+        return reviewRepository.getReviewStat(walkwayId);
+    }
+
+    // {walkwayId, ReviewStat}
+    public Map<Long, ReviewStatistic> getReviewStats(List<Long> walkwayIds) {
+        return reviewRepository.getReviewStats(walkwayIds);
+    }
+
+    // {walkwayLogId, Review}
+    public Map<Long, Review> getReviews(List<Long> walkwayLogIds) {
+        return reviewRepository.getReviews(walkwayLogIds);
     }
 }

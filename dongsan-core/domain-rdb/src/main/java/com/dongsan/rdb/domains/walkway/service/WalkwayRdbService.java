@@ -9,9 +9,15 @@ import com.dongsan.rdb.domains.walkway.domain.WalkwayInfo;
 import com.dongsan.rdb.domains.walkway.infrastructure.WalkwayRepository;
 import com.dongsan.rdb.support.error.CoreErrorCode;
 import com.dongsan.rdb.support.error.CoreException;
+import com.dongsan.rdb.support.util.CursorPage;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -31,6 +37,16 @@ public class WalkwayRdbService {
         Walkway walkway = getWalkway(walkwayId);
         walkway.validateAccess(memberId);
         return walkway;
+    }
+
+    private LocalDateTime getWalkwayCreatedAt(Long walkwayId, Long memberId) {
+        Optional<Walkway> optionalWalkway = walkwayRepository.getWalkway(walkwayId);
+        if (optionalWalkway.isEmpty()) {
+            return null;
+        }
+        Walkway walkway = optionalWalkway.get();
+        walkway.validateAccess(memberId);
+        return walkway.getCreatedAt();
     }
 
     public Long save(CreateWalkwayCommand command) {
@@ -54,5 +70,18 @@ public class WalkwayRdbService {
         walkwayRepository.delete(walkway);
     }
 
+    public CursorPage<Walkway> getUserWalkway(Long memberId, Long lastWalkwayId, int size) {
+        LocalDateTime lastCreatedAt = getWalkwayCreatedAt(lastWalkwayId, memberId);
+        return walkwayRepository.getUserWalkway(memberId, lastCreatedAt, size);
+    }
 
+    public CursorPage<Walkway> getUserLikedWalkway(Long memberId, Long lastWalkwayId, int size) {
+        LocalDateTime lastCreatedAt = getWalkwayCreatedAt(lastWalkwayId, memberId);
+        return walkwayRepository.getUserLikedWalkway(memberId, lastCreatedAt, size);
+    }
+
+    // {walkwayId, Walkway}
+    public Map<Long, Walkway> getWalkways(List<Long> walkwayIds) {
+        return walkwayRepository.getWalkways(walkwayIds);
+    }
 }

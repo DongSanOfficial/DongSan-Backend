@@ -1,6 +1,6 @@
 package com.dongsan.rdb.domains.walkwayLog;
 
-import com.dongsan.rdb.domains.walkway.domain.ExposeLevel;
+import com.dongsan.rdb.support.util.CursorPage;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,6 @@ import java.util.Optional;
 public class WalkwayLogCoreRepository implements WalkwayLogRepository {
     private final WalkwayLogJpaRepository walkwayLogJpaRepository;
     private final JPAQueryFactory queryFactory;
-
     private QWalkwayLog walkwayLog = QWalkwayLog.walkwayLog;
 
     public WalkwayLogCoreRepository(WalkwayLogJpaRepository walkwayLogJpaRepository, JPAQueryFactory queryFactory) {
@@ -31,25 +30,16 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
         return walkwayLogJpaRepository.save(walkwayLog).getId();
     }
 
-
     @Override
-    public List<WalkwayLog> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
-                                                       LocalDateTime lastCreatedAt) {
-        return getCanReviewWalkwayHistories(
-                walkwayId, memberId, size, lastCreatedAt);
-    }
+    public CursorPage<WalkwayLog> getUserWalkwayLog(Long memberId, LocalDateTime lastCreatedAt, int size) {
+        List<WalkwayLog> result = queryFactory.selectFrom(walkwayLog)
+                .where(walkwayLog.memberId.eq(memberId),
+                        createdAtLt(lastCreatedAt))
+                .limit(size + 1)
+                .orderBy(walkwayLog.createdAt.desc())
+                .fetch();
 
-    @Override
-    public List<WalkwayLog> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt) {
-        return getUserCanReviewWalkwayHistories(memberId, size, lastCreatedAt);
-    }
-
-
-    @Override
-    public void updateWalkwayHistoryIsReviewed(Long walkwayHistoryId, boolean isReviewed) {
-        WalkwayLog walkwayLog = walkwayLogJpaRepository.getReferenceById(walkwayHistoryId);
-        walkwayLog.updateIsReviewed(isReviewed);
-        walkwayLogJpaRepository.save(walkwayLog);
+        return new CursorPage<>(result, size);
     }
 
     @Override
@@ -62,46 +52,51 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
         walkwayLogJpaRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
-
-    // 산책로의 리뷰 가능한 회원의 기록 조회
-    public List<WalkwayLog> getCanReviewWalkwayHistories(Long walkwayId, Long memberId, int size,
-                                                         LocalDateTime lastCreatedAt) {
-        return queryFactory.selectFrom(walkwayHistory)
-                .join(walkwayHistory.walkway)
-                .fetchJoin()
-                .where(
-                        this.canReviewCondition(memberId),
-                        walkwayHistory.walkway.id.eq(walkwayId),
-                        createdAtLt(lastCreatedAt)
-                )
-                .limit(size)
-                .orderBy(walkwayHistory.createdAt.desc())
-                .fetch();
-    }
-
-    // 모든 산책로의 리뷰 가능한 회원의 기록 조회
-    public List<WalkwayLog> getUserCanReviewWalkwayHistories(Long memberId, int size,
-                                                             LocalDateTime lastCreatedAt) {
-        return queryFactory.selectFrom(walkwayHistory)
-                .join(walkwayHistory.walkway)
-                .fetchJoin()
-                .where(
-                        this.canReviewCondition(memberId),
-                        walkwayHistory.walkway.exposeLevel.eq(ExposeLevel.PUBLIC),
-                        createdAtLt(lastCreatedAt)
-                )
-                .limit(size)
-                .orderBy(walkwayHistory.createdAt.desc())
-                .fetch();
-    }
-
     private BooleanExpression createdAtLt(LocalDateTime lastCreatedAt) {
-        return lastCreatedAt != null ? walkwayHistory.createdAt.lt(lastCreatedAt) : null;
+        return lastCreatedAt != null ? walkwayLog.createdAt.lt(lastCreatedAt) : null;
     }
 
-    private BooleanExpression canReviewCondition(Long memberId) {
-        return walkwayHistory.member.id.eq(memberId)
-                .and(walkwayHistory.isReviewed.eq(false))
-                .and(walkwayHistory.distance.goe(walkwayHistory.walkway.distance.multiply(2.0 / 3.0)));
-    }
+//    private BooleanExpression canReviewCondition(Long memberId, Double walkwayDistance) {
+//        return walkwayLog.memberId.eq(memberId)
+//                .and(walkwayLog.isReviewed.eq(false))
+//                .and(walkwayLog.distance.goe(walkwayDistance * (2.0 / 3.0)));
+//    }
+
+//    @Override
+//    public List<WalkwayLog> getCanReviewWalkwayHistory(Long walkwayId, Long memberId, int size,
+//                                                       LocalDateTime lastCreatedAt) {
+//        return queryFactory.selectFrom(walkwayHistory)
+//                .join(walkwayHistory.walkway)
+//                .fetchJoin()
+//                .where(
+//                        this.canReviewCondition(memberId),
+//                        walkwayHistory.walkway.id.eq(walkwayId),
+//                        createdAtLt(lastCreatedAt)
+//                )
+//                .limit(size)
+//                .orderBy(walkwayHistory.createdAt.desc())
+//                .fetch();
+//    }
+//
+//    @Override
+//    public List<WalkwayLog> getUserCanReviewWalkwayHistory(Long memberId, int size, LocalDateTime lastCreatedAt) {
+//        return queryFactory.selectFrom(walkwayHistory)
+//                .join(walkwayHistory.walkway)
+//                .fetchJoin()
+//                .where(
+//                        this.canReviewCondition(memberId),
+//                        walkwayHistory.walkway.exposeLevel.eq(ExposeLevel.PUBLIC),
+//                        createdAtLt(lastCreatedAt)
+//                )
+//                .limit(size)
+//                .orderBy(walkwayHistory.createdAt.desc())
+//                .fetch();
+//    }
+
+//    @Override
+//    public void updateWalkwayHistoryIsReviewed(Long walkwayHistoryId, boolean isReviewed) {
+//        WalkwayLog walkwayLog = walkwayLogJpaRepository.getReferenceById(walkwayHistoryId);
+//        walkwayLog.updateIsReviewed(isReviewed);
+//        walkwayLogJpaRepository.save(walkwayLog);
+//    }
 }

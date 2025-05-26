@@ -47,10 +47,6 @@ public class WalkwayLog extends BaseEntity {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public void validateRelation(Long memberId, Long walkwayId) {
         if (!this.walkwayId.equals(walkwayId) || !this.memberId.equals(memberId)) {
             throw new CoreException(CoreErrorCode.INVALID_ACCESS);
@@ -65,5 +61,21 @@ public class WalkwayLog extends BaseEntity {
         if (walkwayDistance * 2 / 3 > this.distance) {
             throw new CoreException(CoreErrorCode.NOT_ENOUGH_DISTANCE);
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getWalkwayId() {
+        return walkwayId;
+    }
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public Double getDistance() {
+        return distance;
     }
 }

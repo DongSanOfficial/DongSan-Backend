@@ -7,6 +7,8 @@ import com.dongsan.rdb.support.error.CoreException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -50,5 +52,10 @@ public class LikedWalkwayRdbService {
 
     public int countLikes(Long walkwayId) {
         return likedWalkwayRepository.countByWalkwayId(walkwayId);
+    }
+
+    // {walkwayId, likeCount}
+    public Map<Long, Long> countLikesMap(List<Long> walkwayIds) {
+        return likedWalkwayRepository.countByWalkwayIds(walkwayIds);
     }
 }

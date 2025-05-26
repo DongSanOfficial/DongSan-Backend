@@ -3,10 +3,9 @@ package com.dongsan.api.domains.review;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.review.dto.CreateReviewRequest;
 import com.dongsan.api.domains.review.dto.CreateReviewResponse;
-import com.dongsan.api.domains.review.dto.WalkwayRatingResponse;
 import com.dongsan.api.domains.review.dto.WalkwayReviewsResponse;
 import com.dongsan.api.support.response.CursorResponse;
-import com.dongsan.rdb.domains.review.domain.Rating;
+import com.dongsan.rdb.domains.review.domain.ReviewStatistic;
 import com.dongsan.rdb.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.rdb.support.util.CursorPage;
 import com.dongsan.rdb.support.util.CursorRequest;
@@ -17,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/walkways")
@@ -62,11 +59,11 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 별점 보기")
     @GetMapping("/{walkwayId}/review/rating")
-    public ResponseEntity<WalkwayRatingResponse> getWalkwaysRating(
+    public ResponseEntity<ReviewStatistic> getWalkwaysRating(
             @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        Map<Rating, Long> ratingCounts = reviewFacade.getWalkwayRating(walkwayId, customOAuth2User.getMemberId());
-        return ResponseEntity.ok(WalkwayRatingResponse.from(ratingCounts)); // ReviewStat 과 동일 로직
+        ReviewStatistic reviewStatistic = reviewFacade.getWalkwayRating(walkwayId, customOAuth2User.getMemberId());
+        return ResponseEntity.ok(reviewStatistic);
     }
 }
