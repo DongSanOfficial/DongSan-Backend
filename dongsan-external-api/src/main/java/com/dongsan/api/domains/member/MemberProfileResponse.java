@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.member;
 
-import com.dongsan.rdb.domains.member.Member;
+import com.dongsan.domain.domains.member.Member;
 
 public record MemberProfileResponse(
         String profileImageUrl,

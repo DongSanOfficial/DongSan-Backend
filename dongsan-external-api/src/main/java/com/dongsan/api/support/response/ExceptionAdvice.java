@@ -21,9 +21,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
 import com.dongsan.api.support.error.SystemErrorCode;
-import com.dongsan.core.support.error.CoreErrorCode;
-import com.dongsan.core.support.error.CoreErrorStatus;
-import com.dongsan.core.support.error.CoreException;
+import com.dongsan.domain.support.error.CoreErrorCode;
+import com.dongsan.domain.support.error.CoreErrorStatus;
+import com.dongsan.domain.support.error.CoreException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;

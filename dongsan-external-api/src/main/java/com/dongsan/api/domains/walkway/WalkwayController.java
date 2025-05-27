@@ -1,23 +1,18 @@
 package com.dongsan.api.domains.walkway;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.api.domains.bookmark.BookmarkFacade;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.response.*;
 import com.dongsan.api.support.response.CursorResponse;
-import com.dongsan.core.domains.walkway.*;
-import com.dongsan.core.support.util.CursorRequest;
-import com.dongsan.core.support.util.PagingResponse;
-import com.dongsan.file.service.S3FileService;
-import com.dongsan.rdb.common.CursorPage;
-import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
-import com.dongsan.rdb.domains.bookmark.service.BookmarkRdbService;
-import com.dongsan.rdb.domains.image.ImageService;
+import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedStatus;
+import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
+import com.dongsan.domain.domains.walkway.UpdateWalkwayCommand;
+import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,29 +20,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/walkways")
 @Tag(name = "산책로")
 @Validated
 public class WalkwayController {
 
-    private final WalkwayService walkwayService;
-    private final BookmarkRdbService bookmarkRdbService;
-    private final BookmarkFacade bookmarkFacade;
-    private final S3FileService s3FileService;
-    private final ImageService imageService;
+    private final WalkwayFacade walkwayFacade;
 
-    @Autowired
-    public WalkwayController(WalkwayService walkwayService, BookmarkRdbService bookmarkRdbService,
-                             BookmarkFacade bookmarkFacade, S3FileService s3FileService, ImageService imageService) {
-        this.walkwayService = walkwayService;
-        this.bookmarkRdbService = bookmarkRdbService;
-        this.bookmarkFacade = bookmarkFacade;
-        this.s3FileService = s3FileService;
-        this.imageService = imageService;
+    public WalkwayController(WalkwayFacade walkwayFacade) {
+        this.walkwayFacade = walkwayFacade;
     }
 
     @Operation(summary = "산책로 등록")
@@ -56,9 +38,7 @@ public class WalkwayController {
             @Validated @RequestBody CreateWalkwayRequest createWalkwayRequest,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        String imageUrl = imageService.getImage(createWalkwayRequest.courseImageId()).getUrl();
-        CreateWalkway createWalkway = createWalkwayRequest.toCreateWalkway(imageUrl, customOAuth2User.getMemberId());
-        Long walkwayId = walkwayService.createWalkway(createWalkway);
+        Long walkwayId = walkwayFacade.createWalkway(createWalkwayRequest, customOAuth2User.getMemberId());
         return ResponseEntity.ok(new WalkwayIdResponse(walkwayId));
     }
 
@@ -69,9 +49,32 @@ public class WalkwayController {
             @RequestPart("courseImage") MultipartFile courseImage,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        String imageUrl = s3FileService.saveFile(courseImage);
-        Long imageId = imageService.save(imageUrl);
+        Long imageId = walkwayFacade.saveImage(courseImage);
         return ResponseEntity.ok(new CourseImageIdResponse(imageId));
+    }
+
+    @Operation(summary = "산책로 수정")
+    @PutMapping("/{walkwayId}")
+    public ResponseEntity<Void> updateWalkway(
+            @PathVariable Long walkwayId,
+            @Validated @RequestBody UpdateWalkwayRequest updateWalkwayRequest,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        UpdateWalkwayCommand updateWalkwayCommand = updateWalkwayRequest.toUpdateWalkway(walkwayId);
+        walkwayFacade.updateWalkway(updateWalkwayCommand, customOAuth2User.getMemberId());
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @Operation(summary = "산책로 삭제")
+    @DeleteMapping("/{walkwayId}")
+    public ResponseEntity<Void> deleteWalkway(
+            @PathVariable Long walkwayId,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        walkwayFacade.deleteWalkway(walkwayId, customOAuth2User.getMemberId());
+        return ResponseEntity.ok()
+                .build();
     }
 
     @Operation(summary = "산책로 단건 조회")
@@ -80,10 +83,8 @@ public class WalkwayController {
             @PathVariable Long walkwayId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        Walkway walkway = walkwayService.getWalkway(customOAuth2User.getMemberId(), walkwayId);
-        boolean isLike = walkwayService.existsLikedWalkway(customOAuth2User.getMemberId(), walkwayId);
-        boolean isMarked = bookmarkRdbService.wasEverBookmarked(customOAuth2User.getMemberId(), walkwayId);
-        return ResponseEntity.ok(new WalkwayDetailResponse(walkway, isLike, isMarked));
+        WalkwayDetailResponse response = walkwayFacade.getWalkwayDetail(walkwayId, customOAuth2User.getMemberId());
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "북마크 목록 보기(산책로 마크 여부 포함)")
@@ -95,28 +96,14 @@ public class WalkwayController {
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         CursorPage<BookmarkWithMarkedStatus> response
-                = bookmarkFacade.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId,
-                new CursorRequest(lastId, size));
+                = walkwayFacade.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorRequest(lastId, size));
         return ResponseEntity.ok(
                 new CursorResponse<>(BookmarksWithMarkedWalkwayResponse.from(response.getData()), response.getHasNext()));
     }
 
-    @Operation(summary = "산책로 수정")
-    @PutMapping("/{walkwayId}")
-    public ResponseEntity<Void> updateWalkway(
-            @PathVariable Long walkwayId,
-            @Validated @RequestBody UpdateWalkwayRequest updateWalkwayRequest,
-            @AuthenticationPrincipal CustomAuthUser customOAuth2User
-    ) {
-        UpdateWalkway updateWalkway = updateWalkwayRequest.toUpdateWalkway(walkwayId);
-        walkwayService.updateWalkway(updateWalkway, customOAuth2User.getMemberId());
-        return ResponseEntity.ok()
-                .build();
-    }
-
     @Operation(summary = "산책로 검색")
     @GetMapping("")
-    public ResponseEntity<CursorResponse<SearchWalkwayResponse>> searchWalkway(
+    public ResponseEntity<CursorPage<SearchWalkwayResponse>> searchWalkway(
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "latitude") Double latitude,
             @RequestParam(name = "longitude") Double longitude,
@@ -126,17 +113,21 @@ public class WalkwayController {
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         SearchWalkwayQuery searchWalkwayQuery
-                = new SearchWalkwayQuery(customOAuth2User.getMemberId(), longitude, latitude, distance, lastId, size + 1);
-        PagingResponse<Walkway> response = walkwayService.searchWalkway(sort, searchWalkwayQuery);
+                = new SearchWalkwayQuery(customOAuth2User.getMemberId(), sort, latitude, longitude, distance);
+        CursorPage<SearchWalkwayResponse> response = walkwayFacade.searchWalkway(searchWalkwayQuery, new CursorRequest(lastId, size));
+        return ResponseEntity.ok(response);
+    }
 
-        List<Long> walkwayIds = response.data()
-                .stream()
-                .map(Walkway::walkwayId)
-                .toList();
-        Map<Long, Boolean> isLiked = walkwayService.existsLikedWalkways(customOAuth2User.getMemberId(), walkwayIds);
-
-        return ResponseEntity.ok(new CursorResponse<>(SearchWalkwayResponse.from(response.data(), isLiked),
-                response.hasNext()));
+    @Operation(summary = "산책로 조회 (위치 기반 X)")
+    @GetMapping("/all")
+    public ResponseEntity<CursorPage<SearchWalkwayResponse>> getWalkwaysLatest(
+            @RequestParam(name = "sort", defaultValue = "latest") String sort,
+            @RequestParam(name = "lastId", required = false) Long lastId,
+            @RequestParam(name = "size", defaultValue = "10") Integer size,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        CursorPage<SearchWalkwayResponse> response = walkwayFacade.getWalkwaysLatest(customOAuth2User.getMemberId(), sort, new CursorRequest(lastId, size));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "산책로 이용 기록")
@@ -146,56 +137,22 @@ public class WalkwayController {
             @Validated @RequestBody CreateWalkwayHistoryRequest request,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CreateWalkwayHistory createWalkwayHistory
-                = new CreateWalkwayHistory(walkwayId, customOAuth2User.getMemberId(), request.distance(), request.time());
-        Long walkwayHistoryId = walkwayService.createWalkwayHistory(createWalkwayHistory);
-        boolean canReview = walkwayService.isCanReview(walkwayHistoryId);
-        return ResponseEntity.ok(new WalkwayHistoryResponse(walkwayHistoryId, canReview));
+        WalkwayHistoryResponse response = walkwayFacade.createHistoryLog(walkwayId, customOAuth2User.getMemberId(), request.distance(), request.time());
+        return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "리뷰 작성 가능한 산책로 이용 기록 보기")
-    @GetMapping("/{walkwayId}/history")
-    public ResponseEntity<GetWalkwayHistoriesResponse> getHistories(
-            @PathVariable Long walkwayId,
-            @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(required = false) Long lastId,
-            @AuthenticationPrincipal CustomAuthUser customOAuth2User
-    ) {
-        PagingResponse<WalkwayHistory> response
-                = walkwayService.getCanReviewWalkwayHistory(walkwayId, customOAuth2User.getMemberId(), size, lastId);
+    // 필요없는 비즈니스 로직 : 해당 산책로를 이용한 사람들의 히스토리를 보여주는 거면 필요할 수도 (현재 용도에는 필요 없음)
+//    @Operation(summary = "리뷰 작성 가능한 산책로 이용 기록 보기")
+//    @GetMapping("/{walkwayId}/history")
+//    public ResponseEntity<GetWalkwayHistoriesResponse> getHistories(
+//            @PathVariable Long walkwayId,
+//            @RequestParam(defaultValue = "10") Integer size,
+//            @RequestParam(required = false) Long lastId,
+//            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+//    ) {
+//        CursorPage<GetWalkwayHistoriesResponse> response = walkwayFacade.getCanReviewWalkwayLog(walkwayId, customOAuth2User.getMemberId(), new CursorRequest(lastId, size));
+//        return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response.getData(), response.getHasNext()));
+//    }
 
-        return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response.data(), response.hasNext()));
-    }
 
-    @Operation(summary = "산책로 삭제")
-    @DeleteMapping("/{walkwayId}")
-    public ResponseEntity<Void> deleteWalkway(
-            @PathVariable Long walkwayId,
-            @AuthenticationPrincipal CustomAuthUser customOAuth2User
-    ) {
-        walkwayService.deleteWalkway(walkwayId, customOAuth2User.getMemberId());
-        return ResponseEntity.ok()
-                .build();
-    }
-
-    @Operation(summary = "산책로 조회 (위치 기반 X)")
-    @GetMapping("/all")
-    public ResponseEntity<CursorResponse<SearchWalkwayResponse>> getWalkwaysLatest(
-            @RequestParam(name = "sort", defaultValue = "latest") String sort,
-            @RequestParam(name = "lastId", required = false) Long lastId,
-            @RequestParam(name = "size", defaultValue = "10") Integer size,
-            @AuthenticationPrincipal CustomAuthUser customOAuth2User
-    ) {
-        PagingResponse<Walkway> response = walkwayService.getWalkways(size, lastId,
-                customOAuth2User.getMemberId(), sort);
-
-        List<Long> walkwayIds = response.data()
-                .stream()
-                .map(Walkway::walkwayId)
-                .toList();
-        Map<Long, Boolean> isLiked = walkwayService.existsLikedWalkways(customOAuth2User.getMemberId(), walkwayIds);
-
-        return ResponseEntity.ok(new CursorResponse<>(SearchWalkwayResponse.from(response.data(), isLiked),
-                response.hasNext()));
-    }
 }

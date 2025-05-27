@@ -1,26 +1,35 @@
 package com.dongsan.api.domains.bookmark;
 
-import com.dongsan.core.domains.walkway.WalkwayService;
-import com.dongsan.core.support.util.CursorRequest;
-import com.dongsan.rdb.common.CursorPage;
-import com.dongsan.rdb.domains.bookmark.BookmarkWithMarkedStatus;
-import com.dongsan.rdb.domains.bookmark.domain.Bookmark;
-import com.dongsan.rdb.domains.bookmark.service.BookmarkRdbService;
-import com.dongsan.rdb.query.MarkedWalkwayParam;
+import com.dongsan.domain.domains.bookmark.domain.Bookmark;
+import com.dongsan.domain.domains.bookmark.domain.MarkedWalkway;
+import com.dongsan.domain.domains.bookmark.service.BookmarkRdbService;
+import com.dongsan.domain.domains.review.domain.ReviewStatistic;
+import com.dongsan.domain.domains.review.service.ReviewRdbService;
+import com.dongsan.domain.domains.walkway.domain.Walkway;
+import com.dongsan.domain.domains.walkway.service.LikedWalkwayRdbService;
+import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
+import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Transactional
 public class BookmarkFacade {
     private final BookmarkRdbService bookmarkRdbService;
-    private final WalkwayService walkwayService;
+    private final WalkwayRdbService walkwayRdbService;
+    private final ReviewRdbService reviewRdbService;
+    private final LikedWalkwayRdbService likedWalkwayRdbService;
 
-    public BookmarkFacade(BookmarkRdbService bookmarkRdbService, WalkwayService walkwayService) {
+
+    public BookmarkFacade(BookmarkRdbService bookmarkRdbService, WalkwayRdbService walkwayRdbService, ReviewRdbService reviewRdbService, LikedWalkwayRdbService likedWalkwayRdbService) {
         this.bookmarkRdbService = bookmarkRdbService;
-        this.walkwayService = walkwayService;
+        this.walkwayRdbService = walkwayRdbService;
+        this.reviewRdbService = reviewRdbService;
+        this.likedWalkwayRdbService = likedWalkwayRdbService;
     }
 
     public Long save(Long memberId, String name) {
@@ -32,12 +41,12 @@ public class BookmarkFacade {
     }
 
     public void includeWalkway(Long memberId, Long bookmarkId, Long walkwayId) {
-        walkwayService.validateWalkwayExists(walkwayId);
+        walkwayRdbService.getWalkway(walkwayId);
         bookmarkRdbService.includeWalkway(memberId, bookmarkId, walkwayId);
     }
 
     public void excludeWalkway(Long memberId, Long bookmarkId, Long walkwayId) {
-        walkwayService.validateWalkwayExists(walkwayId);
+        walkwayRdbService.getWalkway(walkwayId);
         bookmarkRdbService.excludeWalkway(memberId, bookmarkId, walkwayId);
     }
 
@@ -46,28 +55,21 @@ public class BookmarkFacade {
     }
 
     public CursorPage<Bookmark> getUserBookmark(Long memberId, CursorRequest paging) {
-        LocalDateTime lastCreatedAt = bookmarkRdbService.getBookmarkCreatedAt(paging.lastId());
-        return bookmarkRdbService.getUserBookmark(memberId, lastCreatedAt, paging.size());
+        return bookmarkRdbService.getUserBookmark(memberId, paging.lastId(), paging.size());
     }
 
     public CursorPage<MarkedWalkwayResponse> getBookmarkWalkways(Long memberId, Long bookmarkId, CursorRequest paging) {
         Bookmark bookmark = bookmarkRdbService.getBookmark(bookmarkId);
         bookmark.validateOwner(memberId);
+        CursorPage<MarkedWalkway> markedWalkways = bookmarkRdbService.getBookmarkWalkway(memberId, bookmarkId, paging.lastId(), paging.size());
 
-        LocalDateTime lastCreatedAt = bookmarkRdbService.getBookmarkedDate(bookmarkId, paging.lastId());
-        CursorPage<MarkedWalkwayParam> result = bookmarkRdbService.getBookmarkWalkway(memberId, bookmarkId, lastCreatedAt, paging.size() + 1);
-        // TODO : 따로 매핑 필요
-        return null;
+        List<Long> walkwayIds = markedWalkways.getData().stream().map(MarkedWalkway::getWalkwayId).toList();
+        Map<Long, Walkway> walkwayMap = walkwayRdbService.getWalkways(walkwayIds);
+        Map<Long, ReviewStatistic> reviewStatMap = reviewRdbService.getReviewStats(walkwayIds);
+        Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
+
+        List<MarkedWalkwayResponse> response = MarkedWalkwayResponse.from(markedWalkways.getData(), walkwayMap, reviewStatMap, likeCountMap);
+        return new CursorPage<>(response, markedWalkways.getHasNext());
     }
-
-
-    public CursorPage<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long memberId, Long walkwayId,
-                                                                              CursorRequest paging) {
-        walkwayService.validateWalkwayExists(walkwayId);
-        LocalDateTime createdAt = bookmarkRdbService.getBookmarkCreatedAt(paging.lastId());
-        CursorPage<BookmarkWithMarkedStatus> bookmarks = bookmarkRdbService.getBookmarksWithMarkedWalkway(walkwayId, memberId, createdAt, paging.size());
-        return bookmarks;
-    }
-
 
 }

@@ -4,6 +4,3 @@ include 'dongsan-external-api'
 include 'dongsan-core:domain-rdb'
 include 'dongsan-core:domain-redis'
 include 'dongsan-infra:infra-file'
-
-include 'dongsan-core'
-include 'dongsan-domain:domain-rds'

@@ -1,8 +1,8 @@
 package com.dongsan.api.domains.dev;
 
 import com.dongsan.api.domains.auth.AuthService;
-import com.dongsan.core.domains.auth.GetTokenRemaining;
-import com.dongsan.core.domains.auth.TokenReader;
+import com.dongsan.domain.domains.refresh.GetTokenRemaining;
+import com.dongsan.domain.domains.refresh.TokenReader;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

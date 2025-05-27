@@ -2,10 +2,10 @@ package com.dongsan.api.domains.auth;
 
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
-import com.dongsan.core.domains.auth.TokenReader;
-import com.dongsan.core.domains.auth.TokenWriter;
-import com.dongsan.core.support.error.CoreException;
-import com.dongsan.rdb.domains.member.Member;
+import com.dongsan.domain.domains.member.Member;
+import com.dongsan.domain.domains.refresh.TokenReader;
+import com.dongsan.domain.domains.refresh.TokenWriter;
+import com.dongsan.domain.support.error.CoreException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

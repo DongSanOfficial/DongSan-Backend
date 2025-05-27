@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.auth.oauth2;
 
-import com.dongsan.core.domains.auth.Provider;
+import com.dongsan.domain.domains.auth.Provider;
 
 import java.util.Map;
 

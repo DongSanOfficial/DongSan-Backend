@@ -1,6 +1,6 @@
 package com.dongsan.api.config;
 
-import com.dongsan.core.domains.auth.Provider;
+import com.dongsan.domain.domains.auth.Provider;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;

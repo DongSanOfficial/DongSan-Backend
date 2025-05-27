@@ -2,10 +2,10 @@ package com.dongsan.api.domains.auth;
 
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
-import com.dongsan.core.domains.auth.GetTokenRemaining;
-import com.dongsan.core.domains.auth.TokenReader;
-import com.dongsan.core.domains.auth.TokenWriter;
-import com.dongsan.rdb.domains.member.Member;
+import com.dongsan.domain.domains.member.Member;
+import com.dongsan.domain.domains.refresh.GetTokenRemaining;
+import com.dongsan.domain.domains.refresh.TokenReader;
+import com.dongsan.domain.domains.refresh.TokenWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
