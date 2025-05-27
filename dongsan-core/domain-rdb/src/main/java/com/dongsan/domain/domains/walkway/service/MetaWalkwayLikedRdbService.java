@@ -36,4 +36,9 @@ public class MetaWalkwayLikedRdbService {
                 MetaWalkwayLiked::decreaseLikeCount
         );
     }
+
+    public void saveByWalkwayId(Long walkwayId) {
+        MetaWalkwayLiked metaLiked = new MetaWalkwayLiked(walkwayId);
+        metaWalkwayLikedRepository.save(metaLiked);
+    }
 }

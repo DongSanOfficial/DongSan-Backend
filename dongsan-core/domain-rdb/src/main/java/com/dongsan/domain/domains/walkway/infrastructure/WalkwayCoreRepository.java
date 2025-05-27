@@ -39,7 +39,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
     }
 
     @Override
-    public Optional<Walkway> getWalkway(Long walkwayId) {
+    public Optional<Walkway> findById(Long walkwayId) {
         return walkwayJpaRepository.findById(walkwayId);
     }
 

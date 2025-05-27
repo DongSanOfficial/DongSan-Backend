@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -194,10 +191,12 @@ public class ReviewCoreRepository implements ReviewRepository {
                     .put(rating, count);
         }
 
-        return statsPerWalkway.entrySet().stream()
+        return walkwayIds.stream()
                 .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> ReviewStatistic.from(entry.getValue())
+                        id -> id,
+                        id -> ReviewStatistic.from(
+                                statsPerWalkway.getOrDefault(id, Collections.emptyMap())
+                        )
                 ));
     }
 

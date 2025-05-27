@@ -1,7 +1,7 @@
 package com.dongsan.domain.domains.walkway.domain;
 
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
+import com.dongsan.domain.support.util.CursorPage;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface WalkwayRepository {
     Long save(Walkway walkway);
 
-    Optional<Walkway> getWalkway(Long walkwayId);
+    Optional<Walkway> findById(Long walkwayId);
 
     CursorPage<Walkway> searchWalkwaysLiked(SearchWalkwayQuery searchWalkwayQuery, Long lastWalkwayId, int size);
 

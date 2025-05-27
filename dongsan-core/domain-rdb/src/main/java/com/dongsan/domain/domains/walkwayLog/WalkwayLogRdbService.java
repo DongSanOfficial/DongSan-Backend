@@ -23,6 +23,10 @@ public class WalkwayLogRdbService {
     }
 
     public LocalDateTime getWalkwayLogCreatedAt(Long walkwayLogId) {
+        if (walkwayLogId == null) {
+            return null;
+        }
+
         Optional<WalkwayLog> optionalWalkwayLog = walkwayLogRepository.findById(walkwayLogId);
         return optionalWalkwayLog.map(BaseEntity::getCreatedAt).orElse(null);
     }

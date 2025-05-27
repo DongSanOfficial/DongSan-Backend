@@ -38,4 +38,9 @@ public class MetaWalkwayRatingRdbService {
                 }
         );
     }
+
+    public void saveByWalkwayId(Long walkwayId) {
+        MetaWalkwayRating metaRating = new MetaWalkwayRating(walkwayId);
+        metaWalkwayRatingRepository.save(metaRating);
+    }
 }

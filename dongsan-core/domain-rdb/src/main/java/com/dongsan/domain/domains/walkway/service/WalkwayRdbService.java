@@ -1,15 +1,15 @@
 package com.dongsan.domain.domains.walkway.service;
 
-import com.dongsan.domain.domains.walkway.domain.Walkway;
-import com.dongsan.domain.domains.walkway.domain.WalkwayGeometry;
-import com.dongsan.domain.domains.walkway.domain.WalkwayInfo;
-import com.dongsan.domain.support.error.CoreErrorCode;
-import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.domains.walkway.CreateWalkwayCommand;
 import com.dongsan.domain.domains.walkway.LineStringMapper;
 import com.dongsan.domain.domains.walkway.UpdateWalkwayCommand;
+import com.dongsan.domain.domains.walkway.domain.Walkway;
+import com.dongsan.domain.domains.walkway.domain.WalkwayGeometry;
+import com.dongsan.domain.domains.walkway.domain.WalkwayInfo;
 import com.dongsan.domain.domains.walkway.domain.WalkwayRepository;
+import com.dongsan.domain.support.error.CoreErrorCode;
+import com.dongsan.domain.support.error.CoreException;
+import com.dongsan.domain.support.util.CursorPage;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +29,13 @@ public class WalkwayRdbService {
     }
 
     public Walkway getWalkway(Long walkwayId) {
-        return walkwayRepository.getWalkway(walkwayId)
+        return walkwayRepository.findById(walkwayId)
                 .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_NOT_FOUND));
     }
+
+//    public Optional<Walkway> findById(Long walkwayId) {
+//        return walkwayRepository.findById(walkwayId);
+//    }
 
     public Walkway getWalkwayWithAccessValidation(Long walkwayId, Long memberId) {
         Walkway walkway = getWalkway(walkwayId);
@@ -40,7 +44,11 @@ public class WalkwayRdbService {
     }
 
     private LocalDateTime getWalkwayCreatedAt(Long walkwayId, Long memberId) {
-        Optional<Walkway> optionalWalkway = walkwayRepository.getWalkway(walkwayId);
+        if (walkwayId == null) {
+            return null;
+        }
+
+        Optional<Walkway> optionalWalkway = walkwayRepository.findById(walkwayId);
         if (optionalWalkway.isEmpty()) {
             return null;
         }
