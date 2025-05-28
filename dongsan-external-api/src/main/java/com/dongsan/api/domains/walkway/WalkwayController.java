@@ -113,7 +113,7 @@ public class WalkwayController {
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         SearchWalkwayQuery searchWalkwayQuery
-                = new SearchWalkwayQuery(customOAuth2User.getMemberId(), sort, latitude, longitude, distance);
+                = new SearchWalkwayQuery(customOAuth2User.getMemberId(), sort, longitude, latitude, distance);
         CursorPage<SearchWalkwayResponse> response = walkwayFacade.searchWalkway(searchWalkwayQuery, new CursorRequest(lastId, size));
         return ResponseEntity.ok(response);
     }
@@ -140,19 +140,5 @@ public class WalkwayController {
         WalkwayHistoryResponse response = walkwayFacade.createHistoryLog(walkwayId, customOAuth2User.getMemberId(), request.distance(), request.time());
         return ResponseEntity.ok(response);
     }
-
-    // 필요없는 비즈니스 로직 : 해당 산책로를 이용한 사람들의 히스토리를 보여주는 거면 필요할 수도 (현재 용도에는 필요 없음)
-//    @Operation(summary = "리뷰 작성 가능한 산책로 이용 기록 보기")
-//    @GetMapping("/{walkwayId}/history")
-//    public ResponseEntity<GetWalkwayHistoriesResponse> getHistories(
-//            @PathVariable Long walkwayId,
-//            @RequestParam(defaultValue = "10") Integer size,
-//            @RequestParam(required = false) Long lastId,
-//            @AuthenticationPrincipal CustomAuthUser customOAuth2User
-//    ) {
-//        CursorPage<GetWalkwayHistoriesResponse> response = walkwayFacade.getCanReviewWalkwayLog(walkwayId, customOAuth2User.getMemberId(), new CursorRequest(lastId, size));
-//        return ResponseEntity.ok(GetWalkwayHistoriesResponse.from(response.getData(), response.getHasNext()));
-//    }
-
 
 }
