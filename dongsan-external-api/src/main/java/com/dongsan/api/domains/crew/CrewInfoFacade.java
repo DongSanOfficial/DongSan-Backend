@@ -1,6 +1,7 @@
 package com.dongsan.api.domains.crew;
 
 import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
+import com.dongsan.domain.domains.crew.service.CrewRdbService;
 import com.dongsan.domain.domains.image.ImageRdbService;
 import com.dongsan.file.service.S3FileService;
 import org.springframework.stereotype.Service;
@@ -10,10 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @Transactional
 public class CrewInfoFacade {
+    private final CrewRdbService crewRdbService;
     private final S3FileService s3FileService;
     private final ImageRdbService imageRdbService;
 
-    public CrewInfoFacade(S3FileService s3FileService, ImageRdbService imageRdbService) {
+    public CrewInfoFacade(CrewRdbService crewRdbService, S3FileService s3FileService, ImageRdbService imageRdbService) {
+        this.crewRdbService = crewRdbService;
         this.s3FileService = s3FileService;
         this.imageRdbService = imageRdbService;
     }
@@ -23,5 +26,11 @@ public class CrewInfoFacade {
         String imageUrl = s3FileService.saveFile(image);
         Long imageId = imageRdbService.save(imageUrl);
         return new CreateCrewImageResponse(imageId, imageUrl);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isNameDuplicated(String name) {
+        name = name.trim();
+        return crewRdbService.isNameDuplicated(name);
     }
 }
