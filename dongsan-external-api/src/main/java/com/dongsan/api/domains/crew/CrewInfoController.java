@@ -26,11 +26,11 @@ public class CrewInfoController {
     public CrewInfoController(CrewInfoFacade crewInfoFacade) {
         this.crewInfoFacade = crewInfoFacade;
     }
-    
+
     @Operation(summary = "크루 이름 중복 체크")
     @GetMapping("/exists")
     public ResponseEntity<IsNameDuplicatedResponse> isNameDuplicated(
-            @RequestParam(name = "name", required = false) @NotBlank String name
+            @RequestParam @NotBlank String name
     ) {
         boolean isValid = crewInfoFacade.isNameDuplicated(name);
         return ResponseEntity.ok(new IsNameDuplicatedResponse(isValid));
@@ -39,7 +39,7 @@ public class CrewInfoController {
     @Operation(summary = "크루 등록")
     @PostMapping()
     public ResponseEntity<CreateCrewResponse> createCrew(
-            @RequestBody @Valid CreateCrewRequest request,
+            @Valid @RequestBody CreateCrewRequest request,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         Long crewId = crewInfoFacade.saveCrew(request, customOAuth2User.getMemberId());
@@ -52,10 +52,20 @@ public class CrewInfoController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<CreateCrewImageResponse> createCrewImage(
-            @RequestPart("crewImage") MultipartFile crewImage
+            @RequestPart MultipartFile crewImage
     ) {
         CreateCrewImageResponse response = crewInfoFacade.saveImage(crewImage);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "크루 탈퇴")
+    @DeleteMapping(value = "/{crewId}/members")
+    public ResponseEntity<Void> leaveCrew(
+            @PathVariable Long crewId,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        crewInfoFacade.leaveCrew(crewId, customOAuth2User.getMemberId());
+        return ResponseEntity.ok().build();
     }
 
 

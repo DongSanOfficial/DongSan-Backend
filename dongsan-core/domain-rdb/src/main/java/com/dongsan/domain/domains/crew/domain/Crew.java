@@ -59,4 +59,7 @@ public abstract class Crew extends BaseEntity {
         }
     }
 
+    public Long getId() {
+        return id;
+    }
 }

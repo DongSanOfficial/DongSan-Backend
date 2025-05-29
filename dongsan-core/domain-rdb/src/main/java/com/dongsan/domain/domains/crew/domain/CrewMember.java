@@ -12,7 +12,7 @@ public class CrewMember extends BaseEntity {
 
     private Long crewId;
 
-    private Long userId;
+    private Long memberId;
 
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
@@ -21,9 +21,9 @@ public class CrewMember extends BaseEntity {
     protected CrewMember() {
     }
 
-    public CrewMember(Long crewId, Long userId, CrewMemberRole role) {
+    public CrewMember(Long crewId, Long memberId, CrewMemberRole role) {
         this.crewId = crewId;
-        this.userId = userId;
+        this.memberId = memberId;
         this.role = role;
     }
 }

@@ -16,4 +16,14 @@ public class CrewMemberCoreRepository implements CrewMemberRepository {
     public void save(CrewMember crewMember) {
         crewMemberJpaRepository.save(crewMember);
     }
+
+    @Override
+    public boolean existsByCrewIdAndMemberId(Long crewId, Long memberId) {
+        return crewMemberJpaRepository.existsByCrewIdAndMemberId(crewId, memberId);
+    }
+
+    @Override
+    public void deleteByCrewIdAndMemberId(Long crewId, Long memberId) {
+        crewMemberJpaRepository.deleteByCrewIdAndMemberId(crewId, memberId);
+    }
 }

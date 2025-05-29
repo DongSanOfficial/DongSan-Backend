@@ -46,4 +46,8 @@ public class CrewInfoFacade {
         return new CreateCrewImageResponse(imageId, imageUrl);
     }
 
+    public void leaveCrew(Long crewId, Long memberId) {
+        crewRdbService.getCrew(crewId);
+        crewMemberRdbService.leaveCrew(crewId, memberId);
+    }
 }

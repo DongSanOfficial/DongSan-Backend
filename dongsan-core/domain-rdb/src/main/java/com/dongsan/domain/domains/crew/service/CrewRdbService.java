@@ -17,6 +17,11 @@ public class CrewRdbService {
         this.crewRepository = crewRepository;
     }
 
+    public Crew getCrew(Long crewId) {
+        return crewRepository.findById(crewId)
+                .orElseThrow(() -> new CoreException(CoreErrorCode.CREW_NOT_FOUND));
+    }
+
     public boolean isNameDuplicated(String name) {
         return crewRepository.existsByName(name);
     }

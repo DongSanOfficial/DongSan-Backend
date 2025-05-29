@@ -51,6 +51,9 @@ public enum CoreErrorCode {
     CREW_RULE_NOT_VALID(CoreErrorStatus.BAD_REQUEST, "CREW-05", "크루 규칙은 250자 이하 입니다."),
     PRIVATE_CREW_PASSWORD_NOT_VALID(CoreErrorStatus.BAD_REQUEST, "CREW-06", "비공개 크루는 비밀번호를 필수로 입력해야하고, 8자 이상 20자 이하입니다."),
     CREW_NAME_DUPLICATED(CoreErrorStatus.BAD_REQUEST, "CREW-07", "동일한 크루 이름이 이미 존재합니다."),
+    CREW_NOT_JOINED(CoreErrorStatus.FORBIDDEN, "CREW-08", "해당 크루에 가입되어 있지 않습니다."),
+    CREW_ALREADY_JOINED(CoreErrorStatus.CONFLICT, "CREW-09", "이미 해당 크루에 가입되어 있습니다."),
+
 
     // cowalk
 

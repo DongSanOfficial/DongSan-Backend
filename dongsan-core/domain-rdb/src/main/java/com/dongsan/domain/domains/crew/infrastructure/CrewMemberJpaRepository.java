@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CrewMemberJpaRepository extends JpaRepository<CrewMember, Long> {
+    boolean existsByCrewIdAndMemberId(Long crewId, Long memberId);
+
+    void deleteByCrewIdAndMemberId(Long crewId, Long memberId);
 }
