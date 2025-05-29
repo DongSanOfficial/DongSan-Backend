@@ -21,18 +21,7 @@ allprojects {
     }
 }
 
-import java.util.stream.Collectors
-
-def excludeFromCoverage = new ArrayList<String>()
-file('coverage-exclude.asap').withInputStream() { it ->
-    excludeFromCoverage.addAll(new BufferedReader(new InputStreamReader(it))
-            .lines()
-            .parallel()
-            .map(s -> s.substring(7).strip())
-            .collect(Collectors.toList()))
-}
-
-jacoco{
+jacoco {
     toolVersion = '0.8.12'
 }
 
@@ -63,13 +52,20 @@ tasks.register('jacocoRootTestReport', JacocoReport) {
         xml.outputLocation = file('build/reports/jacoco/test/jacocoTestReport.xml')
     }
 
+    def excludePatterns = [
+            "**/com/dongsan/api/support/**",
+            "**/config/**",
+            "**/dto/**",
+            "**/fixture/**",
+            "com/dongsan/*Application*",
+            "com/dongsan/*/Q*"
+    ]
+
     classDirectories.setFrom(files(subprojects.collect {
         // 서브 프로젝트들의 컴파일된 클래스 파일이 저장되는 디렉토리
         it.sourceSets.main.output
     }).asFileTree.matching {
-        exclude excludeFromCoverage.stream()
-                .map(s -> s + ".class")
-                .collect(Collectors.toList())
+        exclude excludePatterns
     })
 
     finalizedBy 'jacocoTestVerification'
@@ -86,13 +82,10 @@ tasks.register('jacocoTestVerification') {
                 [
                         enabled: true,
                         element: 'CLASS',
-                        limits: [
+                        limits : [
                                 [counter: 'LINE', value: 'COVEREDRATIO', minimum: 0.0],
                                 [counter: 'METHOD', value: 'COVEREDRATIO', minimum: 0.0]
-                        ],
-                        excludes: excludeFromCoverage.stream()
-                                .map(s -> s.replace("/", "."))
-                                .collect(Collectors.toList())
+                        ]
                 ]
         ]
 
@@ -145,11 +138,11 @@ subprojects {
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
 
-    bootJar{
+    bootJar {
         enabled = false
     }
 
-    jar{
+    jar {
         enabled = true
     }
 

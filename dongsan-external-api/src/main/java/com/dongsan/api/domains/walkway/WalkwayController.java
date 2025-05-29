@@ -43,11 +43,11 @@ public class WalkwayController {
     }
 
     @Operation(summary = "산책로 코스 이미지 등록")
-    @PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces =
-            MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/image",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CourseImageIdResponse> createWalkwayCourseImage(
-            @RequestPart("courseImage") MultipartFile courseImage,
-            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+            @RequestPart("courseImage") MultipartFile courseImage
     ) {
         Long imageId = walkwayFacade.saveImage(courseImage);
         return ResponseEntity.ok(new CourseImageIdResponse(imageId));

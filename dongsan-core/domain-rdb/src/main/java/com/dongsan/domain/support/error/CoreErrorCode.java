@@ -40,9 +40,24 @@ public enum CoreErrorCode {
     WALKWAY_HISTORY_TIME_NOT_ENOUGH(CoreErrorStatus.BAD_REQUEST, "WALKWAY-LOG-03", "산책 기록 등록 가능 거리는 0초 이상 입니다."),
     WALKWAY_HISTORY_DISTANCE_NOT_ENOUGH(CoreErrorStatus.BAD_REQUEST, "WALKWAY-LOG-04", "산책 기록 등록 가능 시간은 0km 이상 입니다."),
 
-
     // auth provider
     PROVIDER_NOT_FOUND(CoreErrorStatus.NOT_FOUND, "PROVIDER-01", "존재하지 않는 Provider 입니다."),
+
+    // crew
+    CREW_NOT_FOUND(CoreErrorStatus.NOT_FOUND, "CREW-01", "존재하지 않는 크루 입니다."),
+    CREW_MEMBER_LIMIT_NOT_VALID(CoreErrorStatus.BAD_REQUEST, "CREW-02", "크루 제한 가능 인원은 2명 이상 100명 이하입니다."),
+    CREW_NAME_NOT_VALID(CoreErrorStatus.BAD_REQUEST, "CREW-03", "크루 이름은 1자 이상 20자 이하 입니다."),
+    CREW_DESCRIPTION_NOT_VALID(CoreErrorStatus.BAD_REQUEST, "CREW-04", "크루 설명은 250자 이하 입니다."),
+    CREW_RULE_NOT_VALID(CoreErrorStatus.BAD_REQUEST, "CREW-05", "크루 규칙은 250자 이하 입니다."),
+    PRIVATE_CREW_PASSWORD_NOT_VALID(CoreErrorStatus.BAD_REQUEST, "CREW-06", "비공개 크루는 비밀번호를 필수로 입력해야하고, 8자 이상 20자 이하입니다."),
+    CREW_NAME_DUPLICATED(CoreErrorStatus.BAD_REQUEST, "CREW-07", "동일한 크루 이름이 이미 존재합니다."),
+    CREW_NOT_JOINED(CoreErrorStatus.FORBIDDEN, "CREW-08", "해당 크루에 가입되어 있지 않습니다."),
+    CREW_ALREADY_JOINED(CoreErrorStatus.CONFLICT, "CREW-09", "이미 해당 크루에 가입되어 있습니다."),
+
+
+    // cowalk
+
+
     ;
 
     private final CoreErrorStatus httpStatus;

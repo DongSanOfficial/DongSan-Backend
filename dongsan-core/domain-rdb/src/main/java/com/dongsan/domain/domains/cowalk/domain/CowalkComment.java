@@ -1,21 +1,21 @@
-package com.dongsan.domain.domains.crew.domain;
+package com.dongsan.domain.domains.cowalk.domain;
 
 import com.dongsan.domain.domains.common.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "recruit_comment")
-public class RecruitComment extends BaseEntity {
+@Table(name = "cowalk_comment")
+public class CowalkComment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long recruitPostId;
+    private Long cowalkPostId;
 
     private Long memberId;
 
     private String content;
 
-    protected RecruitComment() {
+    protected CowalkComment() {
     }
 }

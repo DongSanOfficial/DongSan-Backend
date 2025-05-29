@@ -2,21 +2,21 @@ package com.dongsan.domain.domains.walkway.domain;
 
 import java.util.Arrays;
 
-public enum ExposeLevel {
+public enum WalkwayExposeLevel {
     PRIVATE("비공개"),
     PUBLIC("공개");
 
     private final String description;
 
-    ExposeLevel(String description) {
+    WalkwayExposeLevel(String description) {
         this.description = description;
     }
 
-    public static ExposeLevel getExposeLevelByDescription(String description) {
-        return Arrays.stream(ExposeLevel.values())
+    public static WalkwayExposeLevel getExposeLevelByDescription(String description) {
+        return Arrays.stream(WalkwayExposeLevel.values())
                 .filter(val -> val.description.equals(description))
                 .findFirst()
-                .orElse(ExposeLevel.PRIVATE);
+                .orElse(WalkwayExposeLevel.PRIVATE);
     }
 
     public Boolean toBoolean() {

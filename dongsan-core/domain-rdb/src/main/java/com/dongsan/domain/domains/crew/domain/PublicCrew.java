@@ -7,4 +7,10 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("PUBLIC")
 public class PublicCrew extends Crew {
 
+    protected PublicCrew() {
+    }
+
+    public PublicCrew(String name, String description, String rule, String crewImageUrl, Capacity capacity) {
+        super(name, description, rule, crewImageUrl, capacity);
+    }
 }

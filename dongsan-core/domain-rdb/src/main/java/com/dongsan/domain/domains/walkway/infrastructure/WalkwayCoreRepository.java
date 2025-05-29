@@ -55,7 +55,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                         exposeCondition(query.memberId()),
                         likedCondition(metaLiked)
                 )
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(metaWalkwayLiked.likeCount.desc(), walkway.createdAt.desc())
                 .fetch();
 
@@ -74,7 +74,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                         exposeCondition(query.memberId()),
                         ratingCondition(metaRating)
                 )
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(metaWalkwayRating.rating.desc(), walkway.createdAt.desc())
                 .fetch();
 
@@ -91,7 +91,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                         createdAtLt(lastCreatedAt)
                 )
                 .orderBy(walkway.createdAt.desc())
-                .limit(size + 1)
+                .limit(size + 1L)
                 .fetch();
 
         return new CursorPage<>(result, size);
@@ -102,7 +102,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
         List<Walkway> result = queryFactory.selectFrom(walkway)
                 .where(walkway.memberId.eq(memberId), createdAtLt(lastCreatedAt))
                 .orderBy(walkway.createdAt.desc())
-                .limit(size + 1)
+                .limit(size + 1L)
                 .fetch();
 
         return new CursorPage<>(result, size);
@@ -118,7 +118,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                         exposeCondition(memberId),
                         latestCondition(lastWalkway)
                 )
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(walkway.createdAt.desc())
                 .fetch();
 
@@ -136,7 +136,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                         exposeCondition(memberId),
                         likedCondition(metaLiked)
                 )
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(metaWalkwayLiked.likeCount.desc())
                 .fetch();
 
@@ -154,7 +154,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                         exposeCondition(memberId),
                         ratingCondition(metaRating)
                 )
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(metaWalkwayRating.rating.desc())
                 .fetch();
 
@@ -217,9 +217,9 @@ public class WalkwayCoreRepository implements WalkwayRepository {
     // 사용자에게 보여질 수 있는 산책로 조건 (공개 또는 본인이 작성한 산책로)
     private BooleanExpression exposeCondition(Long memberId) {
         if (memberId == null) {
-            return walkway.walkwayInfo.exposeLevel.eq(ExposeLevel.PUBLIC);
+            return walkway.walkwayInfo.exposeLevel.eq(WalkwayExposeLevel.PUBLIC);
         }
-        return walkway.walkwayInfo.exposeLevel.eq(ExposeLevel.PUBLIC)
+        return walkway.walkwayInfo.exposeLevel.eq(WalkwayExposeLevel.PUBLIC)
                 .or(walkway.memberId.eq(memberId));
     }
 

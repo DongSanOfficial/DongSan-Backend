@@ -1,13 +1,13 @@
 package com.dongsan.domain.domains.bookmark.infrastructure;
 
-import com.dongsan.domain.domains.common.BaseEntity;
-import com.dongsan.domain.domains.walkway.domain.ExposeLevel;
-import com.dongsan.domain.domains.walkway.domain.QWalkway;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.domains.bookmark.domain.MarkedWalkway;
 import com.dongsan.domain.domains.bookmark.domain.MarkedWalkwayRepository;
 import com.dongsan.domain.domains.bookmark.domain.QBookmark;
 import com.dongsan.domain.domains.bookmark.domain.QMarkedWalkway;
+import com.dongsan.domain.domains.common.BaseEntity;
+import com.dongsan.domain.domains.walkway.domain.QWalkway;
+import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
+import com.dongsan.domain.support.util.CursorPage;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -47,10 +47,10 @@ public class MarkedWalkwayCoreRepository implements MarkedWalkwayRepository {
         List<MarkedWalkway> result = queryFactory.selectFrom(markedWalkway)
                 .join(walkway).on(walkway.id.eq(markedWalkway.walkwayId))
                 .where(markedWalkway.bookmarkId.eq(bookmarkId),
-                        walkway.walkwayInfo.exposeLevel.eq(ExposeLevel.PUBLIC)
+                        walkway.walkwayInfo.exposeLevel.eq(WalkwayExposeLevel.PUBLIC)
                                 .or(walkway.memberId.eq(memberId)),
                         markedBookmarkCreatedAtLt(lastCreatedAt))
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(markedWalkway.createdAt.desc())
                 .fetch();
 

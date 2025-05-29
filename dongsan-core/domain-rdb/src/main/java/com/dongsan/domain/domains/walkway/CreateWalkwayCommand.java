@@ -1,6 +1,6 @@
 package com.dongsan.domain.domains.walkway;
 
-import com.dongsan.domain.domains.walkway.domain.ExposeLevel;
+import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public record CreateWalkwayCommand(
         Double distance,
         Integer time,
         List<String> hashtags,
-        ExposeLevel exposeLevel,
+        WalkwayExposeLevel walkwayExposeLevel,
         List<WalkwayCoordinate> course,
         String imageUrl,
         Long memberId
