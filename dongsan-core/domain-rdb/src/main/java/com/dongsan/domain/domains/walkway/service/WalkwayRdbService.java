@@ -60,7 +60,7 @@ public class WalkwayRdbService {
     public Long save(CreateWalkwayCommand command) {
         LineString course = LineStringMapper.toLineString(command.course());
         WalkwayGeometry walkwayGeometry = new WalkwayGeometry(course, command.imageUrl());
-        WalkwayInfo walkwayInfo = new WalkwayInfo(command.name(), command.distance(), command.time(), command.exposeLevel(), command.memo(), command.hashtags());
+        WalkwayInfo walkwayInfo = new WalkwayInfo(command.name(), command.distance(), command.time(), command.walkwayExposeLevel(), command.memo(), command.hashtags());
         Walkway walkway = new Walkway(command.memberId(), walkwayInfo, walkwayGeometry);
         return walkwayRepository.save(walkway);
     }
@@ -68,7 +68,7 @@ public class WalkwayRdbService {
     public void update(UpdateWalkwayCommand command, Long memberId) {
         Walkway walkway = getWalkway(command.walkwayId());
         walkway.isOwner(memberId);
-        walkway.updateWalkway(command.name(), command.memo(), command.exposeLevel(), command.hashtags());
+        walkway.updateWalkway(command.name(), command.memo(), command.walkwayExposeLevel(), command.hashtags());
     }
 
     public void delete(Long walkwayId, Long memberId) {

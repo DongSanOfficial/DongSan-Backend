@@ -217,9 +217,9 @@ public class WalkwayCoreRepository implements WalkwayRepository {
     // 사용자에게 보여질 수 있는 산책로 조건 (공개 또는 본인이 작성한 산책로)
     private BooleanExpression exposeCondition(Long memberId) {
         if (memberId == null) {
-            return walkway.walkwayInfo.exposeLevel.eq(ExposeLevel.PUBLIC);
+            return walkway.walkwayInfo.exposeLevel.eq(WalkwayExposeLevel.PUBLIC);
         }
-        return walkway.walkwayInfo.exposeLevel.eq(ExposeLevel.PUBLIC)
+        return walkway.walkwayInfo.exposeLevel.eq(WalkwayExposeLevel.PUBLIC)
                 .or(walkway.memberId.eq(memberId));
     }
 

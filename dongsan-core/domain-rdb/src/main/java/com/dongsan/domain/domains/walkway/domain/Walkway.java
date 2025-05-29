@@ -31,12 +31,12 @@ public class Walkway extends BaseEntity {
         this.geometry = geometry;
     }
 
-    public void updateWalkway(String name, String memo, ExposeLevel exposeLevel, List<String> hashtags) {
-        walkwayInfo.updateWalkwayInfo(name, memo, exposeLevel, hashtags);
+    public void updateWalkway(String name, String memo, WalkwayExposeLevel walkwayExposeLevel, List<String> hashtags) {
+        walkwayInfo.updateWalkwayInfo(name, memo, walkwayExposeLevel, hashtags);
     }
 
     public void validateAccess(Long memberId) {
-        if (!this.memberId.equals(memberId) && this.walkwayInfo.getExposeLevel().equals(ExposeLevel.PRIVATE)) {
+        if (!this.memberId.equals(memberId) && this.walkwayInfo.getExposeLevel().equals(WalkwayExposeLevel.PRIVATE)) {
             throw new CoreException(CoreErrorCode.WALKWAY_CANT_ACCESS);
         }
     }

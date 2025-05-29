@@ -20,7 +20,7 @@ public class WalkwayInfo {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private ExposeLevel exposeLevel;
+    private WalkwayExposeLevel exposeLevel;
 
     @Convert(converter = ListStringConverter.class)
     private List<String> hashtags;
@@ -52,7 +52,7 @@ public class WalkwayInfo {
         }
     }
 
-    public WalkwayInfo(String name, Double distanceKm, Integer timeSec, ExposeLevel exposeLevel, String memo, List<String> hashtags) {
+    public WalkwayInfo(String name, Double distanceKm, Integer timeSec, WalkwayExposeLevel exposeLevel, String memo, List<String> hashtags) {
         name = name.trim();
         memo = memo.trim();
 
@@ -68,10 +68,10 @@ public class WalkwayInfo {
         this.hashtags = Objects.requireNonNullElseGet(hashtags, List::of);
     }
 
-    public void updateWalkwayInfo(String name, String memo, ExposeLevel exposeLevel, List<String> hashtags) {
+    public void updateWalkwayInfo(String name, String memo, WalkwayExposeLevel walkwayExposeLevel, List<String> hashtags) {
         updateName(name);
         updateMemo(memo);
-        updateExposeLevel(exposeLevel);
+        updateExposeLevel(walkwayExposeLevel);
         updateHashtag(hashtags);
     }
 
@@ -86,8 +86,8 @@ public class WalkwayInfo {
         this.memo = memo;
     }
 
-    private void updateExposeLevel(ExposeLevel exposeLevel) {
-        this.exposeLevel = exposeLevel;
+    private void updateExposeLevel(WalkwayExposeLevel walkwayExposeLevel) {
+        this.exposeLevel = walkwayExposeLevel;
     }
 
     private void updateHashtag(List<String> hashtags) {
@@ -106,7 +106,7 @@ public class WalkwayInfo {
         return memo;
     }
 
-    public ExposeLevel getExposeLevel() {
+    public WalkwayExposeLevel getExposeLevel() {
         return exposeLevel;
     }
 

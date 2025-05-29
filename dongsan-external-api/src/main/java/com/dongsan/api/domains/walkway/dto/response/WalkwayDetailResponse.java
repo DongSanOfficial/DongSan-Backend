@@ -3,7 +3,7 @@ package com.dongsan.api.domains.walkway.dto.response;
 import com.dongsan.domain.domains.review.domain.ReviewStatistic;
 import com.dongsan.domain.domains.walkway.LineStringMapper;
 import com.dongsan.domain.domains.walkway.WalkwayCoordinate;
-import com.dongsan.domain.domains.walkway.domain.ExposeLevel;
+import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
 import com.dongsan.domain.domains.walkway.domain.WalkwaySnapshot;
 
 import java.time.format.DateTimeFormatter;
@@ -20,7 +20,7 @@ public record WalkwayDetailResponse(
         int reviewCount,
         int likeCount,
         List<String> hashtags,
-        ExposeLevel accessLevel,
+        WalkwayExposeLevel accessLevel,
         List<WalkwayCoordinate> course,
         boolean marked
 ) {
@@ -40,7 +40,7 @@ public record WalkwayDetailResponse(
                         .stream()
                         .map(hashtag -> "#" + hashtag)
                         .toList(),
-                walkway.exposeLevel(),
+                walkway.walkwayExposeLevel(),
                 LineStringMapper.toList(walkway.course()),
                 isMarked
         );

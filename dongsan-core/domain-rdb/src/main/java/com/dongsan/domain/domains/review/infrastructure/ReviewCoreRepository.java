@@ -2,8 +2,8 @@ package com.dongsan.domain.domains.review.infrastructure;
 
 import com.dongsan.domain.domains.member.QMember;
 import com.dongsan.domain.domains.review.domain.*;
-import com.dongsan.domain.domains.walkway.domain.ExposeLevel;
 import com.dongsan.domain.domains.walkway.domain.QWalkway;
+import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
 import com.dongsan.domain.domains.walkwayLog.QWalkwayLog;
 import com.dongsan.domain.support.util.CursorPage;
 import com.querydsl.core.Tuple;
@@ -77,7 +77,7 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .where(member.id.eq(memberId),
                         createdAtLt(lastCreatedAt),
                         walkway.memberId.eq(memberId)
-                                .or(walkway.walkwayInfo.exposeLevel.eq(ExposeLevel.PUBLIC)))
+                                .or(walkway.walkwayInfo.exposeLevel.eq(WalkwayExposeLevel.PUBLIC)))
                 .limit(size + 1)
                 .orderBy(review.createdAt.desc())
                 .fetch();

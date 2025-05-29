@@ -20,4 +20,10 @@ public class CrewMember extends BaseEntity {
 
     protected CrewMember() {
     }
+
+    public CrewMember(Long crewId, Long userId, CrewMemberRole role) {
+        this.crewId = crewId;
+        this.userId = userId;
+        this.role = role;
+    }
 }

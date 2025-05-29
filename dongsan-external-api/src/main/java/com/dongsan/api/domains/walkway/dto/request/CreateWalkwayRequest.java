@@ -2,7 +2,7 @@ package com.dongsan.api.domains.walkway.dto.request;
 
 import com.dongsan.domain.domains.walkway.CreateWalkwayCommand;
 import com.dongsan.domain.domains.walkway.WalkwayCoordinate;
-import com.dongsan.domain.domains.walkway.domain.ExposeLevel;
+import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +22,7 @@ public record CreateWalkwayRequest(
         Integer time,
         @NotNull
         List<String> hashtags,
-        ExposeLevel exposeLevel,
+        WalkwayExposeLevel walkwayExposeLevel,
         List<WalkwayCoordinate> course
 ) {
 
@@ -33,7 +33,7 @@ public record CreateWalkwayRequest(
                 distance,
                 time,
                 hashtags,
-                exposeLevel,
+                walkwayExposeLevel,
                 course,
                 imageUrl,
                 memberId

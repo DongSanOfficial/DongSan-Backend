@@ -11,7 +11,7 @@ public record WalkwaySnapshot(
         Long memberId,
         String name,
         String memo,
-        ExposeLevel exposeLevel,
+        WalkwayExposeLevel walkwayExposeLevel,
         List<String> hashtags,
         double distance,
         int time,

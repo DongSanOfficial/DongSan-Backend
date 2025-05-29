@@ -24,6 +24,9 @@ dependencies {
     // List<String> <-> JSON
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
 
+    // 해싱
+    implementation 'org.springframework.security:spring-security-crypto:6.4.5'
+
     // flyway
     //implementation 'org.flywaydb:flyway-core'
     //implementation 'org.flywaydb:flyway-mysql'

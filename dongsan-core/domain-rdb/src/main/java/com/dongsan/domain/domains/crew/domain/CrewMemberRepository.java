@@ -3,8 +3,6 @@ package com.dongsan.domain.domains.crew.domain;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CrewRepository {
-    boolean existsByName(String name);
-
-    Long save(Crew crew);
+public interface CrewMemberRepository {
+    void save(CrewMember crewMember);
 }
