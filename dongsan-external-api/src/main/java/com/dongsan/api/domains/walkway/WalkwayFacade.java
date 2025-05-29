@@ -88,8 +88,8 @@ public class WalkwayFacade {
     }
 
     @Transactional
-    public Long saveImage(MultipartFile courseImage) {
-        String imageUrl = s3FileService.saveFile(courseImage);
+    public Long saveImage(MultipartFile image) {
+        String imageUrl = s3FileService.saveFile(image);
         return imageRdbService.save(imageUrl);
     }
 
