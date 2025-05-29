@@ -1,4 +1,4 @@
-package com.dongsan.domain.domains.crew.domain;
+package com.dongsan.domain.domains.cowalk.domain;
 
 import com.dongsan.domain.domains.common.BaseEntity;
 import jakarta.persistence.*;
@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "recruit_post")
-public class RecruitPost extends BaseEntity {
+@Table(name = "cowalk_post")
+public class CowalkPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +23,6 @@ public class RecruitPost extends BaseEntity {
 
     private Integer capacity;
 
-    protected RecruitPost() {
+    protected CowalkPost() {
     }
 }
