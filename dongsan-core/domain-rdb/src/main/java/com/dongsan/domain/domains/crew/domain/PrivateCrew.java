@@ -27,4 +27,6 @@ public class PrivateCrew extends Crew {
             throw new CoreException(CoreErrorCode.PRIVATE_CREW_PASSWORD_NOT_VALID);
         }
     }
+
+
 }
