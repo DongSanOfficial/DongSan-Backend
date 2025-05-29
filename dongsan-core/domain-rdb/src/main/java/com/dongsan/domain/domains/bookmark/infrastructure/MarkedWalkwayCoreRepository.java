@@ -50,7 +50,7 @@ public class MarkedWalkwayCoreRepository implements MarkedWalkwayRepository {
                         walkway.walkwayInfo.exposeLevel.eq(WalkwayExposeLevel.PUBLIC)
                                 .or(walkway.memberId.eq(memberId)),
                         markedBookmarkCreatedAtLt(lastCreatedAt))
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(markedWalkway.createdAt.desc())
                 .fetch();
 

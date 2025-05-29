@@ -78,7 +78,7 @@ public class ReviewCoreRepository implements ReviewRepository {
                         createdAtLt(lastCreatedAt),
                         walkway.memberId.eq(memberId)
                                 .or(walkway.walkwayInfo.exposeLevel.eq(WalkwayExposeLevel.PUBLIC)))
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(review.createdAt.desc())
                 .fetch();
 
@@ -112,7 +112,7 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .where(walkwayLog.walkwayId.eq(walkwayId),
                         createdAtLt(lastCreatedAt)
                 )
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(review.createdAt.desc())
                 .fetch();
 
@@ -138,7 +138,7 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .where(walkwayLog.walkwayId.eq(walkwayId),
                         ratingLtCreatedAtLt(lastRating, lastCreatedAt)
                 )
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(review.rating.desc(), review.createdAt.desc())
                 .fetch();
 
