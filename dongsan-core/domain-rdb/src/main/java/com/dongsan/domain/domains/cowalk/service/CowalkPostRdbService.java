@@ -9,6 +9,7 @@ import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPostRepository;
 import com.dongsan.domain.support.error.CoreException;
+import com.dongsan.domain.support.util.CursorPage;
 
 @Service
 @Transactional
@@ -28,5 +29,9 @@ public class CowalkPostRdbService {
 		CowalkPost cowalkPost = new CowalkPost(command);
 		cowalkPostRepository.save(cowalkPost);
 		return cowalkPost.getId();
+	}
+
+	public CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
+		return cowalkPostRepository.getCowalkPosts(size, lastId, crewId);
 	}
 }

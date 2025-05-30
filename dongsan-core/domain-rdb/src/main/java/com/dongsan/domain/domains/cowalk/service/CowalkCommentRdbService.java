@@ -1,5 +1,8 @@
 package com.dongsan.domain.domains.cowalk.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,5 +19,9 @@ public class CowalkCommentRdbService {
 
 	public Integer countByCowalkPostId(Long cowalkPostId) {
 		return cowalkCommentRepository.countByCowalkPostId(cowalkPostId);
+	}
+
+	public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
+		return cowalkCommentRepository.countByCowalkPostIds(cowalkPostIds);
 	}
 }

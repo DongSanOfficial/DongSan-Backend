@@ -1,10 +1,14 @@
 package com.dongsan.api.domains.cowalk;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkPostRequest;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostDetailResponse;
+import com.dongsan.api.domains.cowalk.dto.response.CowalkPostsResponse;
 import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
 import com.dongsan.domain.domains.cowalk.service.CowalkCommentRdbService;
@@ -13,6 +17,7 @@ import com.dongsan.domain.domains.cowalk.service.CowalkPostRdbService;
 import com.dongsan.domain.domains.crew.service.CrewMemberRdbService;
 import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberService;
+import com.dongsan.domain.support.util.CursorPage;
 
 @Service
 @Transactional
@@ -58,5 +63,30 @@ public class CowalkPostFacade {
 		crewMemberRdbService.validateIsCrewMember(crewId, memberId);
 		cowalkParticipantRdbService.validAlreadyJoin(memberId, cowalkPostId);
 		return cowalkParticipantRdbService.save(memberId, cowalkPostId);
+	}
+
+	public CursorPage<CowalkPostsResponse> getCowalkPosts(Long crewId, Integer size, Long lastId) {
+		CursorPage<CowalkPost> cowalkPosts = cowalkPostRdbService.getCowalkPosts(size, lastId, crewId);
+		List<CowalkPost> cowalkPostList = cowalkPosts.getData();
+
+		List<Long> memberIds = cowalkPostList.stream()
+			.map(CowalkPost::getMemberId)
+			.toList();
+
+		List<Long> cowalkPostIds = cowalkPostList.stream()
+			.map(CowalkPost::getId)
+			.toList();
+
+		Map<Long, Member> memberMap = memberService.getMemberMap(memberIds);
+		Map<Long, Integer> memberCountMap = cowalkParticipantRdbService.countByCowalkPostIds(cowalkPostIds);
+		Map<Long, Integer> commentCountMap = cowalkCommentRdbService.countByCowalkPostIds(cowalkPostIds);
+		List<CowalkPostsResponse> cowalkPostsResponseList = CowalkPostsResponse.from(
+			cowalkPostList,
+			memberMap,
+			memberCountMap,
+			commentCountMap
+		);
+
+		return new CursorPage<>(cowalkPostsResponseList, cowalkPosts.getHasNext());
 	}
 }

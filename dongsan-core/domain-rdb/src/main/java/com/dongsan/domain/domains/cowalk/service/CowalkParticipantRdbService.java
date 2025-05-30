@@ -2,6 +2,9 @@ package com.dongsan.domain.domains.cowalk.service;
 
 import static com.dongsan.domain.support.error.CoreErrorCode.*;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,5 +39,9 @@ public class CowalkParticipantRdbService {
 		if (isJoin(memberId, cowalkPostId)) {
 			throw new CoreException(COWALK_PARTICIPANT_ALREADY_JOIN);
 		}
+	}
+
+	public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
+		return cowalkParticipantRepository.countByCowalkPostIds(cowalkPostIds);
 	}
 }
