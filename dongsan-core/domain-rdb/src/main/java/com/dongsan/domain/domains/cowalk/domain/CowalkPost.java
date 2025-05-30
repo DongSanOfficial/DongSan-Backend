@@ -1,28 +1,46 @@
 package com.dongsan.domain.domains.cowalk.domain;
 
-import com.dongsan.domain.domains.common.BaseEntity;
-import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import com.dongsan.domain.domains.common.BaseEntity;
+import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "cowalk_post")
 public class CowalkPost extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private Long crewId;
+	private Long crewId;
 
-    private Long memberId;
+	private Long memberId;
 
-    private LocalDate date;
+	private LocalDate date;
 
-    private LocalTime time;
+	private LocalTime time;
 
-    private Integer capacity;
+	private Integer capacity;
 
-    protected CowalkPost() {
-    }
+	protected CowalkPost() {
+	}
+
+	public CowalkPost(CreateCowalkPostCommand command) {
+		this.crewId = command.crewId();
+		this.memberId = command.memberId();
+		this.date = command.date();
+		this.time = command.time();
+		this.capacity = command.capacity();
+	}
+
+	public Long getId() {
+		return id;
+	}
 }
