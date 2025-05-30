@@ -17,4 +17,9 @@ public class CowalkParticipantCoreRepository implements CowalkParticipantReposit
 	public CowalkParticipant save(CowalkParticipant cowalkParticipant) {
 		return cowalkParticipantJpaRepository.save(cowalkParticipant);
 	}
+
+	@Override
+	public Integer countByCowalkPostId(Long cowalkPostId) {
+		return cowalkParticipantJpaRepository.countByCowalkPostId(cowalkPostId);
+	}
 }

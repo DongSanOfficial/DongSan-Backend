@@ -1,5 +1,7 @@
 package com.dongsan.domain.domains.cowalk.infrastructure;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
@@ -23,5 +25,10 @@ public class CowalkPostCoreRepository implements CowalkPostRepository {
 	@Override
 	public void save(CowalkPost cowalkPost) {
 		cowalkPostJpaRepository.save(cowalkPost);
+	}
+
+	@Override
+	public Optional<CowalkPost> findById(Long id) {
+		return cowalkPostJpaRepository.findById(id);
 	}
 }

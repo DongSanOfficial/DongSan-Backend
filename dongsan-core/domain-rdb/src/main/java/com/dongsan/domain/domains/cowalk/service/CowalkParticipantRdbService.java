@@ -20,4 +20,8 @@ public class CowalkParticipantRdbService {
 		cowalkParticipantRepository.save(cowalkParticipant);
 		return cowalkParticipant.getId();
 	}
+
+	public Integer countByCowalkPostId(Long cowalkPostId) {
+		return cowalkParticipantRepository.countByCowalkPostId(cowalkPostId);
+	}
 }

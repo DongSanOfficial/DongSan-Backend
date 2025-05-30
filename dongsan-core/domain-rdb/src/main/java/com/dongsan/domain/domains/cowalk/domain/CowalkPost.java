@@ -43,4 +43,20 @@ public class CowalkPost extends BaseEntity {
 	public Long getId() {
 		return id;
 	}
+
+	public Long getMemberId() {
+		return memberId;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public LocalTime getTime() {
+		return time;
+	}
+
+	public Integer getCapacity() {
+		return capacity;
+	}
 }
