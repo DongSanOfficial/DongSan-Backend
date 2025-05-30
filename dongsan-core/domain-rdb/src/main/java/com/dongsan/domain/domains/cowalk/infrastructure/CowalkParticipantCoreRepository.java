@@ -22,4 +22,9 @@ public class CowalkParticipantCoreRepository implements CowalkParticipantReposit
 	public Integer countByCowalkPostId(Long cowalkPostId) {
 		return cowalkParticipantJpaRepository.countByCowalkPostId(cowalkPostId);
 	}
+
+	@Override
+	public Boolean existsByMemberIdAndCowalkPostId(Long memberId, Long cowalkPostId) {
+		return cowalkParticipantJpaRepository.existsByMemberIdAndCowalkPostId(memberId, cowalkPostId);
+	}
 }

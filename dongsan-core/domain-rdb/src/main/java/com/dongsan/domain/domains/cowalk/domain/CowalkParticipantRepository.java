@@ -7,4 +7,6 @@ public interface CowalkParticipantRepository {
 	CowalkParticipant save(CowalkParticipant cowalkParticipant);
 
 	Integer countByCowalkPostId(Long cowalkPostId);
+
+	Boolean existsByMemberIdAndCowalkPostId(Long memberId, Long cowalkPostId);
 }

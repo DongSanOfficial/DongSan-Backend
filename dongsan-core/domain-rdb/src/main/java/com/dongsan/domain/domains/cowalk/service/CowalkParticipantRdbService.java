@@ -1,10 +1,13 @@
 package com.dongsan.domain.domains.cowalk.service;
 
+import static com.dongsan.domain.support.error.CoreErrorCode.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dongsan.domain.domains.cowalk.domain.CowalkParticipant;
 import com.dongsan.domain.domains.cowalk.domain.CowalkParticipantRepository;
+import com.dongsan.domain.support.error.CoreException;
 
 @Service
 @Transactional
@@ -23,5 +26,15 @@ public class CowalkParticipantRdbService {
 
 	public Integer countByCowalkPostId(Long cowalkPostId) {
 		return cowalkParticipantRepository.countByCowalkPostId(cowalkPostId);
+	}
+
+	public Boolean isJoin(Long memberId, Long cowalkPostId) {
+		return cowalkParticipantRepository.existsByMemberIdAndCowalkPostId(memberId, cowalkPostId);
+	}
+
+	public void validAlreadyJoin(Long memberId, Long cowalkPostId) {
+		if (isJoin(memberId, cowalkPostId)) {
+			throw new CoreException(COWALK_PARTICIPANT_ALREADY_JOIN);
+		}
 	}
 }

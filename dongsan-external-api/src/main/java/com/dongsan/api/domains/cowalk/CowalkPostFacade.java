@@ -53,4 +53,10 @@ public class CowalkPostFacade {
 		Member member = memberService.getMember(memberId);
 		return new CowalkPostDetailResponse(cowalkPost, participantCount, commentCount, member);
 	}
+
+	public Long joinCowalkPost(Long crewId, Long cowalkPostId, Long memberId) {
+		crewMemberRdbService.validateIsCrewMember(crewId, memberId);
+		cowalkParticipantRdbService.validAlreadyJoin(memberId, cowalkPostId);
+		return cowalkParticipantRdbService.save(memberId, cowalkPostId);
+	}
 }

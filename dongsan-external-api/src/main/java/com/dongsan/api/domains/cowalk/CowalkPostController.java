@@ -14,6 +14,7 @@ import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkPostRequest;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostDetailResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CreateCowalkPostResponse;
+import com.dongsan.api.domains.cowalk.dto.response.JoinCowalkParticipantResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,5 +53,17 @@ public class CowalkPostController {
 		CowalkPostDetailResponse cowalkPostDetail
 			= cowalkPostFacade.getCowalkPostDetail(cowalkId, crewId, customOAuth2User.getMemberId());
 		return ResponseEntity.ok(cowalkPostDetail);
+	}
+
+	@Operation(summary = "같이 산책 참여")
+	@PostMapping("/{crewId}/cowalk/{cowalkId}/join")
+	public ResponseEntity<JoinCowalkParticipantResponse> joinParticipant(
+		@PathVariable Long crewId,
+		@PathVariable Long cowalkId,
+		@AuthenticationPrincipal CustomAuthUser customOAuth2User
+	) {
+		Long participantId
+			= cowalkPostFacade.joinCowalkPost(crewId, cowalkId, customOAuth2User.getMemberId());
+		return ResponseEntity.ok(new JoinCowalkParticipantResponse(participantId));
 	}
 }
