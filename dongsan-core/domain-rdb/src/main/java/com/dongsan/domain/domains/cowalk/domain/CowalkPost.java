@@ -1,10 +1,13 @@
 package com.dongsan.domain.domains.cowalk.domain;
 
+import static com.dongsan.domain.support.error.CoreErrorCode.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.dongsan.domain.domains.common.BaseEntity;
 import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
+import com.dongsan.domain.support.error.CoreException;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +41,12 @@ public class CowalkPost extends BaseEntity {
 		this.date = command.date();
 		this.time = command.time();
 		this.capacity = command.capacity();
+	}
+
+	public void validCapacity(Integer participantCount) {
+		if (participantCount >= capacity) {
+			throw new CoreException(COWALK_PARTICIPANT_LIMIT);
+		}
 	}
 
 	public Long getId() {

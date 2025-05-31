@@ -22,6 +22,7 @@ public class CowalkParticipantRdbService {
 	}
 
 	public Long save(Long memberId, Long cowalkPostId) {
+		validAlreadyJoin(memberId, cowalkPostId);
 		CowalkParticipant cowalkParticipant = new CowalkParticipant(cowalkPostId, memberId);
 		cowalkParticipantRepository.save(cowalkParticipant);
 		return cowalkParticipant.getId();

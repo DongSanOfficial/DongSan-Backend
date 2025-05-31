@@ -61,7 +61,8 @@ public class CowalkPostFacade {
 
 	public Long joinCowalkPost(Long crewId, Long cowalkPostId, Long memberId) {
 		crewMemberRdbService.validateIsCrewMember(crewId, memberId);
-		cowalkParticipantRdbService.validAlreadyJoin(memberId, cowalkPostId);
+		Integer participantCount = cowalkParticipantRdbService.countByCowalkPostId(cowalkPostId);
+		cowalkPostRdbService.validCapacity(cowalkPostId, participantCount);
 		return cowalkParticipantRdbService.save(memberId, cowalkPostId);
 	}
 

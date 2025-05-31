@@ -58,8 +58,7 @@ public enum CoreErrorCode {
 	// cowalk
 	COWALK_NOT_FOUND(CoreErrorStatus.NOT_FOUND, "COWALK-01", "존재하지 않는 같이 산책 입니다."),
 	COWALK_PARTICIPANT_ALREADY_JOIN(CoreErrorStatus.BAD_REQUEST, "COWALK-02", "이미 같이 산책에 참여했습니다."),
-
-	;
+	COWALK_PARTICIPANT_LIMIT(CoreErrorStatus.BAD_REQUEST, "COWALK-03", "같이 산책 인원이 이미 모두 찼습니다.");
 
 	private final CoreErrorStatus httpStatus;
 	private final String code;
