@@ -50,7 +50,10 @@ public class CowalkPost extends BaseEntity {
 	}
 
 	public void validCapacity(Integer participantCount) {
-		if (capacityType.equals(CapacityType.LIMITED) && participantCount >= capacity) {
+		if (capacityType.equals(CapacityType.UNLIMITED))
+			return;
+
+		if (participantCount >= capacity) {
 			throw new CoreException(COWALK_PARTICIPANT_LIMIT);
 		}
 	}

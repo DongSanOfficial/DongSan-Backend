@@ -20,7 +20,6 @@ import com.dongsan.domain.domains.member.MemberService;
 import com.dongsan.domain.support.util.CursorPage;
 
 @Service
-@Transactional
 public class CowalkPostFacade {
 	private final CowalkParticipantRdbService cowalkParticipantRdbService;
 	private final CowalkCommentRdbService cowalkCommentRdbService;
@@ -42,6 +41,7 @@ public class CowalkPostFacade {
 		this.memberService = memberService;
 	}
 
+	@Transactional
 	public Long saveCowalkPost(CreateCowalkPostRequest createCowalkPostRequest, Long crewId, Long memberId) {
 		crewMemberRdbService.validateIsCrewMember(crewId, memberId);
 		CreateCowalkPostCommand command = createCowalkPostRequest.toCreateCowalkPostCommand(crewId, memberId);
@@ -59,10 +59,10 @@ public class CowalkPostFacade {
 		return new CowalkPostDetailResponse(cowalkPost, participantCount, commentCount, member);
 	}
 
-	public Long joinCowalkPost(Long crewId, Long cowalkPostId, Long memberId) {
+	public synchronized Long joinCowalkPost(Long crewId, Long cowalkPostId, Long memberId) {
 		crewMemberRdbService.validateIsCrewMember(crewId, memberId);
 		Integer participantCount = cowalkParticipantRdbService.countByCowalkPostId(cowalkPostId);
-		cowalkPostRdbService.validCapacity(cowalkPostId, participantCount);
+		cowalkPostRdbService.validJoin(cowalkPostId, participantCount);
 		return cowalkParticipantRdbService.save(memberId, cowalkPostId);
 	}
 
