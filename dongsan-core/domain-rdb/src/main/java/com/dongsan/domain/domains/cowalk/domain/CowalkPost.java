@@ -10,6 +10,8 @@ import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
 import com.dongsan.domain.support.error.CoreException;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,6 +34,9 @@ public class CowalkPost extends BaseEntity {
 
 	private Integer capacity;
 
+	@Enumerated(EnumType.STRING)
+	private CapacityType capacityType;
+
 	protected CowalkPost() {
 	}
 
@@ -41,10 +46,11 @@ public class CowalkPost extends BaseEntity {
 		this.date = command.date();
 		this.time = command.time();
 		this.capacity = command.capacity();
+		this.capacityType = command.capacity() == null ? CapacityType.UNLIMITED : CapacityType.LIMITED;
 	}
 
 	public void validCapacity(Integer participantCount) {
-		if (participantCount >= capacity) {
+		if (capacityType.equals(CapacityType.LIMITED) && participantCount >= capacity) {
 			throw new CoreException(COWALK_PARTICIPANT_LIMIT);
 		}
 	}
@@ -67,5 +73,9 @@ public class CowalkPost extends BaseEntity {
 
 	public Integer getCapacity() {
 		return capacity;
+	}
+
+	public CapacityType getCapacityType() {
+		return capacityType;
 	}
 }
