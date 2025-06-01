@@ -11,6 +11,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -36,14 +37,21 @@ public abstract class IntegrationTest {
                     .withUsername(USERNAME)
                     .withPassword(PASSWORD);
 
+    @Container
+    static GenericContainer<?> redisContainer = new GenericContainer<>("redis:7.0.11")
+            .withExposedPorts(6379);
+
     @DynamicPropertySource
     public static void overrideProps(DynamicPropertyRegistry registry) {
         // Testcontainers에서 제공하는 JDBC URL을 p6spy로 변경
-        registry.add("spring.datasource.url", () -> "jdbc:p6spy:mysql://" + mySQLContainer.getContainerIpAddress() + ":" + mySQLContainer.getMappedPort(3306) + "/" + DATABASE_NAME);
+        registry.add("spring.datasource.url", () -> "jdbc:p6spy:mysql://" + mySQLContainer.getContainerIpAddress() + ":"
+                + mySQLContainer.getMappedPort(3306) + "/" + DATABASE_NAME);
         registry.add("spring.datasource.driver-class-name", () -> "com.p6spy.engine.spy.P6SpyDriver");
         registry.add("spring.datasource.username", mySQLContainer::getUsername);
         registry.add("spring.datasource.password", mySQLContainer::getPassword);
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
+        registry.add("spring.data.redis.host", () -> redisContainer.getHost());
+        registry.add("spring.data.redis.port", () -> redisContainer.getMappedPort(6379));
     }
 
     @BeforeEach

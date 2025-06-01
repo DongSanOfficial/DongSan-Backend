@@ -7,7 +7,7 @@ import com.dongsan.domain.domains.cowalk.domain.CowalkParticipant;
 
 @Repository
 public interface CowalkParticipantJpaRepository extends JpaRepository<CowalkParticipant, Long> {
-	Integer countByCowalkPostId(Long cowalkPostId);
+    Integer countByCowalkPostId(Long cowalkPostId);
 
-	Boolean existsByMemberIdAndCowalkPostId(Long memberId, Long cowalkPostId);
+    Boolean existsByMemberIdAndCowalkPostId(Long memberId, Long cowalkPostId);
 }

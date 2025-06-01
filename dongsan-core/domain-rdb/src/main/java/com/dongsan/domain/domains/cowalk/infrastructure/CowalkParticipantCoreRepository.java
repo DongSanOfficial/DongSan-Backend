@@ -14,46 +14,46 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
 public class CowalkParticipantCoreRepository implements CowalkParticipantRepository {
-	private final CowalkParticipantJpaRepository cowalkParticipantJpaRepository;
-	private final JPAQueryFactory queryFactory;
+    private final CowalkParticipantJpaRepository cowalkParticipantJpaRepository;
+    private final JPAQueryFactory queryFactory;
 
-	private final QCowalkParticipant cowalkParticipant = QCowalkParticipant.cowalkParticipant;
+    private final QCowalkParticipant cowalkParticipant = QCowalkParticipant.cowalkParticipant;
 
-	public CowalkParticipantCoreRepository(
-		CowalkParticipantJpaRepository cowalkParticipantJpaRepository,
-		JPAQueryFactory queryFactory
-	) {
-		this.cowalkParticipantJpaRepository = cowalkParticipantJpaRepository;
-		this.queryFactory = queryFactory;
-	}
+    public CowalkParticipantCoreRepository(
+            CowalkParticipantJpaRepository cowalkParticipantJpaRepository,
+            JPAQueryFactory queryFactory
+    ) {
+        this.cowalkParticipantJpaRepository = cowalkParticipantJpaRepository;
+        this.queryFactory = queryFactory;
+    }
 
-	@Override
-	public CowalkParticipant save(CowalkParticipant cowalkParticipant) {
-		return cowalkParticipantJpaRepository.save(cowalkParticipant);
-	}
+    @Override
+    public CowalkParticipant save(CowalkParticipant cowalkParticipant) {
+        return cowalkParticipantJpaRepository.save(cowalkParticipant);
+    }
 
-	@Override
-	public Integer countByCowalkPostId(Long cowalkPostId) {
-		return cowalkParticipantJpaRepository.countByCowalkPostId(cowalkPostId);
-	}
+    @Override
+    public Integer countByCowalkPostId(Long cowalkPostId) {
+        return cowalkParticipantJpaRepository.countByCowalkPostId(cowalkPostId);
+    }
 
-	@Override
-	public Boolean existsByMemberIdAndCowalkPostId(Long memberId, Long cowalkPostId) {
-		return cowalkParticipantJpaRepository.existsByMemberIdAndCowalkPostId(memberId, cowalkPostId);
-	}
+    @Override
+    public Boolean existsByMemberIdAndCowalkPostId(Long memberId, Long cowalkPostId) {
+        return cowalkParticipantJpaRepository.existsByMemberIdAndCowalkPostId(memberId, cowalkPostId);
+    }
 
-	public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
-		List<Tuple> countTuple = queryFactory
-			.select(cowalkParticipant.cowalkPostId, cowalkParticipant.count())
-			.from(cowalkParticipant)
-			.where(cowalkParticipant.cowalkPostId.in(cowalkPostIds))
-			.groupBy(cowalkParticipant.cowalkPostId)
-			.fetch();
+    public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
+        List<Tuple> countTuple = queryFactory
+                .select(cowalkParticipant.cowalkPostId, cowalkParticipant.count())
+                .from(cowalkParticipant)
+                .where(cowalkParticipant.cowalkPostId.in(cowalkPostIds))
+                .groupBy(cowalkParticipant.cowalkPostId)
+                .fetch();
 
-		return countTuple.stream()
-			.collect(Collectors.toMap(
-				tuple -> tuple.get(cowalkParticipant.cowalkPostId),
-				tuple -> tuple.get(cowalkParticipant.count()).intValue()
-			));
-	}
+        return countTuple.stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(cowalkParticipant.cowalkPostId),
+                        tuple -> tuple.get(cowalkParticipant.count()).intValue()
+                ));
+    }
 }

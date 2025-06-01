@@ -20,65 +20,65 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "cowalk_post")
 public class CowalkPost extends BaseEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private Long crewId;
+    private Long crewId;
 
-	private Long memberId;
+    private Long memberId;
 
-	private LocalDate date;
+    private LocalDate date;
 
-	private LocalTime time;
+    private LocalTime time;
 
-	private Integer capacity;
+    private Integer capacity;
 
-	@Enumerated(EnumType.STRING)
-	private CapacityType capacityType;
+    @Enumerated(EnumType.STRING)
+    private CapacityType capacityType;
 
-	protected CowalkPost() {
-	}
+    protected CowalkPost() {
+    }
 
-	public CowalkPost(CreateCowalkPostCommand command) {
-		this.crewId = command.crewId();
-		this.memberId = command.memberId();
-		this.date = command.date();
-		this.time = command.time();
-		this.capacity = command.capacity();
-		this.capacityType = command.capacity() == null ? CapacityType.UNLIMITED : CapacityType.LIMITED;
-	}
+    public CowalkPost(CreateCowalkPostCommand command) {
+        this.crewId = command.crewId();
+        this.memberId = command.memberId();
+        this.date = command.date();
+        this.time = command.time();
+        this.capacity = command.capacity();
+        this.capacityType = command.capacity() == null ? CapacityType.UNLIMITED : CapacityType.LIMITED;
+    }
 
-	public void validCapacity(Integer participantCount) {
-		if (capacityType.equals(CapacityType.UNLIMITED))
-			return;
+    public void validCapacity(Integer participantCount) {
+        if (capacityType.equals(CapacityType.UNLIMITED))
+            return;
 
-		if (participantCount >= capacity) {
-			throw new CoreException(COWALK_PARTICIPANT_LIMIT);
-		}
-	}
+        if (participantCount >= capacity) {
+            throw new CoreException(COWALK_PARTICIPANT_LIMIT);
+        }
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getMemberId() {
-		return memberId;
-	}
+    public Long getMemberId() {
+        return memberId;
+    }
 
-	public LocalDate getDate() {
-		return date;
-	}
+    public LocalDate getDate() {
+        return date;
+    }
 
-	public LocalTime getTime() {
-		return time;
-	}
+    public LocalTime getTime() {
+        return time;
+    }
 
-	public Integer getCapacity() {
-		return capacity;
-	}
+    public Integer getCapacity() {
+        return capacity;
+    }
 
-	public CapacityType getCapacityType() {
-		return capacityType;
-	}
+    public CapacityType getCapacityType() {
+        return capacityType;
+    }
 }

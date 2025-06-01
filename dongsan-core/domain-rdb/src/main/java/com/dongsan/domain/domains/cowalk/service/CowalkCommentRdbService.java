@@ -11,17 +11,17 @@ import com.dongsan.domain.domains.cowalk.domain.CowalkCommentRepository;
 @Service
 @Transactional
 public class CowalkCommentRdbService {
-	private final CowalkCommentRepository cowalkCommentRepository;
+    private final CowalkCommentRepository cowalkCommentRepository;
 
-	public CowalkCommentRdbService(CowalkCommentRepository cowalkCommentRepository) {
-		this.cowalkCommentRepository = cowalkCommentRepository;
-	}
+    public CowalkCommentRdbService(CowalkCommentRepository cowalkCommentRepository) {
+        this.cowalkCommentRepository = cowalkCommentRepository;
+    }
 
-	public Integer countByCowalkPostId(Long cowalkPostId) {
-		return cowalkCommentRepository.countByCowalkPostId(cowalkPostId);
-	}
+    public Integer countByCowalkPostId(Long cowalkPostId) {
+        return cowalkCommentRepository.countByCowalkPostId(cowalkPostId);
+    }
 
-	public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
-		return cowalkCommentRepository.countByCowalkPostIds(cowalkPostIds);
-	}
+    public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
+        return cowalkCommentRepository.countByCowalkPostIds(cowalkPostIds);
+    }
 }

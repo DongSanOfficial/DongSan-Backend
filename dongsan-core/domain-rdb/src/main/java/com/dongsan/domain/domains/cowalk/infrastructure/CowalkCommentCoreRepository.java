@@ -13,37 +13,37 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
 public class CowalkCommentCoreRepository implements CowalkCommentRepository {
-	private final CowalkCommentJpaRepository cowalkCommentJpaRepository;
-	private final JPAQueryFactory queryFactory;
+    private final CowalkCommentJpaRepository cowalkCommentJpaRepository;
+    private final JPAQueryFactory queryFactory;
 
-	private final QCowalkComment cowalkComment = QCowalkComment.cowalkComment;
+    private final QCowalkComment cowalkComment = QCowalkComment.cowalkComment;
 
-	public CowalkCommentCoreRepository(
-		CowalkCommentJpaRepository cowalkCommentJpaRepository,
-		JPAQueryFactory queryFactory
-	) {
-		this.cowalkCommentJpaRepository = cowalkCommentJpaRepository;
-		this.queryFactory = queryFactory;
-	}
+    public CowalkCommentCoreRepository(
+            CowalkCommentJpaRepository cowalkCommentJpaRepository,
+            JPAQueryFactory queryFactory
+    ) {
+        this.cowalkCommentJpaRepository = cowalkCommentJpaRepository;
+        this.queryFactory = queryFactory;
+    }
 
-	@Override
-	public Integer countByCowalkPostId(Long cowalkPostId) {
-		return cowalkCommentJpaRepository.countByCowalkPostId(cowalkPostId);
-	}
+    @Override
+    public Integer countByCowalkPostId(Long cowalkPostId) {
+        return cowalkCommentJpaRepository.countByCowalkPostId(cowalkPostId);
+    }
 
-	@Override
-	public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
-		List<Tuple> countTuple = queryFactory
-			.select(cowalkComment.cowalkPostId, cowalkComment.count())
-			.from(cowalkComment)
-			.where(cowalkComment.cowalkPostId.in(cowalkPostIds))
-			.groupBy(cowalkComment.cowalkPostId)
-			.fetch();
+    @Override
+    public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
+        List<Tuple> countTuple = queryFactory
+                .select(cowalkComment.cowalkPostId, cowalkComment.count())
+                .from(cowalkComment)
+                .where(cowalkComment.cowalkPostId.in(cowalkPostIds))
+                .groupBy(cowalkComment.cowalkPostId)
+                .fetch();
 
-		return countTuple.stream()
-			.collect(Collectors.toMap(
-				tuple -> tuple.get(cowalkComment.cowalkPostId),
-				tuple -> tuple.get(cowalkComment.count()).intValue()
-			));
-	}
+        return countTuple.stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(cowalkComment.cowalkPostId),
+                        tuple -> tuple.get(cowalkComment.count()).intValue()
+                ));
+    }
 }

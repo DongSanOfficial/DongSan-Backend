@@ -1,89 +1,107 @@
 package com.dongsan.api.domains.cowalk;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.dongsan.domain.domains.cowalk.service.CowalkParticipantRdbService;
-import com.dongsan.domain.domains.cowalk.service.CowalkPostRdbService;
-import com.dongsan.domain.domains.crew.service.CrewMemberRdbService;
+import com.dongsan.api.support.IntegrationTest;
+import com.dongsan.domain.domains.auth.Provider;
+import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
+import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
+import com.dongsan.domain.domains.cowalk.infrastructure.CowalkParticipantCoreRepository;
+import com.dongsan.domain.domains.cowalk.infrastructure.CowalkPostCoreRepository;
+import com.dongsan.domain.domains.crew.domain.Capacity;
+import com.dongsan.domain.domains.crew.domain.Crew;
+import com.dongsan.domain.domains.crew.domain.CrewMember;
+import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
+import com.dongsan.domain.domains.crew.domain.PublicCrew;
+import com.dongsan.domain.domains.crew.infrastructure.CrewCoreRepository;
+import com.dongsan.domain.domains.crew.infrastructure.CrewMemberCoreRepository;
+import com.dongsan.domain.domains.member.Member;
+import com.dongsan.domain.domains.member.MemberCoreRepository;
+import com.dongsan.domain.domains.member.MemberRole;
 
-@ExtendWith(MockitoExtension.class)
-class CowalkPostFacadeTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class CowalkPostFacadeTest extends IntegrationTest {
 
-	@Mock
-	private CrewMemberRdbService crewMemberRdbService;
+    @Autowired
+    private CowalkPostFacade cowalkPostFacade;
 
-	@Mock
-	private CowalkParticipantRdbService cowalkParticipantRdbService;
+    @Autowired
+    private CowalkParticipantCoreRepository cowalkParticipantRepository;
 
-	@Mock
-	private CowalkPostRdbService cowalkPostRdbService;
+    @Autowired
+    private CowalkPostCoreRepository cowalkPostRepository;
 
-	@InjectMocks
-	private CowalkPostFacade cowalkPostFacade;
+    @Autowired
+    private MemberCoreRepository memberRepository;
 
-	@Test
-	void 동시에_100명이_참여요청_하면_정원까지만_저장된다() throws InterruptedException {
-		// given
-		int executeCount = 100;
-		int maxParticipants = 30;
-		ExecutorService executor = Executors.newFixedThreadPool(32);
-		CountDownLatch latch = new CountDownLatch(executeCount);
-		AtomicInteger participantCounter = new AtomicInteger();
+    @Autowired
+    private CrewMemberCoreRepository crewMemberRepository;
 
-		// 크루 멤버 검증은 항상 통과
-		doNothing().when(crewMemberRdbService).validateIsCrewMember(anyLong(), anyLong());
+    @Autowired
+    private CrewCoreRepository crewRepository;
 
-		// 참가자 수: 호출될 때마다 증가하는 방식으로 mock
-		when(cowalkParticipantRdbService.countByCowalkPostId(anyLong()))
-			.thenAnswer(invocation -> participantCounter.get());
+    @BeforeEach
+    void setUpPost() {
 
-		// 정원 검증: 30명 이상이면 예외 발생
-		doAnswer(invocation -> {
-			Long cowalkPostId = invocation.getArgument(0);
-			int count = invocation.getArgument(1);
-			if (count >= maxParticipants) {
-				throw new IllegalStateException("정원이 초과되었습니다.");
-			}
-			return null;
-		}).when(cowalkPostRdbService).validJoin(anyLong(), anyInt());
+        Capacity capacity = new Capacity(false, 100);
+        Crew crew = new PublicCrew("name", "description", "rule", "image", capacity);
 
-		// save(): 성공 시에만 호출되고, 호출될 때마다 카운터 증가
-		when(cowalkParticipantRdbService.save(anyLong(), anyLong()))
-			.thenAnswer(invocation -> {
-				participantCounter.incrementAndGet();
-				return 1L;
-			});
+        crewRepository.save(crew);
 
-		// when
-		for (int i = 0; i < executeCount; i++) {
-			final long memberId = i + 1;
-			executor.execute(() -> {
-				try {
-					cowalkPostFacade.joinCowalkPost(1L, 1L, memberId);
-				} catch (Exception ignored) {
-				} finally {
-					latch.countDown();
-				}
-			});
-		}
+        for (int i = 0; i < 1000; i++) {
+            Member member = memberRepository.save("email", "nickname", "profile", MemberRole.ROLE_USER, Provider.KAKAO);
+            crewMemberRepository.save(
+                    new CrewMember(crew.getId(), member.getId(), CrewMemberRole.PARTICIPANT)
+            );
+        }
 
-		latch.await();
-		executor.shutdown();
+        // given
+        Integer limit = 100;
+        Long crewId = 1L;
+        Long memberId = 1L;
 
-		// then
-		assertThat(participantCounter.get()).isEqualTo(maxParticipants);
-		verify(cowalkParticipantRdbService, times(maxParticipants)).save(anyLong(), anyLong());
-	}
+        CreateCowalkPostCommand command
+                = new CreateCowalkPostCommand(crewId, memberId, LocalDate.now(), LocalTime.now(), limit);
+
+        // 참가 최대 인원 30인 게시글 생성
+        CowalkPost post = new CowalkPost(command);
+        cowalkPostRepository.save(post);
+    }
+
+    @Test
+    void 동시에_100명이_참여하면_30명만_저장된다() throws InterruptedException {
+        int executeCount = 1000;
+        ExecutorService executor = Executors.newFixedThreadPool(32);
+        CountDownLatch latch = new CountDownLatch(executeCount);
+
+        for (int i = 0; i < executeCount; i++) {
+            final long memberId = i + 1;
+            executor.execute(() -> {
+                try {
+                    cowalkPostFacade.joinCowalkPost(1L, 1L, memberId);
+                } catch (Exception ignored) {
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executor.shutdown();
+
+        // 결과 확인
+        Integer count = cowalkParticipantRepository.countByCowalkPostId(1L);
+        assertThat(count).isEqualTo(100);
+    }
 }

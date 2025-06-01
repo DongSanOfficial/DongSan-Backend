@@ -7,11 +7,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CowalkParticipantRepository {
-	CowalkParticipant save(CowalkParticipant cowalkParticipant);
+    CowalkParticipant save(CowalkParticipant cowalkParticipant);
 
-	Integer countByCowalkPostId(Long cowalkPostId);
+    Integer countByCowalkPostId(Long cowalkPostId);
 
-	Boolean existsByMemberIdAndCowalkPostId(Long memberId, Long cowalkPostId);
+    Boolean existsByMemberIdAndCowalkPostId(Long memberId, Long cowalkPostId);
 
-	Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds);
+    Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds);
 }

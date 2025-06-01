@@ -7,5 +7,5 @@ import com.dongsan.domain.domains.cowalk.domain.CowalkComment;
 
 @Repository
 public interface CowalkCommentJpaRepository extends JpaRepository<CowalkComment, Long> {
-	Integer countByCowalkPostId(Long cowalkPostId);
+    Integer countByCowalkPostId(Long cowalkPostId);
 }

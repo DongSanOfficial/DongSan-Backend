@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CowalkCommentRepository {
-	Integer countByCowalkPostId(Long cowalkPostId);
+    Integer countByCowalkPostId(Long cowalkPostId);
 
-	Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds);
+    Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds);
 }

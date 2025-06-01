@@ -8,9 +8,9 @@ import com.dongsan.domain.support.util.CursorPage;
 
 @Repository
 public interface CowalkPostRepository {
-	void save(CowalkPost cowalkPost);
+    void save(CowalkPost cowalkPost);
 
-	Optional<CowalkPost> findById(Long id);
+    Optional<CowalkPost> findById(Long id);
 
-	CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId);
+    CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId);
 }

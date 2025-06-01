@@ -14,29 +14,29 @@ import com.dongsan.domain.support.util.CursorPage;
 @Service
 @Transactional
 public class CowalkPostRdbService {
-	private final CowalkPostRepository cowalkPostRepository;
+    private final CowalkPostRepository cowalkPostRepository;
 
-	public CowalkPostRdbService(CowalkPostRepository cowalkPostRepository) {
-		this.cowalkPostRepository = cowalkPostRepository;
-	}
+    public CowalkPostRdbService(CowalkPostRepository cowalkPostRepository) {
+        this.cowalkPostRepository = cowalkPostRepository;
+    }
 
-	public CowalkPost getCowalkPost(Long id) {
-		return cowalkPostRepository.findById(id)
-			.orElseThrow(() -> new CoreException(COWALK_NOT_FOUND));
-	}
+    public CowalkPost getCowalkPost(Long id) {
+        return cowalkPostRepository.findById(id)
+                .orElseThrow(() -> new CoreException(COWALK_NOT_FOUND));
+    }
 
-	public Long save(CreateCowalkPostCommand command) {
-		CowalkPost cowalkPost = new CowalkPost(command);
-		cowalkPostRepository.save(cowalkPost);
-		return cowalkPost.getId();
-	}
+    public Long save(CreateCowalkPostCommand command) {
+        CowalkPost cowalkPost = new CowalkPost(command);
+        cowalkPostRepository.save(cowalkPost);
+        return cowalkPost.getId();
+    }
 
-	public CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
-		return cowalkPostRepository.getCowalkPosts(size, lastId, crewId);
-	}
+    public CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
+        return cowalkPostRepository.getCowalkPosts(size, lastId, crewId);
+    }
 
-	public void validJoin(Long cowalkPostId, Integer participantCount) {
-		CowalkPost cowalkPost = getCowalkPost(cowalkPostId);
-		cowalkPost.validCapacity(participantCount);
-	}
+    public void validJoin(Long cowalkPostId, Integer participantCount) {
+        CowalkPost cowalkPost = getCowalkPost(cowalkPostId);
+        cowalkPost.validCapacity(participantCount);
+    }
 }

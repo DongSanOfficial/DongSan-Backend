@@ -15,41 +15,41 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 @Repository
 public class CowalkPostCoreRepository implements CowalkPostRepository {
 
-	private final CowalkPostJpaRepository cowalkPostJpaRepository;
-	private final JPAQueryFactory queryFactory;
+    private final CowalkPostJpaRepository cowalkPostJpaRepository;
+    private final JPAQueryFactory queryFactory;
 
-	private final QCowalkPost cowalkPost = QCowalkPost.cowalkPost;
+    private final QCowalkPost cowalkPost = QCowalkPost.cowalkPost;
 
-	public CowalkPostCoreRepository(CowalkPostJpaRepository cowalkPostJpaRepository, JPAQueryFactory queryFactory) {
-		this.cowalkPostJpaRepository = cowalkPostJpaRepository;
-		this.queryFactory = queryFactory;
-	}
+    public CowalkPostCoreRepository(CowalkPostJpaRepository cowalkPostJpaRepository, JPAQueryFactory queryFactory) {
+        this.cowalkPostJpaRepository = cowalkPostJpaRepository;
+        this.queryFactory = queryFactory;
+    }
 
-	@Override
-	public void save(CowalkPost cowalkPost) {
-		cowalkPostJpaRepository.save(cowalkPost);
-	}
+    @Override
+    public void save(CowalkPost cowalkPost) {
+        cowalkPostJpaRepository.save(cowalkPost);
+    }
 
-	@Override
-	public Optional<CowalkPost> findById(Long id) {
-		return cowalkPostJpaRepository.findById(id);
-	}
+    @Override
+    public Optional<CowalkPost> findById(Long id) {
+        return cowalkPostJpaRepository.findById(id);
+    }
 
-	@Override
-	public CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
-		List<CowalkPost> cowalkPosts = queryFactory.selectFrom(cowalkPost)
-			.where(
-				cowalkPost.crewId.eq(crewId),
-				cowalkPostIdLt(lastId)
-			)
-			.orderBy(cowalkPost.id.desc())
-			.limit(size + 1L)
-			.fetch();
+    @Override
+    public CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
+        List<CowalkPost> cowalkPosts = queryFactory.selectFrom(cowalkPost)
+                .where(
+                        cowalkPost.crewId.eq(crewId),
+                        cowalkPostIdLt(lastId)
+                )
+                .orderBy(cowalkPost.id.desc())
+                .limit(size + 1L)
+                .fetch();
 
-		return new CursorPage<>(cowalkPosts, size);
-	}
+        return new CursorPage<>(cowalkPosts, size);
+    }
 
-	private BooleanExpression cowalkPostIdLt(Long id) {
-		return id == null ? null : cowalkPost.id.lt(id);
-	}
+    private BooleanExpression cowalkPostIdLt(Long id) {
+        return id == null ? null : cowalkPost.id.lt(id);
+    }
 }
