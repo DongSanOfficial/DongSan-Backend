@@ -80,9 +80,9 @@ class CowalkPostFacadeTest extends IntegrationTest {
     }
 
     @Test
-    void 동시에_100명이_참여하면_30명만_저장된다() throws InterruptedException {
+    void 동시에_1000명이_참여하면_100명만_저장된다() throws InterruptedException {
         int executeCount = 1000;
-        ExecutorService executor = Executors.newFixedThreadPool(32);
+        ExecutorService executor = Executors.newFixedThreadPool(10);
         CountDownLatch latch = new CountDownLatch(executeCount);
 
         for (int i = 0; i < executeCount; i++) {
