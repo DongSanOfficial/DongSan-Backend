@@ -28,19 +28,16 @@ public class CowalkPostLockService {
         long leaseTime = 2;
 
         RLock lock = getFairLock(cowalkPostId);
-        boolean isLocked = false;
+
+        boolean isLocked = lock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS);
+        if (!isLocked) {
+            throw new InterruptedException("CowalkPostLockService : 락 획득 실패 " + cowalkPostId);
+        }
 
         try {
-            isLocked = lock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS);
-            if (!isLocked) {
-                throw new InterruptedException("CowalkPostLockService : 락 획득 실패 " + cowalkPostId);
-            }
-
             return task.get();
         } finally {
-            if (isLocked && lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
+            lock.unlock();
         }
     }
 }
