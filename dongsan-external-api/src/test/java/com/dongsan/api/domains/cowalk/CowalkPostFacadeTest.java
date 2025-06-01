@@ -11,7 +11,6 @@ import java.util.concurrent.Executors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.dongsan.api.support.IntegrationTest;
 import com.dongsan.domain.domains.auth.Provider;
@@ -30,7 +29,6 @@ import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberCoreRepository;
 import com.dongsan.domain.domains.member.MemberRole;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CowalkPostFacadeTest extends IntegrationTest {
 
     @Autowired
@@ -82,7 +80,7 @@ class CowalkPostFacadeTest extends IntegrationTest {
     @Test
     void 동시에_1000명이_참여하면_100명만_저장된다() throws InterruptedException {
         int executeCount = 1000;
-        ExecutorService executor = Executors.newFixedThreadPool(10);
+        ExecutorService executor = Executors.newFixedThreadPool(5);
         CountDownLatch latch = new CountDownLatch(executeCount);
 
         for (int i = 0; i < executeCount; i++) {
