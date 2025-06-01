@@ -67,12 +67,13 @@ public class CowalkPostFacade {
     public Long joinCowalkPost(Long crewId, Long cowalkPostId, Long memberId) {
         crewMemberRdbService.validateIsCrewMember(crewId, memberId);
         try {
-            return cowalkPostLockService.executeWithLock(cowalkPostId, () -> {
+            return cowalkPostLockService.executeWithFairLock(cowalkPostId, () -> {
                 Integer participantCount = cowalkParticipantRdbService.countByCowalkPostId(cowalkPostId);
                 cowalkPostRdbService.validJoin(cowalkPostId, participantCount);
                 return cowalkParticipantRdbService.save(memberId, cowalkPostId);
             });
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new CoreException(CoreErrorCode.COWALK_LOCK_FAIL);
         }
     }

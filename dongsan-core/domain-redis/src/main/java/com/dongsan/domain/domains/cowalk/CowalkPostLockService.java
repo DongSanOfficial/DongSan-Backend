@@ -19,30 +19,24 @@ public class CowalkPostLockService {
         return lockRepository.getFairLock(key);
     }
 
-    public RLock tryFairLock(Long cowalkPostId) throws InterruptedException {
+    public void unlock(RLock lock) {
+        lock.unlock();
+    }
+
+    public <T> T executeWithFairLock(Long cowalkPostId, Supplier<T> task) throws InterruptedException {
         long waitTime = 10;
         long leaseTime = 2;
 
         RLock lock = getFairLock(cowalkPostId);
 
         if (lock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS)) {
-            return lock;
+            try {
+                return task.get();
+            } finally {
+                unlock(lock);
+            }
         } else {
             throw new InterruptedException("CowalkPostLockService : 락 획득 실패: " + cowalkPostId);
-        }
-    }
-
-    public void unlock(RLock lock) {
-        lock.unlock();
-    }
-
-    public <T> T executeWithLock(Long cowalkPostId, Supplier<T> task) throws InterruptedException {
-        RLock lock = tryFairLock(cowalkPostId);
-
-        try {
-            return task.get();
-        } finally {
-            unlock(lock);
         }
     }
 }
