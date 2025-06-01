@@ -19,10 +19,6 @@ public class CowalkPostLockService {
         return lockRepository.getFairLock(key);
     }
 
-    public void unlock(RLock lock) {
-        lock.unlock();
-    }
-
     public <T> T executeWithFairLock(Long cowalkPostId, Supplier<T> task) throws InterruptedException {
         long waitTime = 10;
         long leaseTime = 2;
