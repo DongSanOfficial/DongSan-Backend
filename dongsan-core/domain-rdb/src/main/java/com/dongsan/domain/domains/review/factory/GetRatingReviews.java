@@ -1,9 +1,9 @@
 package com.dongsan.domain.domains.review.factory;
 
 import com.dongsan.domain.domains.review.domain.Review;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.domains.review.domain.ReviewRepository;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithMemberQuery;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ public class GetRatingReviews implements GetReviews {
 
     @Override
     @Transactional(readOnly = true)
-    public CursorPage<ReviewWithMemberQuery> search(Long walkwayId, Review review, int size) {
+    public CursorResponse<ReviewWithMemberQuery> search(Long walkwayId, Review review, int size) {
         LocalDateTime lastCreatedAt = null;
         Integer rating = null;
         if (review != null) {

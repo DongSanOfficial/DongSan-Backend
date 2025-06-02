@@ -26,4 +26,9 @@ public class CrewMemberCoreRepository implements CrewMemberRepository {
     public void deleteByCrewIdAndMemberId(Long crewId, Long memberId) {
         crewMemberJpaRepository.deleteByCrewIdAndMemberId(crewId, memberId);
     }
+
+    @Override
+    public int countByCrewId(Long crewId) {
+        return crewMemberJpaRepository.countByCrewId(crewId);
+    }
 }

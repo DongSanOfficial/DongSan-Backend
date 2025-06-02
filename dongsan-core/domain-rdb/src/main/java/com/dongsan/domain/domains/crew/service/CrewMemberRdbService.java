@@ -38,4 +38,8 @@ public class CrewMemberRdbService {
             throw new CoreException(CoreErrorCode.CREW_NOT_JOINED);
         }
     }
+
+    public int countCrewMember(Long crewId) {
+        return crewMemberRepository.countByCrewId(crewId);
+    }
 }

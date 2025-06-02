@@ -1,27 +1,19 @@
 package com.dongsan.api.domains.cowalk;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkPostRequest;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostDetailResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostsResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CreateCowalkPostResponse;
 import com.dongsan.api.domains.cowalk.dto.response.JoinCowalkParticipantResponse;
-import com.dongsan.domain.support.util.CursorPage;
-
+import com.dongsan.domain.support.util.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/crews")
@@ -72,12 +64,12 @@ public class CowalkPostController {
 
     @Operation(summary = "같이 산책 목록 조회")
     @GetMapping("/{crewId}/cowalk")
-    public ResponseEntity<CursorPage<CowalkPostsResponse>> getCowalkPosts(
+    public ResponseEntity<CursorResponse<CowalkPostsResponse>> getCowalkPosts(
             @PathVariable Long crewId,
             @RequestParam(required = false) Long lastId,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        CursorPage<CowalkPostsResponse> cowalkPosts = cowalkPostFacade.getCowalkPosts(crewId, size, lastId);
+        CursorResponse<CowalkPostsResponse> cowalkPosts = cowalkPostFacade.getCowalkPosts(crewId, size, lastId);
         return ResponseEntity.ok(cowalkPosts);
     }
 }

@@ -14,7 +14,7 @@ import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,8 +77,8 @@ public class CowalkPostFacade {
         }
     }
 
-    public CursorPage<CowalkPostsResponse> getCowalkPosts(Long crewId, Integer size, Long lastId) {
-        CursorPage<CowalkPost> cowalkPosts = cowalkPostRdbService.getCowalkPosts(size, lastId, crewId);
+    public CursorResponse<CowalkPostsResponse> getCowalkPosts(Long crewId, Integer size, Long lastId) {
+        CursorResponse<CowalkPost> cowalkPosts = cowalkPostRdbService.getCowalkPosts(size, lastId, crewId);
         List<CowalkPost> cowalkPostList = cowalkPosts.getData();
 
         List<Long> memberIds = cowalkPostList.stream()
@@ -99,6 +99,6 @@ public class CowalkPostFacade {
                 commentCountMap
         );
 
-        return new CursorPage<>(cowalkPostsResponseList, cowalkPosts.getHasNext());
+        return new CursorResponse<>(cowalkPostsResponseList, cowalkPosts.getHasNext());
     }
 }

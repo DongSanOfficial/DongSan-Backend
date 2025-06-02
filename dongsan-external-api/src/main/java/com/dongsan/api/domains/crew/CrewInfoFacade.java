@@ -3,7 +3,9 @@ package com.dongsan.api.domains.crew;
 import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
 import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
+import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
 import com.dongsan.domain.domains.crew.domain.Crew;
+import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
 import com.dongsan.domain.domains.crew.service.CrewMemberRdbService;
 import com.dongsan.domain.domains.crew.service.CrewRdbService;
 import com.dongsan.domain.domains.image.ImageRdbService;
@@ -11,8 +13,8 @@ import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.util.CursorResponse;
 import com.dongsan.file.service.S3FileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,16 +70,28 @@ public class CrewInfoFacade {
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<GetCrewFeedResponse> getCrewFeed(Long crewId, Long memberId, CursorRequest paging) {
+    public CursorResponse<GetCrewFeedResponse> getCrewFeed(Long crewId, Long memberId, CursorRequest paging) {
         Crew crew = crewRdbService.getCrew(crewId);
 
         boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
         crew.canAccess(isCrewMember);
 
-        CursorPage<WalkwayLog> walkwayLogs = walkwayLogRdbService.getCrewFeed(crewId, paging.lastId(), paging.size());
+        CursorResponse<WalkwayLog> walkwayLogs = walkwayLogRdbService.getCrewFeed(crewId, paging.lastId(), paging.size());
         List<Long> memberIds = walkwayLogs.getData().stream().map(WalkwayLog::getMemberId).toList();
         Map<Long, Member> memberMap = memberRdbService.getMemberMap(memberIds);
         List<GetCrewFeedResponse> result = GetCrewFeedResponse.from(walkwayLogs, memberMap);
-        return new CursorPage<>(result, walkwayLogs.getHasNext());
+        return new CursorResponse<>(result, walkwayLogs.getHasNext());
+    }
+
+    @Transactional(readOnly = true)
+    public GetCrewInfoResponse getCrewInfo(Long crewId, Long memberId) {
+        Crew crew = crewRdbService.getCrew(crewId);
+
+        boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
+        crew.canAccess(isCrewMember);
+
+        int memberCount = crewMemberRdbService.countCrewMember(crewId);
+        CrewWeeklyStatistic crewWeeklyStat = walkwayLogRdbService.getCrewWeeklyStat(crewId);
+        return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat);
     }
 }

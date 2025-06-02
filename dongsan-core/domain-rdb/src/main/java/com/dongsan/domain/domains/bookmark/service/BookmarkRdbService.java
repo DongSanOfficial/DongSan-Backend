@@ -7,7 +7,7 @@ import com.dongsan.domain.domains.bookmark.domain.MarkedWalkwayRepository;
 import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,18 +83,18 @@ public class BookmarkRdbService {
         return markedWalkwayRepository.existsByMemberIdAndWalkwayId(memberId, walkwayId);
     }
 
-    public CursorPage<Bookmark> getUserBookmark(Long memberId, Long lastBookmarkId, int size) {
+    public CursorResponse<Bookmark> getUserBookmark(Long memberId, Long lastBookmarkId, int size) {
         LocalDateTime lastCreatedAt = getBookmarkCreatedAt(lastBookmarkId);
         return bookmarkRepository.getUserBookmarks(memberId, lastCreatedAt, size);
     }
 
-    public CursorPage<MarkedWalkway> getBookmarkWalkway(Long memberId, Long bookmarkId, Long lastWalkwayId, int size) {
+    public CursorResponse<MarkedWalkway> getBookmarkWalkway(Long memberId, Long bookmarkId, Long lastWalkwayId, int size) {
         LocalDateTime lastCreatedAt = getBookmarkedDate(bookmarkId, lastWalkwayId);
         return markedWalkwayRepository.getBookmarkWalkway(memberId, bookmarkId, lastCreatedAt, size);
     }
 
-    public CursorPage<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long walkwayId, Long memberId,
-                                                                              Long lastBookmarkId, int size) {
+    public CursorResponse<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long walkwayId, Long memberId,
+                                                                                  Long lastBookmarkId, int size) {
         LocalDateTime lastCreatedAt = getBookmarkCreatedAt(lastBookmarkId);
         return bookmarkRepository.getBookmarksWithMarkedStatus(walkwayId, memberId, lastCreatedAt, size);
     }

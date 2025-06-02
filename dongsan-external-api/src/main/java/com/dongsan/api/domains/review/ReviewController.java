@@ -4,11 +4,10 @@ import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.review.dto.CreateReviewRequest;
 import com.dongsan.api.domains.review.dto.CreateReviewResponse;
 import com.dongsan.api.domains.review.dto.WalkwayReviewsResponse;
-import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.domain.domains.review.domain.ReviewStatistic;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithMemberQuery;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.util.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,18 +42,18 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 내용 보기")
     @GetMapping("/{walkwayId}/review/content")
-    public ResponseEntity<CursorResponse<WalkwayReviewsResponse>> getWalkwayReviews(
+    public ResponseEntity<com.dongsan.api.support.response.CursorResponse<WalkwayReviewsResponse>> getWalkwayReviews(
             @PathVariable Long walkwayId,
             @RequestParam String sort,
             @RequestParam(required = false) Long lastId,
             @RequestParam(required = false, defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CursorPage<ReviewWithMemberQuery> response
+        CursorResponse<ReviewWithMemberQuery> response
                 = reviewFacade.getWalkwayReviews(sort, walkwayId, customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
         return ResponseEntity.ok(
-                new CursorResponse<>(WalkwayReviewsResponse.from(response.getData()), response.getHasNext()));
+                new com.dongsan.api.support.response.CursorResponse<>(WalkwayReviewsResponse.from(response.getData()), response.getHasNext()));
     }
 
     @Operation(summary = "리뷰 별점 보기")

@@ -5,9 +5,10 @@ import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
 import com.dongsan.api.domains.crew.dto.request.CreateCrewResponse;
 import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
+import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
 import com.dongsan.api.domains.crew.dto.response.IsNameDuplicatedResponse;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.util.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -39,15 +40,25 @@ public class CrewInfoController {
         return ResponseEntity.ok(new IsNameDuplicatedResponse(isValid));
     }
 
+    @Operation(summary = "크루 정보 조회")
+    @GetMapping("/{crewId}/info")
+    public ResponseEntity<GetCrewInfoResponse> getCrewInfo(
+            @PathVariable Long crewId,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        GetCrewInfoResponse response = crewInfoFacade.getCrewInfo(crewId, customOAuth2User.getMemberId());
+        return ResponseEntity.ok(response);
+    }
+
     @Operation(summary = "크루 피드 조회")
     @GetMapping("/{crewId}/feeds")
-    public ResponseEntity<CursorPage<GetCrewFeedResponse>> getCrewFeed(
+    public ResponseEntity<CursorResponse<GetCrewFeedResponse>> getCrewFeed(
             @PathVariable Long crewId,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CursorPage<GetCrewFeedResponse> response = crewInfoFacade.getCrewFeed(crewId, customOAuth2User.getMemberId(),
+        CursorResponse<GetCrewFeedResponse> response = crewInfoFacade.getCrewFeed(crewId, customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
         return ResponseEntity.ok(response);
     }

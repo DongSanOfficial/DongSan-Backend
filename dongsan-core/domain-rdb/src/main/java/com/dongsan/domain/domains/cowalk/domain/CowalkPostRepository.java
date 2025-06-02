@@ -1,10 +1,9 @@
 package com.dongsan.domain.domains.cowalk.domain;
 
-import java.util.Optional;
-
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.stereotype.Repository;
 
-import com.dongsan.domain.support.util.CursorPage;
+import java.util.Optional;
 
 @Repository
 public interface CowalkPostRepository {
@@ -12,5 +11,5 @@ public interface CowalkPostRepository {
 
     Optional<CowalkPost> findById(Long id);
 
-    CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId);
+    CursorResponse<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId);
 }

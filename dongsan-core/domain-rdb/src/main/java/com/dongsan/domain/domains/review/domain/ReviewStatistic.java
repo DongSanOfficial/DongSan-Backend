@@ -1,6 +1,6 @@
 package com.dongsan.domain.domains.review.domain;
 
-import com.dongsan.domain.domains.review.RatingCalculator;
+import com.dongsan.domain.domains.review.service.RatingCalculator;
 
 import java.util.Map;
 

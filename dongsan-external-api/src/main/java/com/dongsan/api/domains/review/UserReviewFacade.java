@@ -2,8 +2,8 @@ package com.dongsan.api.domains.review;
 
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithWalkwayQuery;
 import com.dongsan.domain.domains.review.service.ReviewRdbService;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +19,7 @@ public class UserReviewFacade {
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<ReviewWithWalkwayQuery> getUserReviews(CursorRequest paging, Long memberId) {
+    public CursorResponse<ReviewWithWalkwayQuery> getUserReviews(CursorRequest paging, Long memberId) {
         LocalDateTime lastCreatedAt = reviewRdbService.getReviewCreatedAt(paging.lastId());
         return reviewRdbService.getUserReviews(memberId, lastCreatedAt, paging.size());
     }

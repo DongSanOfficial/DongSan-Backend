@@ -35,5 +35,10 @@ public class PrivateCrew extends Crew {
         }
     }
 
+    @Override
+    public String provideVisibility() {
+        return CrewExposeLevel.PRIVATE.toString();
+    }
+
 
 }

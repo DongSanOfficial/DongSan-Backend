@@ -9,4 +9,7 @@ public interface CrewMemberRepository {
     boolean existsByCrewIdAndMemberId(Long crewId, Long memberId);
 
     void deleteByCrewIdAndMemberId(Long crewId, Long memberId);
+
+    int countByCrewId(Long crewId);
+    
 }

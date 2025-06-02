@@ -1,4 +1,4 @@
-package com.dongsan.domain.domains.review;
+package com.dongsan.domain.domains.review.service;
 
 import com.dongsan.domain.domains.review.domain.Rating;
 

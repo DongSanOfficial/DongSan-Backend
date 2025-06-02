@@ -2,7 +2,7 @@ package com.dongsan.api.domains.crew.dto.response;
 
 import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorResponse;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +16,7 @@ public record GetCrewFeedResponse(
         double distanceKm,
         int durationSec
 ) {
-    public static List<GetCrewFeedResponse> from(CursorPage<WalkwayLog> walkwayLogs, Map<Long, Member> memberMap) {
+    public static List<GetCrewFeedResponse> from(CursorResponse<WalkwayLog> walkwayLogs, Map<Long, Member> memberMap) {
         return walkwayLogs.getData().stream()
                 .map(walkwayLog -> {
                     Member member = memberMap.get(walkwayLog.getMemberId());

@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.review.dto;
 
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithMemberQuery;
-import com.dongsan.domain.support.format.TimeFormat;
+import com.dongsan.domain.support.util.TimeFormat;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

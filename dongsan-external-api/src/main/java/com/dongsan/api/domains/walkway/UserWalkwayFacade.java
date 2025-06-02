@@ -11,8 +11,8 @@ import com.dongsan.domain.domains.walkway.service.LikedWalkwayRdbService;
 import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,30 +34,30 @@ public class UserWalkwayFacade {
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<WalkwaySimpleResponse> getUserWalkway(Long memberId, CursorRequest paging) {
-        CursorPage<Walkway> walkways = walkwayRdbService.getUserWalkway(memberId, paging.lastId(), paging.size());
+    public CursorResponse<WalkwaySimpleResponse> getUserWalkway(Long memberId, CursorRequest paging) {
+        CursorResponse<Walkway> walkways = walkwayRdbService.getUserWalkway(memberId, paging.lastId(), paging.size());
         List<WalkwaySnapshot> walkwaySnapshots = walkways.getData().stream().map(Walkway::snapshot).toList();
         List<Long> walkwayIds = walkways.getData().stream().map(Walkway::getId).toList();
         Map<Long, ReviewStatistic> reviewStatMap = reviewRdbService.getReviewStats(walkwayIds);
         Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
         List<WalkwaySimpleResponse> responses = WalkwaySimpleResponse.from(walkwaySnapshots, reviewStatMap, likeCountMap);
-        return new CursorPage<>(responses, walkways.getHasNext());
+        return new CursorResponse<>(responses, walkways.getHasNext());
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<WalkwaySimpleResponse> getUserLikedWalkway(Long memberId, CursorRequest paging) {
-        CursorPage<Walkway> walkways = walkwayRdbService.getUserLikedWalkway(memberId, paging.lastId(), paging.size());
+    public CursorResponse<WalkwaySimpleResponse> getUserLikedWalkway(Long memberId, CursorRequest paging) {
+        CursorResponse<Walkway> walkways = walkwayRdbService.getUserLikedWalkway(memberId, paging.lastId(), paging.size());
         List<WalkwaySnapshot> walkwaySnapshots = walkways.getData().stream().map(Walkway::snapshot).toList();
         List<Long> walkwayIds = walkways.getData().stream().map(Walkway::getId).toList();
         Map<Long, ReviewStatistic> reviewStatMap = reviewRdbService.getReviewStats(walkwayIds);
         Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
         List<WalkwaySimpleResponse> responses = WalkwaySimpleResponse.from(walkwaySnapshots, reviewStatMap, likeCountMap);
-        return new CursorPage<>(responses, walkways.getHasNext());
+        return new CursorResponse<>(responses, walkways.getHasNext());
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<WalkwayLogWithReviewResponse> getUserWalkwayHistoryWithReview(Long memberId, CursorRequest paging) {
-        CursorPage<WalkwayLog> walkwayLogs = walkwayLogRdbService.getUserWalkwayLog(memberId, paging.lastId(), paging.size());
+    public CursorResponse<WalkwayLogWithReviewResponse> getUserWalkwayHistoryWithReview(Long memberId, CursorRequest paging) {
+        CursorResponse<WalkwayLog> walkwayLogs = walkwayLogRdbService.getUserWalkwayLog(memberId, paging.lastId(), paging.size());
         List<Long> walkwayIds = walkwayLogs.getData().stream().map(WalkwayLog::getWalkwayId).toList();
         List<Long> walkwayLogIds = walkwayLogs.getData().stream().map(WalkwayLog::getId).toList();
         Map<Long, Walkway> walkwayMap = walkwayRdbService.getWalkways(walkwayIds);  // {walkwayId, Walkway}
@@ -65,7 +65,7 @@ public class UserWalkwayFacade {
         Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);  // {walkwayId, likeCount}
         Map<Long, Review> reviewMap = reviewRdbService.getReviews(walkwayLogIds);  // {walkwayLogId, Review}
         List<WalkwayLogWithReviewResponse> response = WalkwayLogWithReviewResponse.from(walkwayLogs.getData(), walkwayMap, reviewMap, reviewStatMap, likeCountMap);
-        return new CursorPage<>(response, walkwayLogs.getHasNext());
+        return new CursorResponse<>(response, walkwayLogs.getHasNext());
     }
 
 

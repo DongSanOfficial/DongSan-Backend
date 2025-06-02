@@ -9,7 +9,7 @@ import com.dongsan.domain.domains.walkway.domain.WalkwayInfo;
 import com.dongsan.domain.domains.walkway.domain.WalkwayRepository;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,12 +77,12 @@ public class WalkwayRdbService {
         walkwayRepository.delete(walkway);
     }
 
-    public CursorPage<Walkway> getUserWalkway(Long memberId, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> getUserWalkway(Long memberId, Long lastWalkwayId, int size) {
         LocalDateTime lastCreatedAt = getWalkwayCreatedAt(lastWalkwayId, memberId);
         return walkwayRepository.getUserWalkway(memberId, lastCreatedAt, size);
     }
 
-    public CursorPage<Walkway> getUserLikedWalkway(Long memberId, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> getUserLikedWalkway(Long memberId, Long lastWalkwayId, int size) {
         LocalDateTime lastCreatedAt = getWalkwayCreatedAt(lastWalkwayId, memberId);
         return walkwayRepository.getUserLikedWalkway(memberId, lastCreatedAt, size);
     }
@@ -93,15 +93,15 @@ public class WalkwayRdbService {
     }
 
 
-    public CursorPage<Walkway> getWalkwaysLatest(Long memberId, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> getWalkwaysLatest(Long memberId, Long lastWalkwayId, int size) {
         return walkwayRepository.getWalkwaysByLatest(memberId, lastWalkwayId, size);
     }
 
-    public CursorPage<Walkway> getWalkwaysLiked(Long memberId, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> getWalkwaysLiked(Long memberId, Long lastWalkwayId, int size) {
         return walkwayRepository.getWalkwaysByLiked(memberId, lastWalkwayId, size);
     }
 
-    public CursorPage<Walkway> getWalkwaysRating(Long memberId, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> getWalkwaysRating(Long memberId, Long lastWalkwayId, int size) {
         return walkwayRepository.getWalkwaysByRating(memberId, lastWalkwayId, size);
     }
 

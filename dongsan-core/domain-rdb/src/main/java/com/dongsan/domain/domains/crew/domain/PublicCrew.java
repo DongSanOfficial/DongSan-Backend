@@ -18,4 +18,9 @@ public class PublicCrew extends Crew {
     public void canAccess(boolean isCrewMember) {
         // 공개 크루는 무조건 접근 가능
     }
+
+    @Override
+    public String provideVisibility() {
+        return CrewExposeLevel.PUBLIC.toString();
+    }
 }

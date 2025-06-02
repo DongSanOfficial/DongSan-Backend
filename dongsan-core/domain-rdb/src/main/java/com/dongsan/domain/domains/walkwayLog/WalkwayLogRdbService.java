@@ -1,11 +1,14 @@
 package com.dongsan.domain.domains.walkwayLog;
 
 import com.dongsan.domain.domains.common.BaseEntity;
+import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.util.WeekRangeUtil;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -41,13 +44,19 @@ public class WalkwayLogRdbService {
         walkwayLogRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
-    public CursorPage<WalkwayLog> getUserWalkwayLog(Long memberId, Long lastWalkwayLogId, int size) {
+    public CursorResponse<WalkwayLog> getUserWalkwayLog(Long memberId, Long lastWalkwayLogId, int size) {
         LocalDateTime lastCreatedAt = getWalkwayLogCreatedAt(lastWalkwayLogId);
         return walkwayLogRepository.getUserWalkwayLog(memberId, lastCreatedAt, size);
     }
 
-    public CursorPage<WalkwayLog> getCrewFeed(Long crewId, Long lastWalkwayLogId, int size) {
+    public CursorResponse<WalkwayLog> getCrewFeed(Long crewId, Long lastWalkwayLogId, int size) {
         LocalDateTime lastCreatedAt = getWalkwayLogCreatedAt(lastWalkwayLogId);
         return walkwayLogRepository.getCrewWalkwayLog(crewId, lastCreatedAt, size);
+    }
+
+    public CrewWeeklyStatistic getCrewWeeklyStat(Long crewId) {
+        LocalDate startOfWeek = WeekRangeUtil.getStartOfWeek(LocalDate.now());
+        LocalDate endOfWeek = WeekRangeUtil.getEndOfWeek(LocalDate.now());
+        return walkwayLogRepository.getCrewWeeklyStat(crewId, startOfWeek, endOfWeek);
     }
 }

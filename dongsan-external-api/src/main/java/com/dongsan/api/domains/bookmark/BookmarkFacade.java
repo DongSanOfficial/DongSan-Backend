@@ -8,8 +8,8 @@ import com.dongsan.domain.domains.review.service.ReviewRdbService;
 import com.dongsan.domain.domains.walkway.domain.Walkway;
 import com.dongsan.domain.domains.walkway.service.LikedWalkwayRdbService;
 import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,14 +54,14 @@ public class BookmarkFacade {
         bookmarkRdbService.delete(memberId, walkwayId);
     }
 
-    public CursorPage<Bookmark> getUserBookmark(Long memberId, CursorRequest paging) {
+    public CursorResponse<Bookmark> getUserBookmark(Long memberId, CursorRequest paging) {
         return bookmarkRdbService.getUserBookmark(memberId, paging.lastId(), paging.size());
     }
 
-    public CursorPage<MarkedWalkwayResponse> getBookmarkWalkways(Long memberId, Long bookmarkId, CursorRequest paging) {
+    public CursorResponse<MarkedWalkwayResponse> getBookmarkWalkways(Long memberId, Long bookmarkId, CursorRequest paging) {
         Bookmark bookmark = bookmarkRdbService.getBookmark(bookmarkId);
         bookmark.validateOwner(memberId);
-        CursorPage<MarkedWalkway> markedWalkways = bookmarkRdbService.getBookmarkWalkway(memberId, bookmarkId, paging.lastId(), paging.size());
+        CursorResponse<MarkedWalkway> markedWalkways = bookmarkRdbService.getBookmarkWalkway(memberId, bookmarkId, paging.lastId(), paging.size());
 
         List<Long> walkwayIds = markedWalkways.getData().stream().map(MarkedWalkway::getWalkwayId).toList();
         Map<Long, Walkway> walkwayMap = walkwayRdbService.getWalkways(walkwayIds);
@@ -69,7 +69,7 @@ public class BookmarkFacade {
         Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
 
         List<MarkedWalkwayResponse> response = MarkedWalkwayResponse.from(markedWalkways.getData(), walkwayMap, reviewStatMap, likeCountMap);
-        return new CursorPage<>(response, markedWalkways.getHasNext());
+        return new CursorResponse<>(response, markedWalkways.getHasNext());
     }
 
 }

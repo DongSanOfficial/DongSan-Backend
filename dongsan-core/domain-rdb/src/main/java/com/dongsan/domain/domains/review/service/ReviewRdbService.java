@@ -1,15 +1,15 @@
 package com.dongsan.domain.domains.review.service;
 
 import com.dongsan.domain.domains.review.domain.Review;
+import com.dongsan.domain.domains.review.domain.ReviewRepository;
 import com.dongsan.domain.domains.review.domain.ReviewStatistic;
 import com.dongsan.domain.domains.review.factory.GetReviewsFactory;
 import com.dongsan.domain.domains.review.factory.ReviewSort;
-import com.dongsan.domain.support.error.CoreErrorCode;
-import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
-import com.dongsan.domain.domains.review.domain.ReviewRepository;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithWalkwayQuery;
+import com.dongsan.domain.support.error.CoreErrorCode;
+import com.dongsan.domain.support.error.CoreException;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -43,12 +43,12 @@ public class ReviewRdbService {
         return getReview(reviewId).getCreatedAt();
     }
 
-    public CursorPage<ReviewWithMemberQuery> getWalkwayReviews(Long walkwayId, ReviewSort sort, Review review, int size) {
+    public CursorResponse<ReviewWithMemberQuery> getWalkwayReviews(Long walkwayId, ReviewSort sort, Review review, int size) {
         return getReviewsServiceFactory.getService(sort)
                 .search(walkwayId, review, size);
     }
 
-    public CursorPage<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size) {
         return reviewRepository.getUserReviews(memberId, lastCreatedAt, size);
     }
 

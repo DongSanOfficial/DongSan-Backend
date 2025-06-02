@@ -2,7 +2,7 @@ package com.dongsan.domain.domains.review.domain;
 
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithWalkwayQuery;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.util.CursorResponse;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -16,11 +16,11 @@ public interface ReviewRepository {
 
     Optional<Review> findById(Long reviewId);
 
-    CursorPage<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size);
+    CursorResponse<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size);
 
-    CursorPage<ReviewWithMemberQuery> getWalkwayReviewsLatest(Long walkwayId, LocalDateTime lastCreatedAt, int size);
+    CursorResponse<ReviewWithMemberQuery> getWalkwayReviewsLatest(Long walkwayId, LocalDateTime lastCreatedAt, int size);
 
-    CursorPage<ReviewWithMemberQuery> getWalkwayReviewsRating(Long walkwayId, Integer lastRating, LocalDateTime lastCreatedAt, int size);
+    CursorResponse<ReviewWithMemberQuery> getWalkwayReviewsRating(Long walkwayId, Integer lastRating, LocalDateTime lastCreatedAt, int size);
 
     ReviewStatistic getReviewStat(Long walkwayId);
 

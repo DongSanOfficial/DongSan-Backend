@@ -22,8 +22,8 @@ import com.dongsan.domain.domains.walkway.service.MetaWalkwayRatingRdbService;
 import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.util.CursorResponse;
 import com.dongsan.file.service.S3FileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,8 +94,8 @@ public class WalkwayFacade {
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long memberId, Long walkwayId,
-                                                                              CursorRequest paging) {
+    public CursorResponse<BookmarkWithMarkedStatus> getBookmarksWithMarkedWalkway(Long memberId, Long walkwayId,
+                                                                                  CursorRequest paging) {
         walkwayRdbService.getWalkway(walkwayId);
         return bookmarkRdbService.getBookmarksWithMarkedWalkway(walkwayId, memberId, paging.lastId(), paging.size());
     }
@@ -119,8 +119,8 @@ public class WalkwayFacade {
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<SearchWalkwayResponse> searchWalkway(SearchWalkwayQuery searchQuery, CursorRequest paging) {
-        CursorPage<Walkway> walkways = searchWalkwayFactory.getService(searchQuery.sort()).search(searchQuery, paging);
+    public CursorResponse<SearchWalkwayResponse> searchWalkway(SearchWalkwayQuery searchQuery, CursorRequest paging) {
+        CursorResponse<Walkway> walkways = searchWalkwayFactory.getService(searchQuery.sort()).search(searchQuery, paging);
         List<Long> walkwayIds = walkways.getData().stream().map(Walkway::getId).toList();
         List<WalkwaySnapshot> walkwaySnapshots = walkways.getData().stream().map(Walkway::snapshot).toList();
 
@@ -129,13 +129,13 @@ public class WalkwayFacade {
         Set<Long> likedWalkwaySet = likedWalkwayRdbService.likedWalkways(searchQuery.memberId(), walkwayIds);
 
         List<SearchWalkwayResponse> response = SearchWalkwayResponse.from(walkwaySnapshots, reviewStatMap, likeCountMap, likedWalkwaySet);
-        return new CursorPage<>(response, walkways.getHasNext());
+        return new CursorResponse<>(response, walkways.getHasNext());
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<SearchWalkwayResponse> getWalkwaysLatest(Long memberId, String sortType, CursorRequest paging) {
+    public CursorResponse<SearchWalkwayResponse> getWalkwaysLatest(Long memberId, String sortType, CursorRequest paging) {
         WalkwaySort sort = WalkwaySort.typeOf(sortType);
-        CursorPage<Walkway> walkways = switch (sort) {
+        CursorResponse<Walkway> walkways = switch (sort) {
             case LIKED -> walkwayRdbService.getWalkwaysLiked(memberId, paging.lastId(), paging.size());
             case RATING -> walkwayRdbService.getWalkwaysRating(memberId, paging.lastId(), paging.size());
             default -> walkwayRdbService.getWalkwaysLatest(memberId, paging.lastId(), paging.size());
@@ -148,7 +148,7 @@ public class WalkwayFacade {
         Set<Long> likedWalkwaySet = likedWalkwayRdbService.likedWalkways(memberId, walkwayIds);
 
         List<SearchWalkwayResponse> response = SearchWalkwayResponse.from(walkwaySnapshots, reviewStatMap, likeCountMap, likedWalkwaySet);
-        return new CursorPage<>(response, walkways.getHasNext());
+        return new CursorResponse<>(response, walkways.getHasNext());
     }
 
 }
