@@ -5,7 +5,7 @@ import com.dongsan.domain.domains.review.domain.*;
 import com.dongsan.domain.domains.walkway.domain.QWalkway;
 import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
 import com.dongsan.domain.domains.walkwayLog.QWalkwayLog;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;

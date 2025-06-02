@@ -6,7 +6,7 @@ import com.dongsan.api.domains.cowalk.dto.response.CowalkPostDetailResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostsResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CreateCowalkPostResponse;
 import com.dongsan.api.domains.cowalk.dto.response.JoinCowalkParticipantResponse;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

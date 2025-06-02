@@ -1,6 +1,6 @@
 package com.dongsan.domain.domains.bookmark.domain;
 
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

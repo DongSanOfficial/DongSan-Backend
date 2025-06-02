@@ -2,8 +2,8 @@ package com.dongsan.api.domains.review;
 
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithWalkwayQuery;
 import com.dongsan.domain.domains.review.service.ReviewRdbService;
-import com.dongsan.domain.support.util.CursorRequest;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

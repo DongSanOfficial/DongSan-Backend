@@ -1,7 +1,8 @@
 package com.dongsan.domain.domains.walkwayLog;
 
+import com.dongsan.domain.domains.crew.domain.CrewMemberStatistic;
 import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -18,7 +19,12 @@ public interface WalkwayLogRepository {
 
     CursorResponse<WalkwayLog> getCrewWalkwayLog(Long crewId, LocalDateTime lastCreatedAt, int size);
 
-    void deleteAllInBatchByWalkwayId(Long walkwayId);
+    CursorResponse<CrewMemberStatistic> getCrewRankingByDistance(Long crewId, Long lastMemberId, LocalDate startDay, LocalDate endDay, int size);
+
+    CursorResponse<CrewMemberStatistic> getCrewRankingByTime(Long crewId, Long lastMemberId, LocalDate startDay, LocalDate endDay, int size);
 
     CrewWeeklyStatistic getCrewWeeklyStat(Long crewId, LocalDate startOfWeek, LocalDate endOfWeek);
+
+    void deleteAllInBatchByWalkwayId(Long walkwayId);
+
 }

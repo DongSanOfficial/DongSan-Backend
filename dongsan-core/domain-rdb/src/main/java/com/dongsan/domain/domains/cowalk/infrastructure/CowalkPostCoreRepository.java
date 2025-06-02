@@ -3,7 +3,7 @@ package com.dongsan.domain.domains.cowalk.infrastructure;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPostRepository;
 import com.dongsan.domain.domains.cowalk.domain.QCowalkPost;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;

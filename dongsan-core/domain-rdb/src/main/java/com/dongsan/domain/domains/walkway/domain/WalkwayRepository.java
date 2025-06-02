@@ -1,7 +1,7 @@
 package com.dongsan.domain.domains.walkway.domain;
 
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

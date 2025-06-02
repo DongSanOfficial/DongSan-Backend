@@ -2,8 +2,8 @@ package com.dongsan.api.domains.bookmark;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.domain.domains.bookmark.domain.Bookmark;
-import com.dongsan.domain.support.util.CursorRequest;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

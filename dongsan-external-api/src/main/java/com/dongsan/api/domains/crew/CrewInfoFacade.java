@@ -4,7 +4,10 @@ import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
 import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
+import com.dongsan.api.domains.crew.dto.response.GetCrewMemberRankingResponse;
+import com.dongsan.api.support.util.DateRangeUtil;
 import com.dongsan.domain.domains.crew.domain.Crew;
+import com.dongsan.domain.domains.crew.domain.CrewMemberStatistic;
 import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
 import com.dongsan.domain.domains.crew.service.CrewMemberRdbService;
 import com.dongsan.domain.domains.crew.service.CrewRdbService;
@@ -13,13 +16,14 @@ import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
-import com.dongsan.domain.support.util.CursorRequest;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +76,6 @@ public class CrewInfoFacade {
     @Transactional(readOnly = true)
     public CursorResponse<GetCrewFeedResponse> getCrewFeed(Long crewId, Long memberId, CursorRequest paging) {
         Crew crew = crewRdbService.getCrew(crewId);
-
         boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
         crew.canAccess(isCrewMember);
 
@@ -86,12 +89,33 @@ public class CrewInfoFacade {
     @Transactional(readOnly = true)
     public GetCrewInfoResponse getCrewInfo(Long crewId, Long memberId) {
         Crew crew = crewRdbService.getCrew(crewId);
-
         boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
         crew.canAccess(isCrewMember);
 
         int memberCount = crewMemberRdbService.countCrewMember(crewId);
-        CrewWeeklyStatistic crewWeeklyStat = walkwayLogRdbService.getCrewWeeklyStat(crewId);
+        LocalDate startDate = DateRangeUtil.getStartOfWeek(LocalDate.now());
+        LocalDate endDate = DateRangeUtil.getEndOfWeek(LocalDate.now());
+        CrewWeeklyStatistic crewWeeklyStat = walkwayLogRdbService.getCrewWeeklyStat(crewId, startDate, endDate);
         return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat);
+    }
+
+    public CursorResponse<GetCrewMemberRankingResponse> getCrewMemberRanking(Long crewId, Long memberId, LocalDate date,
+                                                                             CrewRankingSort sort, CrewRankingPeriod period, CursorRequest paging) {
+        Crew crew = crewRdbService.getCrew(crewId);
+        boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
+        crew.canAccess(isCrewMember);
+
+        LocalDate startDay = DateRangeUtil.getStartDay(date, period);
+        LocalDate endDay = DateRangeUtil.getEndDay(date, period);
+        CursorResponse<CrewMemberStatistic> response = switch (sort) {
+            case DISTANCE ->
+                    walkwayLogRdbService.getCrewRankingByDistance(crewId, paging.lastId(), startDay, endDay, paging.size());
+            case DURATION ->
+                    walkwayLogRdbService.getCrewRankingByTime(crewId, paging.lastId(), startDay, endDay, paging.size());
+        };
+        List<Long> memberIds = response.getData().stream().map(CrewMemberStatistic::memberId).toList();
+        Map<Long, Member> memberMap = memberRdbService.getMemberMap(memberIds);
+        List<GetCrewMemberRankingResponse> result = GetCrewMemberRankingResponse.from(response.getData(), memberMap);
+        return new CursorResponse<>(result, response.getHasNext());
     }
 }

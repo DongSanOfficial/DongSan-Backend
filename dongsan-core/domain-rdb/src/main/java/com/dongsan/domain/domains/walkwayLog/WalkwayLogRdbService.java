@@ -1,11 +1,11 @@
 package com.dongsan.domain.domains.walkwayLog;
 
 import com.dongsan.domain.domains.common.BaseEntity;
+import com.dongsan.domain.domains.crew.domain.CrewMemberStatistic;
 import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorResponse;
-import com.dongsan.domain.support.util.WeekRangeUtil;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -54,9 +54,15 @@ public class WalkwayLogRdbService {
         return walkwayLogRepository.getCrewWalkwayLog(crewId, lastCreatedAt, size);
     }
 
-    public CrewWeeklyStatistic getCrewWeeklyStat(Long crewId) {
-        LocalDate startOfWeek = WeekRangeUtil.getStartOfWeek(LocalDate.now());
-        LocalDate endOfWeek = WeekRangeUtil.getEndOfWeek(LocalDate.now());
-        return walkwayLogRepository.getCrewWeeklyStat(crewId, startOfWeek, endOfWeek);
+    public CrewWeeklyStatistic getCrewWeeklyStat(Long crewId, LocalDate startDay, LocalDate endDay) {
+        return walkwayLogRepository.getCrewWeeklyStat(crewId, startDay, endDay);
+    }
+
+    public CursorResponse<CrewMemberStatistic> getCrewRankingByDistance(Long crewId, Long memberId, LocalDate startDay, LocalDate endDay, int size) {
+        return walkwayLogRepository.getCrewRankingByDistance(crewId, memberId, startDay, endDay, size);
+    }
+
+    public CursorResponse<CrewMemberStatistic> getCrewRankingByTime(Long crewId, Long memberId, LocalDate startDay, LocalDate endDay, int size) {
+        return walkwayLogRepository.getCrewRankingByTime(crewId, memberId, startDay, endDay, size);
     }
 }

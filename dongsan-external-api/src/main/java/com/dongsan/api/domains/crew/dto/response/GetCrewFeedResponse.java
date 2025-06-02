@@ -2,7 +2,7 @@ package com.dongsan.api.domains.crew.dto.response;
 
 import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 
 import java.time.LocalDate;
 import java.util.List;

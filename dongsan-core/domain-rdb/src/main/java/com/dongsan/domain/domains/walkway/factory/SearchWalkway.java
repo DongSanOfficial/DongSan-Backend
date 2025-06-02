@@ -3,8 +3,8 @@ package com.dongsan.domain.domains.walkway.factory;
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.domain.domains.walkway.WalkwaySort;
 import com.dongsan.domain.domains.walkway.domain.Walkway;
-import com.dongsan.domain.support.util.CursorRequest;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 
 public interface SearchWalkway {
     WalkwaySort getSortType();

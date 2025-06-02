@@ -7,7 +7,7 @@ import com.dongsan.domain.domains.bookmark.domain.QBookmark;
 import com.dongsan.domain.domains.bookmark.domain.QMarkedWalkway;
 import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
 import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedWalkwayParam;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

@@ -8,8 +8,8 @@ import com.dongsan.domain.domains.review.service.ReviewRdbService;
 import com.dongsan.domain.domains.walkway.domain.Walkway;
 import com.dongsan.domain.domains.walkway.service.LikedWalkwayRdbService;
 import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
-import com.dongsan.domain.support.util.CursorRequest;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

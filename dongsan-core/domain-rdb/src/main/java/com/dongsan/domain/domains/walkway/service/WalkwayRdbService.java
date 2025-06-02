@@ -9,7 +9,7 @@ import com.dongsan.domain.domains.walkway.domain.WalkwayInfo;
 import com.dongsan.domain.domains.walkway.domain.WalkwayRepository;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.locationtech.jts.geom.LineString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -4,8 +4,8 @@ import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.domain.domains.walkway.WalkwaySort;
 import com.dongsan.domain.domains.walkway.domain.Walkway;
 import com.dongsan.domain.domains.walkway.domain.WalkwayRepository;
-import com.dongsan.domain.support.util.CursorRequest;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

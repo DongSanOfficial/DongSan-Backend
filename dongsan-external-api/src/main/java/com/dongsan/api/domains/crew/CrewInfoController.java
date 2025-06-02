@@ -3,12 +3,9 @@ package com.dongsan.api.domains.crew;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
 import com.dongsan.api.domains.crew.dto.request.CreateCrewResponse;
-import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
-import com.dongsan.api.domains.crew.dto.response.IsNameDuplicatedResponse;
-import com.dongsan.domain.support.util.CursorRequest;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.api.domains.crew.dto.response.*;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,6 +16,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/crews")
@@ -60,6 +59,25 @@ public class CrewInfoController {
     ) {
         CursorResponse<GetCrewFeedResponse> response = crewInfoFacade.getCrewFeed(crewId, customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "크루원 랭킹 조회")
+    @GetMapping("/{crewId}/ranking")
+    public ResponseEntity<CursorResponse<GetCrewMemberRankingResponse>> getCrewMemberRanking(
+            @PathVariable Long crewId,
+            @RequestParam String period,
+            @RequestParam LocalDate date,
+            @RequestParam String sort,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) Long lastId,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        CrewRankingSort rankingSort = CrewRankingSort.typeOf(sort);
+        CrewRankingPeriod rankingPeriod = CrewRankingPeriod.typeOf(period);
+        CursorRequest cursorRequest = new CursorRequest(lastId, size);
+        CursorResponse<GetCrewMemberRankingResponse> response = crewInfoFacade.getCrewMemberRanking(crewId, customOAuth2User.getMemberId(), date,
+                rankingSort, rankingPeriod, cursorRequest);
         return ResponseEntity.ok(response);
     }
 

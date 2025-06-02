@@ -7,7 +7,7 @@ import com.dongsan.domain.domains.bookmark.domain.QMarkedWalkway;
 import com.dongsan.domain.domains.common.BaseEntity;
 import com.dongsan.domain.domains.walkway.domain.QWalkway;
 import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;

@@ -1,17 +1,17 @@
-package com.dongsan.domain.support.util;
+package com.dongsan.api.support.util;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class TimeFormat {
+public class TimeFormatUtil {
     public static final int SEC = 60;
     public static final int MIN = 60;
     public static final int HOUR = 24;
     public static final int DAY = 7;
     public static final int WEEK = 4;
     public static final int MONTH = 12;
-    
-    private TimeFormat() {
+
+    private TimeFormatUtil() {
     }
 
     public static String formatTimeString(LocalDateTime createdAt) {

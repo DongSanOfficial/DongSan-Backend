@@ -2,7 +2,7 @@ package com.dongsan.domain.domains.review.domain;
 
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithWalkwayQuery;
-import com.dongsan.domain.support.util.CursorResponse;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

@@ -55,6 +55,9 @@ public enum CoreErrorCode {
     CREW_NOT_JOINED(CoreErrorStatus.FORBIDDEN, "CREW-08", "해당 크루에 가입되어 있지 않습니다."),
     CREW_ALREADY_JOINED(CoreErrorStatus.CONFLICT, "CREW-09", "이미 해당 크루에 가입되어 있습니다."),
     CREW_CANT_ACCESS(CoreErrorStatus.FORBIDDEN, "CREW-10", "해당 크루에 접근할 수 없습니다. (가입하지 않은 비공개크루)"),
+    CREW_INVALID_SORT(CoreErrorStatus.BAD_REQUEST, "CREW-11", "존재하지 않는 정렬 방식 입니다. (지원 정렬 방식 : distance, duration"),
+    CREW_INVALID_PERIOD(CoreErrorStatus.BAD_REQUEST, "CREW-12", "지원하지 않는 기간 입니다. (지원 기간 : daily, weekly, monthly"),
+
 
     // cowalk
     COWALK_NOT_FOUND(CoreErrorStatus.NOT_FOUND, "COWALK-01", "존재하지 않는 같이 산책 입니다."),
