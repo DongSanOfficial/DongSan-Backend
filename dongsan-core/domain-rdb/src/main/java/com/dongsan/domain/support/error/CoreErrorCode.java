@@ -54,6 +54,7 @@ public enum CoreErrorCode {
     CREW_NAME_DUPLICATED(CoreErrorStatus.BAD_REQUEST, "CREW-07", "동일한 크루 이름이 이미 존재합니다."),
     CREW_NOT_JOINED(CoreErrorStatus.FORBIDDEN, "CREW-08", "해당 크루에 가입되어 있지 않습니다."),
     CREW_ALREADY_JOINED(CoreErrorStatus.CONFLICT, "CREW-09", "이미 해당 크루에 가입되어 있습니다."),
+    CREW_CANT_ACCESS(CoreErrorStatus.FORBIDDEN, "CREW-10", "해당 크루에 접근할 수 없습니다. (가입하지 않은 비공개크루)"),
 
     // cowalk
     COWALK_NOT_FOUND(CoreErrorStatus.NOT_FOUND, "COWALK-01", "존재하지 않는 같이 산책 입니다."),

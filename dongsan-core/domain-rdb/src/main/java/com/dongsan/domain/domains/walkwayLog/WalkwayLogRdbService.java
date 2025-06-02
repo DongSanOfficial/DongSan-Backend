@@ -46,4 +46,8 @@ public class WalkwayLogRdbService {
         return walkwayLogRepository.getUserWalkwayLog(memberId, lastCreatedAt, size);
     }
 
+    public CursorPage<WalkwayLog> getCrewFeed(Long crewId, Long lastWalkwayLogId, int size) {
+        LocalDateTime lastCreatedAt = getWalkwayLogCreatedAt(lastWalkwayLogId);
+        return walkwayLogRepository.getCrewWalkwayLog(crewId, lastCreatedAt, size);
+    }
 }

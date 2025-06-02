@@ -4,7 +4,7 @@ import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.response.SearchWalkwayResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayDetailResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayHistoryResponse;
-import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedStatus;
+import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
 import com.dongsan.domain.domains.bookmark.service.BookmarkRdbService;
 import com.dongsan.domain.domains.image.ImageRdbService;
 import com.dongsan.domain.domains.review.domain.ReviewStatistic;

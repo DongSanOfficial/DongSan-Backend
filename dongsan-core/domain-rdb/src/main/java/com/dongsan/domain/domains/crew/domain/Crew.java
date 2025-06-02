@@ -59,7 +59,10 @@ public abstract class Crew extends BaseEntity {
         }
     }
 
+    public abstract void canAccess(boolean isCrewMember);
+
     public Long getId() {
         return id;
     }
+
 }

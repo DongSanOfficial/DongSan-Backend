@@ -1,13 +1,13 @@
 package com.dongsan.domain.domains.bookmark.infrastructure;
 
 
-import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedStatus;
-import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedWalkwayParam;
+import com.dongsan.domain.domains.bookmark.domain.Bookmark;
 import com.dongsan.domain.domains.bookmark.domain.BookmarkRepository;
 import com.dongsan.domain.domains.bookmark.domain.QBookmark;
 import com.dongsan.domain.domains.bookmark.domain.QMarkedWalkway;
+import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
+import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedWalkwayParam;
 import com.dongsan.domain.support.util.CursorPage;
-import com.dongsan.domain.domains.bookmark.domain.Bookmark;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

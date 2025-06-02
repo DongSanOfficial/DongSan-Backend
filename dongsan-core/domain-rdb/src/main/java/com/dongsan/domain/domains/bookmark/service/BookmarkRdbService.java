@@ -1,13 +1,13 @@
 package com.dongsan.domain.domains.bookmark.service;
 
-import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedStatus;
-import com.dongsan.domain.domains.bookmark.domain.MarkedWalkwayRepository;
-import com.dongsan.domain.support.error.CoreErrorCode;
-import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
 import com.dongsan.domain.domains.bookmark.domain.Bookmark;
 import com.dongsan.domain.domains.bookmark.domain.BookmarkRepository;
 import com.dongsan.domain.domains.bookmark.domain.MarkedWalkway;
+import com.dongsan.domain.domains.bookmark.domain.MarkedWalkwayRepository;
+import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
+import com.dongsan.domain.support.error.CoreErrorCode;
+import com.dongsan.domain.support.error.CoreException;
+import com.dongsan.domain.support.util.CursorPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

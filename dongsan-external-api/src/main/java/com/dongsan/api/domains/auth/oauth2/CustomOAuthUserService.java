@@ -5,8 +5,8 @@ import com.dongsan.api.domains.auth.CustomAccessDeniedHandler;
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.domain.domains.auth.Provider;
 import com.dongsan.domain.domains.member.Member;
+import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.domains.member.MemberRole;
-import com.dongsan.domain.domains.member.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -26,10 +26,10 @@ import java.util.Map;
 public class CustomOAuthUserService extends DefaultOAuth2UserService {
     private static final Logger log = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
 
-    private final MemberService memberService;
+    private final MemberRdbService memberRdbService;
 
-    public CustomOAuthUserService(MemberService memberService) {
-        this.memberService = memberService;
+    public CustomOAuthUserService(MemberRdbService memberRdbService) {
+        this.memberRdbService = memberRdbService;
     }
 
     /**
@@ -56,8 +56,8 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
             oAuth2Attributes = OAuth2Attributes.of(provider, attributes);
         }
 
-        Member member = memberService.getOptionalMemberByEmailAndProvider(oAuth2Attributes.email(), provider)
-                .orElseGet(() -> memberService.save(oAuth2Attributes.email(), oAuth2Attributes.nickname(),
+        Member member = memberRdbService.getOptionalMemberByEmailAndProvider(oAuth2Attributes.email(), provider)
+                .orElseGet(() -> memberRdbService.save(oAuth2Attributes.email(), oAuth2Attributes.nickname(),
                         null, MemberRole.ROLE_USER, provider));
         log.info("[AUTH] 로그인 이메일 : %s".formatted(member.getEmail()));
         AuthUserDto user = new AuthUserDto(member);

@@ -1,4 +1,4 @@
-package com.dongsan.domain.domains.bookmark;
+package com.dongsan.domain.domains.bookmark.infrastructure.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;

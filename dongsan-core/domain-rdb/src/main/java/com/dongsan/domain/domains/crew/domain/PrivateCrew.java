@@ -28,5 +28,12 @@ public class PrivateCrew extends Crew {
         }
     }
 
+    @Override
+    public void canAccess(boolean isCrewMember) {
+        if (!isCrewMember) {
+            throw new CoreException(CoreErrorCode.CREW_CANT_ACCESS);
+        }
+    }
+
 
 }

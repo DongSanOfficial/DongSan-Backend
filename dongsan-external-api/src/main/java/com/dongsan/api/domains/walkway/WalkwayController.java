@@ -6,7 +6,7 @@ import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.response.*;
 import com.dongsan.api.support.response.CursorResponse;
-import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedStatus;
+import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.domain.domains.walkway.UpdateWalkwayCommand;
 import com.dongsan.domain.support.util.CursorPage;

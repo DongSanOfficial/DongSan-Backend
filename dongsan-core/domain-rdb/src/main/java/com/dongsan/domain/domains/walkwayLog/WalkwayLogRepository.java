@@ -14,6 +14,8 @@ public interface WalkwayLogRepository {
 
     CursorPage<WalkwayLog> getUserWalkwayLog(Long memberId, LocalDateTime lastCreatedAt, int size);
 
+    CursorPage<WalkwayLog> getCrewWalkwayLog(Long crewId, LocalDateTime lastCreatedAt, int size);
+
     void deleteAllInBatchByWalkwayId(Long walkwayId);
 
 }

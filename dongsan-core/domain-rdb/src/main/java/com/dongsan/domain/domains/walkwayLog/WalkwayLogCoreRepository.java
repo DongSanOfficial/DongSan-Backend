@@ -1,5 +1,6 @@
 package com.dongsan.domain.domains.walkwayLog;
 
+import com.dongsan.domain.domains.crew.domain.QCrewMember;
 import com.dongsan.domain.support.util.CursorPage;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,7 +14,8 @@ import java.util.Optional;
 public class WalkwayLogCoreRepository implements WalkwayLogRepository {
     private final WalkwayLogJpaRepository walkwayLogJpaRepository;
     private final JPAQueryFactory queryFactory;
-    private final QWalkwayLog walkwayLog = QWalkwayLog.walkwayLog;
+    private static final QWalkwayLog walkwayLog = QWalkwayLog.walkwayLog;
+    private static final QCrewMember crewMember = QCrewMember.crewMember;
 
     public WalkwayLogCoreRepository(WalkwayLogJpaRepository walkwayLogJpaRepository, JPAQueryFactory queryFactory) {
         this.walkwayLogJpaRepository = walkwayLogJpaRepository;
@@ -37,6 +39,20 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
                         createdAtLt(lastCreatedAt))
                 .limit(size + 1)
                 .orderBy(walkwayLog.createdAt.desc())
+                .fetch();
+
+        return new CursorPage<>(result, size);
+    }
+
+    @Override
+    public CursorPage<WalkwayLog> getCrewWalkwayLog(Long crewId, LocalDateTime lastCreatedAt, int size) {
+        List<WalkwayLog> result = queryFactory
+                .selectFrom(walkwayLog)
+                .join(crewMember).on(crewMember.memberId.eq(walkwayLog.memberId))
+                .where(crewMember.crewId.eq(crewId),
+                        createdAtLt(lastCreatedAt))
+                .orderBy(walkwayLog.createdAt.desc())
+                .limit((long) size + 1)
                 .fetch();
 
         return new CursorPage<>(result, size);
