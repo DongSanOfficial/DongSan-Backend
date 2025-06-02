@@ -60,7 +60,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
         List<Bookmark> result = queryFactory.selectFrom(bookmark)
                 .where(bookmark.memberId.eq(memberId),
                         bookmarkCreatedAtLt(lastCreatedAt))
-                .limit(size + 1)
+                .limit((long) size + 1)
                 .orderBy(bookmark.createdAt.desc())
                 .fetch();
 
@@ -87,7 +87,7 @@ public class BookmarkCoreRepository implements BookmarkRepository {
                         .and(markedWalkway.bookmarkId.eq(bookmark.id)))
                 .where(bookmark.memberId.eq(memberId),
                         bookmarkCreatedAtLt(lastCreatedAt))
-                .limit(size + 1)
+                .limit((long) size + 1)
                 .orderBy(bookmark.createdAt.desc())
                 .fetch();
 

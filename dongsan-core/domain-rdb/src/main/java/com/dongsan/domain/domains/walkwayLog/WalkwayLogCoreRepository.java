@@ -49,7 +49,7 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
         List<WalkwayLog> result = queryFactory.selectFrom(walkwayLog)
                 .where(walkwayLog.memberId.eq(memberId),
                         createdAtLt(lastCreatedAt))
-                .limit(size + 1)
+                .limit((long) size + 1)
                 .orderBy(walkwayLog.createdAt.desc())
                 .fetch();
 
