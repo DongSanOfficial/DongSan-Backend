@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.review.dto;
 
-import com.dongsan.domain.domains.review.RatingCalculator;
 import com.dongsan.domain.domains.review.domain.Rating;
+import com.dongsan.domain.domains.review.service.RatingCalculator;
 
 import java.util.Map;
 

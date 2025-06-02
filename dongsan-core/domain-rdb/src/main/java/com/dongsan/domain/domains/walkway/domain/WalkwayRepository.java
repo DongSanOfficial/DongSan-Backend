@@ -1,7 +1,7 @@
 package com.dongsan.domain.domains.walkway.domain;
 
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -15,19 +15,19 @@ public interface WalkwayRepository {
 
     Optional<Walkway> findById(Long walkwayId);
 
-    CursorPage<Walkway> searchWalkwaysLiked(SearchWalkwayQuery searchWalkwayQuery, Long lastWalkwayId, int size);
+    CursorResponse<Walkway> searchWalkwaysLiked(SearchWalkwayQuery searchWalkwayQuery, Long lastWalkwayId, int size);
 
-    CursorPage<Walkway> searchWalkwaysRating(SearchWalkwayQuery searchWalkwayQuery, Long lastWalkwayId, int size);
+    CursorResponse<Walkway> searchWalkwaysRating(SearchWalkwayQuery searchWalkwayQuery, Long lastWalkwayId, int size);
 
-    CursorPage<Walkway> getUserLikedWalkway(Long memberId, LocalDateTime lastCreatedAt, int size);
+    CursorResponse<Walkway> getUserLikedWalkway(Long memberId, LocalDateTime lastCreatedAt, int size);
 
-    CursorPage<Walkway> getUserWalkway(Long memberId, LocalDateTime lastCreatedAt, int size);
+    CursorResponse<Walkway> getUserWalkway(Long memberId, LocalDateTime lastCreatedAt, int size);
 
-    CursorPage<Walkway> getWalkwaysByLatest(Long memberId, Long lastWalkwayId, int size);
+    CursorResponse<Walkway> getWalkwaysByLatest(Long memberId, Long lastWalkwayId, int size);
 
-    CursorPage<Walkway> getWalkwaysByLiked(Long memberId, Long lastWalkwayId, int size);
+    CursorResponse<Walkway> getWalkwaysByLiked(Long memberId, Long lastWalkwayId, int size);
 
-    CursorPage<Walkway> getWalkwaysByRating(Long memberId, Long lastWalkwayId, int size);
+    CursorResponse<Walkway> getWalkwaysByRating(Long memberId, Long lastWalkwayId, int size);
 
     Map<Long, Walkway> getWalkways(List<Long> walkwayIds);
 

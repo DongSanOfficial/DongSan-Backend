@@ -1,10 +1,9 @@
 package com.dongsan.api.domains.bookmark;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.domain.domains.bookmark.domain.Bookmark;
-import com.dongsan.domain.support.util.CursorPage;
-import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -17,11 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "북마크")
 @Validated
 public class BookmarkController {
+    private final BookmarkFacade bookmarkFacade;
+
     public BookmarkController(BookmarkFacade bookmarkFacade) {
         this.bookmarkFacade = bookmarkFacade;
     }
-
-    private final BookmarkFacade bookmarkFacade;
 
     @PostMapping("/bookmarks")
     @Operation(summary = "북마크 생성")
@@ -88,10 +87,9 @@ public class BookmarkController {
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CursorPage<MarkedWalkwayResponse> response = bookmarkFacade.getBookmarkWalkways(customOAuth2User.getMemberId(),
+        CursorResponse<MarkedWalkwayResponse> response = bookmarkFacade.getBookmarkWalkways(customOAuth2User.getMemberId(),
                 bookmarkId, new CursorRequest(lastId, size));
-        return ResponseEntity.ok(
-                new CursorResponse<>(response.getData(), response.getHasNext()));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "사용자가 북마크한 산책로 제목 리스트 보기")
@@ -101,9 +99,8 @@ public class BookmarkController {
             @RequestParam(defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CursorPage<Bookmark> response = bookmarkFacade.getUserBookmark(customOAuth2User.getMemberId(),
+        CursorResponse<Bookmark> response = bookmarkFacade.getUserBookmark(customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
-        return ResponseEntity.ok(new CursorResponse<>(BookmarksNameResponse.from(response.getData()),
-                response.getHasNext()));
+        return ResponseEntity.ok(new CursorResponse<>(BookmarksNameResponse.from(response.getData()), response.getHasNext()));
     }
 }

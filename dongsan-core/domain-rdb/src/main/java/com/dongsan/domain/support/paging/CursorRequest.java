@@ -1,4 +1,4 @@
-package com.dongsan.domain.support.util;
+package com.dongsan.domain.support.paging;
 
 public record CursorRequest(
         Long lastId,

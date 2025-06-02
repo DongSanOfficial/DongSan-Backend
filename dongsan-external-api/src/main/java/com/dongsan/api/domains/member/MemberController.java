@@ -2,7 +2,7 @@ package com.dongsan.api.domains.member;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.domain.domains.member.Member;
-import com.dongsan.domain.domains.member.MemberService;
+import com.dongsan.domain.domains.member.MemberRdbService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @Tag(name = "마이페이지")
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberRdbService memberRdbService;
 
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
+    public MemberController(MemberRdbService memberRdbService) {
+        this.memberRdbService = memberRdbService;
     }
 
     /**
@@ -32,7 +32,7 @@ public class MemberController {
     public ResponseEntity<MemberProfileResponse> getProfile(
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        Member member = memberService.getMember(customOAuth2User.getMemberId());
+        Member member = memberRdbService.getMember(customOAuth2User.getMemberId());
         return ResponseEntity.ok(new MemberProfileResponse(member));
     }
 
@@ -45,7 +45,7 @@ public class MemberController {
             @Valid @RequestBody PatchNicknameRequest request,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        memberService.patchNickname(customOAuth2User.getMemberId(), request.nickname().trim());
+        memberRdbService.patchNickname(customOAuth2User.getMemberId(), request.nickname().trim());
         return ResponseEntity.ok().build();
     }
 }

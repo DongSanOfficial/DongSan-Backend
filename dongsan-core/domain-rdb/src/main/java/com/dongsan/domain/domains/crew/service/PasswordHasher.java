@@ -1,4 +1,4 @@
-package com.dongsan.domain.domains.crew;
+package com.dongsan.domain.domains.crew.service;
 
 import org.springframework.stereotype.Component;
 

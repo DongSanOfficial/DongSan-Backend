@@ -5,7 +5,7 @@ import com.dongsan.api.domains.auth.JwtService;
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
 import com.dongsan.domain.domains.member.Member;
-import com.dongsan.domain.domains.member.MemberService;
+import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.domains.refresh.TokenWriter;
 import com.dongsan.file.service.S3FileService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,16 +17,16 @@ import java.io.IOException;
 
 @Service
 public class DevService {
-    private final MemberService memberService;
+    private final MemberRdbService memberRdbService;
     private final TokenWriter tokenWriter;
     private final JwtService jwtService;
     private final CookieService cookieService;
     private final S3FileService s3FileService;
 
-    public DevService(MemberService memberService, TokenWriter tokenWriter, JwtService jwtService,
+    public DevService(MemberRdbService memberRdbService, TokenWriter tokenWriter, JwtService jwtService,
                       CookieService cookieService,
                       S3FileService s3FileService) {
-        this.memberService = memberService;
+        this.memberRdbService = memberRdbService;
         this.tokenWriter = tokenWriter;
         this.jwtService = jwtService;
         this.cookieService = cookieService;
@@ -34,7 +34,7 @@ public class DevService {
     }
 
     public void generateToken(Long memberId, HttpServletResponse response) {
-        memberService.getMember(memberId);
+        memberRdbService.getMember(memberId);
         String accessToken = jwtService.createAccessToken(memberId);
         String refreshToken = jwtService.createRefreshToken(memberId);
         response.addCookie(cookieService.createAccessTokenCookie(accessToken));

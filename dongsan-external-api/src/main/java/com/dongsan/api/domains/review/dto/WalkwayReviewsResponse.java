@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.review.dto;
 
+import com.dongsan.api.support.util.TimeFormatUtil;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithMemberQuery;
-import com.dongsan.domain.support.format.TimeFormat;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -20,7 +20,7 @@ public record WalkwayReviewsResponse(
                 query.nickname(),
                 query.createdAt()
                         .format(DateTimeFormatter.ofPattern("yyyy.MM.dd")),
-                TimeFormat.formatTimeString(query.createdAt()),
+                TimeFormatUtil.formatTimeString(query.createdAt()),
                 query.rating(),
                 query.content()
         );

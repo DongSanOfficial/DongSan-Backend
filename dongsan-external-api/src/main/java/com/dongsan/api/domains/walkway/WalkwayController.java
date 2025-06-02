@@ -5,12 +5,11 @@ import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.response.*;
-import com.dongsan.api.support.response.CursorResponse;
-import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedStatus;
+import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.domain.domains.walkway.UpdateWalkwayCommand;
-import com.dongsan.domain.support.util.CursorPage;
-import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -95,7 +94,7 @@ public class WalkwayController {
             @RequestParam(required = false, defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CursorPage<BookmarkWithMarkedStatus> response
+        CursorResponse<BookmarkWithMarkedStatus> response
                 = walkwayFacade.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorRequest(lastId, size));
         return ResponseEntity.ok(
                 new CursorResponse<>(BookmarksWithMarkedWalkwayResponse.from(response.getData()), response.getHasNext()));
@@ -103,7 +102,7 @@ public class WalkwayController {
 
     @Operation(summary = "산책로 검색")
     @GetMapping("")
-    public ResponseEntity<CursorPage<SearchWalkwayResponse>> searchWalkway(
+    public ResponseEntity<CursorResponse<SearchWalkwayResponse>> searchWalkway(
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "latitude") Double latitude,
             @RequestParam(name = "longitude") Double longitude,
@@ -114,19 +113,19 @@ public class WalkwayController {
     ) {
         SearchWalkwayQuery searchWalkwayQuery
                 = new SearchWalkwayQuery(customOAuth2User.getMemberId(), sort, longitude, latitude, distance);
-        CursorPage<SearchWalkwayResponse> response = walkwayFacade.searchWalkway(searchWalkwayQuery, new CursorRequest(lastId, size));
+        CursorResponse<SearchWalkwayResponse> response = walkwayFacade.searchWalkway(searchWalkwayQuery, new CursorRequest(lastId, size));
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "산책로 조회 (위치 기반 X)")
     @GetMapping("/all")
-    public ResponseEntity<CursorPage<SearchWalkwayResponse>> getWalkwaysLatest(
+    public ResponseEntity<CursorResponse<SearchWalkwayResponse>> getWalkwaysLatest(
             @RequestParam(name = "sort", defaultValue = "latest") String sort,
             @RequestParam(name = "lastId", required = false) Long lastId,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CursorPage<SearchWalkwayResponse> response = walkwayFacade.getWalkwaysLatest(customOAuth2User.getMemberId(), sort, new CursorRequest(lastId, size));
+        CursorResponse<SearchWalkwayResponse> response = walkwayFacade.getWalkwaysLatest(customOAuth2User.getMemberId(), sort, new CursorRequest(lastId, size));
         return ResponseEntity.ok(response);
     }
 

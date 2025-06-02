@@ -5,7 +5,7 @@ import com.dongsan.domain.domains.review.domain.*;
 import com.dongsan.domain.domains.walkway.domain.QWalkway;
 import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
 import com.dongsan.domain.domains.walkwayLog.QWalkwayLog;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -62,7 +62,7 @@ public class ReviewCoreRepository implements ReviewRepository {
      * @return 사용자가 작성한 리뷰들
      */
     @Override
-    public CursorPage<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<ReviewWithWalkwayQuery> getUserReviews(Long memberId, LocalDateTime lastCreatedAt, int size) {
         List<ReviewWithWalkwayQuery> result = queryFactory.select(Projections.constructor(ReviewWithWalkwayQuery.class,
                         review.id,
                         walkway.id,
@@ -82,7 +82,7 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .orderBy(review.createdAt.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     /**
@@ -97,7 +97,7 @@ public class ReviewCoreRepository implements ReviewRepository {
 
     // 여기 member 조인하는거 취소 하고, 상단 레이어에서 쿼리 추가로 날려서 매핑 가능 (성능 테스트 해보고 분리할지 말지 고민)
     @Override
-    public CursorPage<ReviewWithMemberQuery> getWalkwayReviewsLatest(Long walkwayId, LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<ReviewWithMemberQuery> getWalkwayReviewsLatest(Long walkwayId, LocalDateTime lastCreatedAt, int size) {
         List<ReviewWithMemberQuery> result = queryFactory.select(Projections.constructor(ReviewWithMemberQuery.class,
                         review.id,
                         member.id,
@@ -116,14 +116,14 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .orderBy(review.createdAt.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     // 여기 member 조인하는거 취소 하고, 상단 레이어에서 쿼리 추가로 날려서 매핑 가능 (성능 테스트 해보고 분리할지 말지 고민)
     // (rating DESC, createdAt DESC)
     @Override
-    public CursorPage<ReviewWithMemberQuery> getWalkwayReviewsRating(Long walkwayId, Integer lastRating,
-                                                                     LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<ReviewWithMemberQuery> getWalkwayReviewsRating(Long walkwayId, Integer lastRating,
+                                                                         LocalDateTime lastCreatedAt, int size) {
         List<ReviewWithMemberQuery> result = queryFactory.select(Projections.constructor(ReviewWithMemberQuery.class,
                         review.id,
                         member.id,
@@ -142,7 +142,7 @@ public class ReviewCoreRepository implements ReviewRepository {
                 .orderBy(review.rating.desc(), review.createdAt.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.dongsan.domain.domains.crew;
+package com.dongsan.domain.domains.crew.service;
 
 import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
 
