@@ -88,7 +88,7 @@ public class WalkwayController {
 
     @Operation(summary = "북마크 목록 보기(산책로 마크 여부 포함)")
     @GetMapping("/{walkwayId}/bookmarks")
-    public ResponseEntity<com.dongsan.api.support.response.CursorResponse<BookmarksWithMarkedWalkwayResponse>> getBookmarksWithMarkedWalkway(
+    public ResponseEntity<CursorResponse<BookmarksWithMarkedWalkwayResponse>> getBookmarksWithMarkedWalkway(
             @PathVariable Long walkwayId,
             @RequestParam(required = false) Long lastId,
             @RequestParam(required = false, defaultValue = "10") Integer size,
@@ -97,7 +97,7 @@ public class WalkwayController {
         CursorResponse<BookmarkWithMarkedStatus> response
                 = walkwayFacade.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorRequest(lastId, size));
         return ResponseEntity.ok(
-                new com.dongsan.api.support.response.CursorResponse<>(BookmarksWithMarkedWalkwayResponse.from(response.getData()), response.getHasNext()));
+                new CursorResponse<>(BookmarksWithMarkedWalkwayResponse.from(response.getData()), response.getHasNext()));
     }
 
     @Operation(summary = "산책로 검색")

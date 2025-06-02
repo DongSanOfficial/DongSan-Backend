@@ -81,7 +81,7 @@ public class BookmarkController {
 
     @GetMapping("/bookmarks/{bookmarkId}/walkways")
     @Operation(summary = "북마크에 저장된 산책로 조회")
-    public ResponseEntity<com.dongsan.api.support.response.CursorResponse<MarkedWalkwayResponse>> getBookmarkWalkways(
+    public ResponseEntity<CursorResponse<MarkedWalkwayResponse>> getBookmarkWalkways(
             @PathVariable Long bookmarkId,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long lastId,
@@ -89,20 +89,18 @@ public class BookmarkController {
     ) {
         CursorResponse<MarkedWalkwayResponse> response = bookmarkFacade.getBookmarkWalkways(customOAuth2User.getMemberId(),
                 bookmarkId, new CursorRequest(lastId, size));
-        return ResponseEntity.ok(
-                new com.dongsan.api.support.response.CursorResponse<>(response.getData(), response.getHasNext()));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "사용자가 북마크한 산책로 제목 리스트 보기")
     @GetMapping("/users/bookmarks/title")
-    public ResponseEntity<com.dongsan.api.support.response.CursorResponse<BookmarksNameResponse>> getBookmarksName(
+    public ResponseEntity<CursorResponse<BookmarksNameResponse>> getBookmarksName(
             @RequestParam(required = false) Long lastId,
             @RequestParam(defaultValue = "10") Integer size,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         CursorResponse<Bookmark> response = bookmarkFacade.getUserBookmark(customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
-        return ResponseEntity.ok(new com.dongsan.api.support.response.CursorResponse<>(BookmarksNameResponse.from(response.getData()),
-                response.getHasNext()));
+        return ResponseEntity.ok(new CursorResponse<>(BookmarksNameResponse.from(response.getData()), response.getHasNext()));
     }
 }

@@ -31,14 +31,14 @@ public class UserReviewController {
      */
     @Operation(summary = "내가 작성한 리뷰 보기")
     @GetMapping()
-    public ResponseEntity<com.dongsan.api.support.response.CursorResponse<MyReviewResponse>> getReviews(
+    public ResponseEntity<CursorResponse<MyReviewResponse>> getReviews(
             @RequestParam(defaultValue = "5") Integer size,
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         CursorResponse<ReviewWithWalkwayQuery> response = userReviewFacade.getUserReviews(new CursorRequest(lastId, size),
                 customOAuth2User.getMemberId());
-        return ResponseEntity.ok(new com.dongsan.api.support.response.CursorResponse<>(MyReviewResponse.from(response.getData()), response.getHasNext()));
+        return ResponseEntity.ok(new CursorResponse<>(MyReviewResponse.from(response.getData()), response.getHasNext()));
     }
 
 }

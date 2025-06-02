@@ -42,7 +42,7 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 내용 보기")
     @GetMapping("/{walkwayId}/review/content")
-    public ResponseEntity<com.dongsan.api.support.response.CursorResponse<WalkwayReviewsResponse>> getWalkwayReviews(
+    public ResponseEntity<CursorResponse<WalkwayReviewsResponse>> getWalkwayReviews(
             @PathVariable Long walkwayId,
             @RequestParam String sort,
             @RequestParam(required = false) Long lastId,
@@ -53,7 +53,7 @@ public class ReviewController {
                 = reviewFacade.getWalkwayReviews(sort, walkwayId, customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
         return ResponseEntity.ok(
-                new com.dongsan.api.support.response.CursorResponse<>(WalkwayReviewsResponse.from(response.getData()), response.getHasNext()));
+                new CursorResponse<>(WalkwayReviewsResponse.from(response.getData()), response.getHasNext()));
     }
 
     @Operation(summary = "리뷰 별점 보기")
