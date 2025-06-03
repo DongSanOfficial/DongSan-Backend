@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dongsan.domain.domains.cowalk.domain.CowalkComment;
 import com.dongsan.domain.domains.cowalk.domain.CowalkCommentRepository;
+import com.dongsan.domain.support.paging.CursorResponse;
 
 @Service
 @Transactional
@@ -30,5 +31,9 @@ public class CowalkCommentRdbService {
         CowalkComment cowalkComment = new CowalkComment(cowalkPostId, memberId, content);
         cowalkCommentRepository.save(cowalkComment);
         return cowalkComment.getId();
+    }
+
+    public CursorResponse<CowalkComment> getCowalkComments(Integer size, Long lastId, Long cowalkPostId) {
+        return cowalkCommentRepository.getCowalkComments(size, lastId, cowalkPostId);
     }
 }

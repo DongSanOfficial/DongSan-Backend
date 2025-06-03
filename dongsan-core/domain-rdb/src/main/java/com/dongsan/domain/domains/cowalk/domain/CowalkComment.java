@@ -33,4 +33,12 @@ public class CowalkComment extends BaseEntity {
     public Long getId() {
         return id;
     }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public String getContent() {
+        return content;
+    }
 }
