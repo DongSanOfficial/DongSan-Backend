@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
+import com.dongsan.domain.domains.cowalk.domain.CowalkComment;
 import com.dongsan.domain.domains.cowalk.domain.CowalkCommentRepository;
 import com.dongsan.domain.domains.cowalk.domain.QCowalkComment;
 import com.querydsl.core.Tuple;
@@ -45,5 +46,10 @@ public class CowalkCommentCoreRepository implements CowalkCommentRepository {
                         tuple -> tuple.get(cowalkComment.cowalkPostId),
                         tuple -> tuple.get(cowalkComment.count()).intValue()
                 ));
+    }
+
+    @Override
+    public CowalkComment save(CowalkComment cowalkComment) {
+        return cowalkCommentJpaRepository.save(cowalkComment);
     }
 }

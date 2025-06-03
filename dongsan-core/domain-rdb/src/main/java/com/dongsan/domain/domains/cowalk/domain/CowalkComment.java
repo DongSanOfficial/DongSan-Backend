@@ -23,4 +23,14 @@ public class CowalkComment extends BaseEntity {
 
     protected CowalkComment() {
     }
+
+    public CowalkComment(Long cowalkPostId, Long memberId, String content) {
+        this.cowalkPostId = cowalkPostId;
+        this.memberId = memberId;
+        this.content = content;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

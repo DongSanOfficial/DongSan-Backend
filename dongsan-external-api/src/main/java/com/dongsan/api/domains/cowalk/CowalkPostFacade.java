@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkCommentRequest;
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkPostRequest;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostDetailResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostsResponse;
@@ -69,7 +70,7 @@ public class CowalkPostFacade {
         try {
             return cowalkPostLockService.executeWithFairLock(cowalkPostId, () -> {
                 Integer participantCount = cowalkParticipantRdbService.countByCowalkPostId(cowalkPostId);
-                cowalkPostRdbService.validJoin(cowalkPostId, participantCount);
+                cowalkPostRdbService.validCapacity(cowalkPostId, participantCount);
                 return cowalkParticipantRdbService.save(memberId, cowalkPostId);
             });
         } catch (InterruptedException e) {
@@ -101,5 +102,11 @@ public class CowalkPostFacade {
         );
 
         return new CursorPage<>(cowalkPostsResponseList, cowalkPosts.getHasNext());
+    }
+
+    public Long saveCowalkComment(Long memberId, Long cowalkPostId,
+            CreateCowalkCommentRequest createCowalkCommentRequest) {
+        cowalkParticipantRdbService.validNotJoin(cowalkPostId, memberId);
+        return cowalkCommentRdbService.save(memberId, cowalkPostId, createCowalkCommentRequest.content());
     }
 }

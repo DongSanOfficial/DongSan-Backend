@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
+import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkCommentRequest;
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkPostRequest;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostDetailResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostsResponse;
+import com.dongsan.api.domains.cowalk.dto.response.CreateCowalkCommentResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CreateCowalkPostResponse;
 import com.dongsan.api.domains.cowalk.dto.response.JoinCowalkParticipantResponse;
 import com.dongsan.domain.support.util.CursorPage;
@@ -79,5 +81,19 @@ public class CowalkPostController {
     ) {
         CursorPage<CowalkPostsResponse> cowalkPosts = cowalkPostFacade.getCowalkPosts(crewId, size, lastId);
         return ResponseEntity.ok(cowalkPosts);
+    }
+
+    @Operation(summary = "같이 산책 댓글 작성")
+    @PostMapping("/{crewId}/cowalk/{cowalkId}/comments")
+    public ResponseEntity<CreateCowalkCommentResponse> createCowalkComment(
+            @PathVariable Long crewId,
+            @PathVariable Long cowalkId,
+            @RequestBody @Valid CreateCowalkCommentRequest createCowalkCommentRequest,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        Long commentId
+                = cowalkPostFacade.saveCowalkComment(customOAuth2User.getMemberId(), cowalkId,
+                createCowalkCommentRequest);
+        return ResponseEntity.ok(new CreateCowalkCommentResponse(commentId));
     }
 }

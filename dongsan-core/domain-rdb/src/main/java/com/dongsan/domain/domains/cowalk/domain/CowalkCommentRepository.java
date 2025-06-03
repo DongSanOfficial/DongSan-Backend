@@ -10,4 +10,6 @@ public interface CowalkCommentRepository {
     Integer countByCowalkPostId(Long cowalkPostId);
 
     Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds);
+
+    CowalkComment save(CowalkComment cowalkComment);
 }
