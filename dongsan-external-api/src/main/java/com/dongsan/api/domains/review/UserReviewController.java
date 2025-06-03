@@ -2,10 +2,9 @@ package com.dongsan.api.domains.review;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.review.dto.MyReviewResponse;
-import com.dongsan.api.support.response.CursorResponse;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithWalkwayQuery;
-import com.dongsan.domain.support.util.CursorPage;
-import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ public class UserReviewController {
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CursorPage<ReviewWithWalkwayQuery> response = userReviewFacade.getUserReviews(new CursorRequest(lastId, size),
+        CursorResponse<ReviewWithWalkwayQuery> response = userReviewFacade.getUserReviews(new CursorRequest(lastId, size),
                 customOAuth2User.getMemberId());
         return ResponseEntity.ok(new CursorResponse<>(MyReviewResponse.from(response.getData()), response.getHasNext()));
     }

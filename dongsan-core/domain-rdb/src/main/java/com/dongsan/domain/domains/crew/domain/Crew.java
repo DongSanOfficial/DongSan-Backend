@@ -59,7 +59,36 @@ public abstract class Crew extends BaseEntity {
         }
     }
 
+    public abstract void canAccess(boolean isCrewMember);
+
+    public abstract String provideVisibility();
+
     public Long getId() {
         return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getRule() {
+        return rule;
+    }
+
+    public String getCrewImageUrl() {
+        return crewImageUrl;
+    }
+
+    public boolean isMemberLimited() {
+        return capacity.isMemberLimited();
+    }
+
+    public Integer getMemberLimit() {
+        return capacity.getMemberLimit();
+    }
+
 }

@@ -7,7 +7,7 @@ import com.dongsan.domain.domains.bookmark.domain.QMarkedWalkway;
 import com.dongsan.domain.domains.common.BaseEntity;
 import com.dongsan.domain.domains.walkway.domain.QWalkway;
 import com.dongsan.domain.domains.walkway.domain.WalkwayExposeLevel;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -43,7 +43,7 @@ public class MarkedWalkwayCoreRepository implements MarkedWalkwayRepository {
     }
 
     @Override
-    public CursorPage<MarkedWalkway> getBookmarkWalkway(Long memberId, Long bookmarkId, LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<MarkedWalkway> getBookmarkWalkway(Long memberId, Long bookmarkId, LocalDateTime lastCreatedAt, int size) {
         List<MarkedWalkway> result = queryFactory.selectFrom(markedWalkway)
                 .join(walkway).on(walkway.id.eq(markedWalkway.walkwayId))
                 .where(markedWalkway.bookmarkId.eq(bookmarkId),
@@ -54,7 +54,7 @@ public class MarkedWalkwayCoreRepository implements MarkedWalkwayRepository {
                 .orderBy(markedWalkway.createdAt.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     /**

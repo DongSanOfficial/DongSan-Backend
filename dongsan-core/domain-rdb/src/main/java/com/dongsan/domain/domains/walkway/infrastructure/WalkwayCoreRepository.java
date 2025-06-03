@@ -2,7 +2,7 @@ package com.dongsan.domain.domains.walkway.infrastructure;
 
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.domain.domains.walkway.domain.*;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -45,7 +45,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
 
     // 좋아요 순 검색
     @Override
-    public CursorPage<Walkway> searchWalkwaysLiked(SearchWalkwayQuery query, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> searchWalkwaysLiked(SearchWalkwayQuery query, Long lastWalkwayId, int size) {
         MetaWalkwayLiked metaLiked = getMetaWalkwayLiked(lastWalkwayId);
 
         List<Walkway> result = queryFactory.selectFrom(walkway)
@@ -59,12 +59,12 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                 .orderBy(metaWalkwayLiked.likeCount.desc(), walkway.createdAt.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     // 별점 순 검색
     @Override
-    public CursorPage<Walkway> searchWalkwaysRating(SearchWalkwayQuery query, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> searchWalkwaysRating(SearchWalkwayQuery query, Long lastWalkwayId, int size) {
         MetaWalkwayRating metaRating = getMetaWalkwayRating(lastWalkwayId);
 
         List<Walkway> result = queryFactory.selectFrom(walkway)
@@ -78,11 +78,11 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                 .orderBy(metaWalkwayRating.rating.desc(), walkway.createdAt.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     @Override
-    public CursorPage<Walkway> getUserLikedWalkway(Long memberId, LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<Walkway> getUserLikedWalkway(Long memberId, LocalDateTime lastCreatedAt, int size) {
         List<Walkway> result = queryFactory.selectFrom(walkway)
                 .join(likedWalkway).on(likedWalkway.walkwayId.eq(walkway.id))
                 .where(
@@ -94,23 +94,23 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                 .limit(size + 1L)
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     @Override
-    public CursorPage<Walkway> getUserWalkway(Long memberId, LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<Walkway> getUserWalkway(Long memberId, LocalDateTime lastCreatedAt, int size) {
         List<Walkway> result = queryFactory.selectFrom(walkway)
                 .where(walkway.memberId.eq(memberId), createdAtLt(lastCreatedAt))
                 .orderBy(walkway.createdAt.desc())
                 .limit(size + 1L)
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     // 거리 계산 X
     @Override
-    public CursorPage<Walkway> getWalkwaysByLatest(Long memberId, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> getWalkwaysByLatest(Long memberId, Long lastWalkwayId, int size) {
         Walkway lastWalkway = this.getWalkwayEntity(lastWalkwayId);
 
         List<Walkway> result = queryFactory.selectFrom(walkway)
@@ -122,12 +122,12 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                 .orderBy(walkway.createdAt.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     // 거리 계산 X
     @Override
-    public CursorPage<Walkway> getWalkwaysByLiked(Long memberId, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> getWalkwaysByLiked(Long memberId, Long lastWalkwayId, int size) {
         MetaWalkwayLiked metaLiked = getMetaWalkwayLiked(lastWalkwayId);
 
         List<Walkway> result = queryFactory.selectFrom(walkway)
@@ -140,12 +140,12 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                 .orderBy(metaWalkwayLiked.likeCount.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     // 거리 계산 X
     @Override
-    public CursorPage<Walkway> getWalkwaysByRating(Long memberId, Long lastWalkwayId, int size) {
+    public CursorResponse<Walkway> getWalkwaysByRating(Long memberId, Long lastWalkwayId, int size) {
         MetaWalkwayRating metaRating = getMetaWalkwayRating(lastWalkwayId);
 
         List<Walkway> result = queryFactory.selectFrom(walkway)
@@ -158,7 +158,7 @@ public class WalkwayCoreRepository implements WalkwayRepository {
                 .orderBy(metaWalkwayRating.rating.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     @Override

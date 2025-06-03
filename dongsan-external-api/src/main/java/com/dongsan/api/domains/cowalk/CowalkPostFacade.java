@@ -18,10 +18,15 @@ import com.dongsan.domain.domains.cowalk.service.CowalkParticipantRdbService;
 import com.dongsan.domain.domains.cowalk.service.CowalkPostRdbService;
 import com.dongsan.domain.domains.crew.service.CrewMemberRdbService;
 import com.dongsan.domain.domains.member.Member;
-import com.dongsan.domain.domains.member.MemberService;
+import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CowalkPostFacade {
@@ -29,7 +34,7 @@ public class CowalkPostFacade {
     private final CowalkCommentRdbService cowalkCommentRdbService;
     private final CowalkPostRdbService cowalkPostRdbService;
     private final CrewMemberRdbService crewMemberRdbService;
-    private final MemberService memberService;
+    private final MemberRdbService memberRdbService;
     private final CowalkPostLockService cowalkPostLockService;
 
     public CowalkPostFacade(
@@ -37,13 +42,13 @@ public class CowalkPostFacade {
             CowalkCommentRdbService cowalkCommentRdbService,
             CowalkPostRdbService cowalkPostRdbService,
             CrewMemberRdbService crewMemberRdbService,
-            MemberService memberService, CowalkPostLockService cowalkPostLockService
+            MemberRdbService memberRdbService, CowalkPostLockService cowalkPostLockService
     ) {
         this.cowalkParticipantRdbService = cowalkParticipantRdbService;
         this.cowalkCommentRdbService = cowalkCommentRdbService;
         this.cowalkPostRdbService = cowalkPostRdbService;
         this.crewMemberRdbService = crewMemberRdbService;
-        this.memberService = memberService;
+        this.memberRdbService = memberRdbService;
         this.cowalkPostLockService = cowalkPostLockService;
     }
 
@@ -61,7 +66,7 @@ public class CowalkPostFacade {
         CowalkPost cowalkPost = cowalkPostRdbService.getCowalkPost(cowalkPostId);
         Integer participantCount = cowalkParticipantRdbService.countByCowalkPostId(cowalkPostId);
         Integer commentCount = cowalkCommentRdbService.countByCowalkPostId(cowalkPostId);
-        Member member = memberService.getMember(memberId);
+        Member member = memberRdbService.getMember(memberId);
         return new CowalkPostDetailResponse(cowalkPost, participantCount, commentCount, member);
     }
 
@@ -79,8 +84,8 @@ public class CowalkPostFacade {
         }
     }
 
-    public CursorPage<CowalkPostsResponse> getCowalkPosts(Long crewId, Integer size, Long lastId) {
-        CursorPage<CowalkPost> cowalkPosts = cowalkPostRdbService.getCowalkPosts(size, lastId, crewId);
+    public CursorResponse<CowalkPostsResponse> getCowalkPosts(Long crewId, Integer size, Long lastId) {
+        CursorResponse<CowalkPost> cowalkPosts = cowalkPostRdbService.getCowalkPosts(size, lastId, crewId);
         List<CowalkPost> cowalkPostList = cowalkPosts.getData();
 
         List<Long> memberIds = cowalkPostList.stream()
@@ -91,7 +96,7 @@ public class CowalkPostFacade {
                 .map(CowalkPost::getId)
                 .toList();
 
-        Map<Long, Member> memberMap = memberService.getMemberMap(memberIds);
+        Map<Long, Member> memberMap = memberRdbService.getMemberMap(memberIds);
         Map<Long, Integer> memberCountMap = cowalkParticipantRdbService.countByCowalkPostIds(cowalkPostIds);
         Map<Long, Integer> commentCountMap = cowalkCommentRdbService.countByCowalkPostIds(cowalkPostIds);
         List<CowalkPostsResponse> cowalkPostsResponseList = CowalkPostsResponse.from(
@@ -101,7 +106,7 @@ public class CowalkPostFacade {
                 commentCountMap
         );
 
-        return new CursorPage<>(cowalkPostsResponseList, cowalkPosts.getHasNext());
+        return new CursorResponse<>(cowalkPostsResponseList, cowalkPosts.getHasNext());
     }
 
     public Long saveCowalkComment(Long memberId, Long cowalkPostId,

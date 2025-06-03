@@ -81,4 +81,8 @@ public class WalkwayLog extends BaseEntity {
     public Double getDistance() {
         return distance;
     }
+
+    public Long getMemberId() {
+        return memberId;
+    }
 }

@@ -1,13 +1,13 @@
 package com.dongsan.domain.domains.bookmark.infrastructure;
 
 
-import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedStatus;
-import com.dongsan.domain.domains.bookmark.BookmarkWithMarkedWalkwayParam;
+import com.dongsan.domain.domains.bookmark.domain.Bookmark;
 import com.dongsan.domain.domains.bookmark.domain.BookmarkRepository;
 import com.dongsan.domain.domains.bookmark.domain.QBookmark;
 import com.dongsan.domain.domains.bookmark.domain.QMarkedWalkway;
-import com.dongsan.domain.support.util.CursorPage;
-import com.dongsan.domain.domains.bookmark.domain.Bookmark;
+import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
+import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedWalkwayParam;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -56,15 +56,15 @@ public class BookmarkCoreRepository implements BookmarkRepository {
      * 자신이 등록한 북마크 반환 (생성시간 기준 내림차순 정렬)
      */
     @Override
-    public CursorPage<Bookmark> getUserBookmarks(Long memberId, LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<Bookmark> getUserBookmarks(Long memberId, LocalDateTime lastCreatedAt, int size) {
         List<Bookmark> result = queryFactory.selectFrom(bookmark)
                 .where(bookmark.memberId.eq(memberId),
                         bookmarkCreatedAtLt(lastCreatedAt))
-                .limit(size + 1)
+                .limit((long) size + 1)
                 .orderBy(bookmark.createdAt.desc())
                 .fetch();
 
-        return new CursorPage<>(result, size);
+        return new CursorResponse<>(result, size);
     }
 
     /**
@@ -72,8 +72,8 @@ public class BookmarkCoreRepository implements BookmarkRepository {
      * (북마크 생성시간 기준 내림차순 정렬)
      */
     @Override
-    public CursorPage<BookmarkWithMarkedStatus> getBookmarksWithMarkedStatus(Long walkwayId, Long memberId,
-                                                                             LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<BookmarkWithMarkedStatus> getBookmarksWithMarkedStatus(Long walkwayId, Long memberId,
+                                                                                 LocalDateTime lastCreatedAt, int size) {
         List<BookmarkWithMarkedWalkwayParam> result = queryFactory.select(Projections.constructor(
                         BookmarkWithMarkedWalkwayParam.class,
                         bookmark.id,
@@ -87,14 +87,14 @@ public class BookmarkCoreRepository implements BookmarkRepository {
                         .and(markedWalkway.bookmarkId.eq(bookmark.id)))
                 .where(bookmark.memberId.eq(memberId),
                         bookmarkCreatedAtLt(lastCreatedAt))
-                .limit(size + 1)
+                .limit((long) size + 1)
                 .orderBy(bookmark.createdAt.desc())
                 .fetch();
 
         List<BookmarkWithMarkedStatus> streamResult = result.stream()
                 .map(BookmarkWithMarkedWalkwayParam::toBookmarkWithMarkedStatus)
                 .toList();
-        return new CursorPage<>(streamResult, size);
+        return new CursorResponse<>(streamResult, size);
     }
 
     private BooleanExpression bookmarkCreatedAtLt(LocalDateTime lastCreatedAt) {

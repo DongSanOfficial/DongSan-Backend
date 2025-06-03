@@ -11,8 +11,8 @@ import com.dongsan.domain.domains.walkway.service.MetaWalkwayRatingRdbService;
 import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
-import com.dongsan.domain.support.util.CursorPage;
-import com.dongsan.domain.support.util.CursorRequest;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +43,8 @@ public class ReviewFacade {
     }
 
     @Transactional(readOnly = true)
-    public CursorPage<ReviewWithMemberQuery> getWalkwayReviews(String type, Long walkwayId, Long memberId,
-                                                               CursorRequest paging) {
+    public CursorResponse<ReviewWithMemberQuery> getWalkwayReviews(String type, Long walkwayId, Long memberId,
+                                                                   CursorRequest paging) {
         Walkway walkway = walkwayRdbService.getWalkway(walkwayId);
         walkway.validateAccess(memberId);
         ReviewSort sort = ReviewSort.typeOf(type);

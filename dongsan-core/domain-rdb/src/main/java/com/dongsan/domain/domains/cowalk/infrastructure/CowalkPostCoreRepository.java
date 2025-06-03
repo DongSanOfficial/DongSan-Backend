@@ -1,16 +1,15 @@
 package com.dongsan.domain.domains.cowalk.infrastructure;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Repository;
-
 import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPostRepository;
 import com.dongsan.domain.domains.cowalk.domain.QCowalkPost;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CowalkPostCoreRepository implements CowalkPostRepository {
@@ -36,7 +35,7 @@ public class CowalkPostCoreRepository implements CowalkPostRepository {
     }
 
     @Override
-    public CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
+    public CursorResponse<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
         List<CowalkPost> cowalkPosts = queryFactory.selectFrom(cowalkPost)
                 .where(
                         cowalkPost.crewId.eq(crewId),
@@ -46,7 +45,7 @@ public class CowalkPostCoreRepository implements CowalkPostRepository {
                 .limit(size + 1L)
                 .fetch();
 
-        return new CursorPage<>(cowalkPosts, size);
+        return new CursorResponse<>(cowalkPosts, size);
     }
 
     private BooleanExpression cowalkPostIdLt(Long id) {

@@ -1,11 +1,11 @@
 package com.dongsan.domain.domains.walkway.factory;
 
-import com.dongsan.domain.domains.walkway.domain.Walkway;
-import com.dongsan.domain.support.util.CursorPage;
-import com.dongsan.domain.support.util.CursorRequest;
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.domain.domains.walkway.WalkwaySort;
+import com.dongsan.domain.domains.walkway.domain.Walkway;
 import com.dongsan.domain.domains.walkway.domain.WalkwayRepository;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +24,7 @@ public class SearchWalkwayRating implements SearchWalkway {
 
     @Override
     @Transactional(readOnly = true)
-    public CursorPage<Walkway> search(SearchWalkwayQuery searchWalkwayQuery, CursorRequest paging) {
+    public CursorResponse<Walkway> search(SearchWalkwayQuery searchWalkwayQuery, CursorRequest paging) {
         return walkwayRepository.searchWalkwaysRating(searchWalkwayQuery, paging.lastId(), paging.size());
     }
 }

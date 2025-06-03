@@ -1,15 +1,14 @@
 package com.dongsan.domain.domains.cowalk.service;
 
-import static com.dongsan.domain.support.error.CoreErrorCode.*;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPostRepository;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.dongsan.domain.support.error.CoreErrorCode.COWALK_NOT_FOUND;
 
 @Service
 @Transactional
@@ -31,7 +30,7 @@ public class CowalkPostRdbService {
         return cowalkPost.getId();
     }
 
-    public CursorPage<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
+    public CursorResponse<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId) {
         return cowalkPostRepository.getCowalkPosts(size, lastId, crewId);
     }
 

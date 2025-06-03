@@ -2,5 +2,9 @@ package com.dongsan.domain.domains.crew.domain;
 
 public enum CapacityType {
     LIMITED,
-    UNLIMITED
+    UNLIMITED;
+
+    public boolean isMemberLimited() {
+        return this.equals(LIMITED);
+    }
 }

@@ -1,11 +1,14 @@
 package com.dongsan.domain.domains.walkwayLog;
 
 import com.dongsan.domain.domains.common.BaseEntity;
+import com.dongsan.domain.domains.crew.domain.CrewMemberStatistic;
+import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -41,9 +44,25 @@ public class WalkwayLogRdbService {
         walkwayLogRepository.deleteAllInBatchByWalkwayId(walkwayId);
     }
 
-    public CursorPage<WalkwayLog> getUserWalkwayLog(Long memberId, Long lastWalkwayLogId, int size) {
+    public CursorResponse<WalkwayLog> getUserWalkwayLog(Long memberId, Long lastWalkwayLogId, int size) {
         LocalDateTime lastCreatedAt = getWalkwayLogCreatedAt(lastWalkwayLogId);
         return walkwayLogRepository.getUserWalkwayLog(memberId, lastCreatedAt, size);
     }
 
+    public CursorResponse<WalkwayLog> getCrewFeed(Long crewId, Long lastWalkwayLogId, int size) {
+        LocalDateTime lastCreatedAt = getWalkwayLogCreatedAt(lastWalkwayLogId);
+        return walkwayLogRepository.getCrewWalkwayLog(crewId, lastCreatedAt, size);
+    }
+
+    public CrewWeeklyStatistic getCrewWeeklyStat(Long crewId, LocalDate startDay, LocalDate endDay) {
+        return walkwayLogRepository.getCrewWeeklyStat(crewId, startDay, endDay);
+    }
+
+    public CursorResponse<CrewMemberStatistic> getCrewRankingByDistance(Long crewId, Long memberId, LocalDate startDay, LocalDate endDay, int size) {
+        return walkwayLogRepository.getCrewRankingByDistance(crewId, memberId, startDay, endDay, size);
+    }
+
+    public CursorResponse<CrewMemberStatistic> getCrewRankingByTime(Long crewId, Long memberId, LocalDate startDay, LocalDate endDay, int size) {
+        return walkwayLogRepository.getCrewRankingByTime(crewId, memberId, startDay, endDay, size);
+    }
 }

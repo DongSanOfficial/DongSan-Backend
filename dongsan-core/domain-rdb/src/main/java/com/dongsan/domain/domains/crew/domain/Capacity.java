@@ -37,4 +37,12 @@ public class Capacity {
         }
     }
 
+    public boolean isMemberLimited() {
+        return capacityType.isMemberLimited();
+    }
+
+    public Integer getMemberLimit() {
+        return memberLimit;
+    }
+
 }

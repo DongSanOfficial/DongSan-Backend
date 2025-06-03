@@ -3,7 +3,7 @@ package com.dongsan.api.domains.auth;
 import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
 import com.dongsan.domain.domains.member.Member;
-import com.dongsan.domain.domains.member.MemberService;
+import com.dongsan.domain.domains.member.MemberRdbService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.io.Decoders;
@@ -37,10 +37,10 @@ public class JwtService {
     private SecretKey accessTokenSecretKey;
     private SecretKey refreshTokenSecretKey;
 
-    private final MemberService memberService;
+    private final MemberRdbService memberRdbService;
 
-    public JwtService(MemberService memberService) {
-        this.memberService = memberService;
+    public JwtService(MemberRdbService memberRdbService) {
+        this.memberRdbService = memberRdbService;
     }
 
     @PostConstruct
@@ -77,7 +77,7 @@ public class JwtService {
     private Member getMember(String token, SecretKey secretKey) {
         Long memberId = extractAll(token, secretKey)
                 .get("memberId", Long.class);
-        return memberService.getOptionalMember(memberId)
+        return memberRdbService.getOptionalMember(memberId)
                 .orElseThrow(() -> new ApiException(ApiErrorCode.AUTHENTICATION_FAILED));
     }
 

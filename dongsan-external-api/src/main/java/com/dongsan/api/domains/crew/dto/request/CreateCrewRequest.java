@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.crew.dto.request;
 
-import com.dongsan.domain.domains.crew.CreateCrewCommand;
 import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
+import com.dongsan.domain.domains.crew.service.CreateCrewCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

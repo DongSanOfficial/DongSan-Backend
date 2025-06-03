@@ -19,7 +19,7 @@ import com.dongsan.api.domains.cowalk.dto.response.CowalkPostsResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CreateCowalkCommentResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CreateCowalkPostResponse;
 import com.dongsan.api.domains.cowalk.dto.response.JoinCowalkParticipantResponse;
-import com.dongsan.domain.support.util.CursorPage;
+import com.dongsan.domain.support.paging.CursorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -74,12 +74,12 @@ public class CowalkPostController {
 
     @Operation(summary = "같이 산책 목록 조회")
     @GetMapping("/{crewId}/cowalk")
-    public ResponseEntity<CursorPage<CowalkPostsResponse>> getCowalkPosts(
+    public ResponseEntity<CursorResponse<CowalkPostsResponse>> getCowalkPosts(
             @PathVariable Long crewId,
             @RequestParam(required = false) Long lastId,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        CursorPage<CowalkPostsResponse> cowalkPosts = cowalkPostFacade.getCowalkPosts(crewId, size, lastId);
+        CursorResponse<CowalkPostsResponse> cowalkPosts = cowalkPostFacade.getCowalkPosts(crewId, size, lastId);
         return ResponseEntity.ok(cowalkPosts);
     }
 
