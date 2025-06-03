@@ -64,6 +64,7 @@ public enum CoreErrorCode {
     COWALK_PARTICIPANT_ALREADY_JOIN(CoreErrorStatus.BAD_REQUEST, "COWALK-02", "이미 같이 산책에 참여했습니다."),
     COWALK_PARTICIPANT_LIMIT(CoreErrorStatus.BAD_REQUEST, "COWALK-03", "같이 산책 인원이 이미 모두 찼습니다."),
     COWALK_LOCK_FAIL(CoreErrorStatus.CONFLICT, "COWALK-04", "같이 산책 참여에 실패했습니다."),
+    COWALK_PARTICIPANT_NOT_JOIN(CoreErrorStatus.BAD_REQUEST, "COWALK-05", "같이 산책에 참여하지 않은 사용자입니다."),
 
     ;
 

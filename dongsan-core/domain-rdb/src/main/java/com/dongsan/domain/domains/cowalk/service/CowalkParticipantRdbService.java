@@ -41,6 +41,12 @@ public class CowalkParticipantRdbService {
             throw new CoreException(COWALK_PARTICIPANT_ALREADY_JOIN);
         }
     }
+    
+    public void validNotJoin(Long memberId, Long cowalkPostId) {
+        if (!isJoin(memberId, cowalkPostId)) {
+            throw new CoreException(COWALK_PARTICIPANT_NOT_JOIN);
+        }
+    }
 
     public Map<Long, Integer> countByCowalkPostIds(List<Long> cowalkPostIds) {
         return cowalkParticipantRepository.countByCowalkPostIds(cowalkPostIds);

@@ -6,9 +6,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
+import com.dongsan.domain.domains.cowalk.domain.CowalkComment;
 import com.dongsan.domain.domains.cowalk.domain.CowalkCommentRepository;
 import com.dongsan.domain.domains.cowalk.domain.QCowalkComment;
+import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
@@ -45,5 +48,28 @@ public class CowalkCommentCoreRepository implements CowalkCommentRepository {
                         tuple -> tuple.get(cowalkComment.cowalkPostId),
                         tuple -> tuple.get(cowalkComment.count()).intValue()
                 ));
+    }
+
+    @Override
+    public CowalkComment save(CowalkComment cowalkComment) {
+        return cowalkCommentJpaRepository.save(cowalkComment);
+    }
+
+    @Override
+    public CursorResponse<CowalkComment> getCowalkComments(Integer size, Long lastId, Long cowalkPostId) {
+        List<CowalkComment> cowalkPosts = queryFactory.selectFrom(cowalkComment)
+                .where(
+                        cowalkComment.cowalkPostId.eq(cowalkPostId),
+                        cowalkCommentIdLt(lastId)
+                )
+                .orderBy(cowalkComment.id.desc())
+                .limit(size + 1L)
+                .fetch();
+
+        return new CursorResponse<>(cowalkPosts, size);
+    }
+
+    private BooleanExpression cowalkCommentIdLt(Long commentId) {
+        return commentId == null ? null : cowalkComment.id.lt(commentId);
     }
 }

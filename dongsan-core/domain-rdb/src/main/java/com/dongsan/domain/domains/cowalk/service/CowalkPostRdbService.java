@@ -34,7 +34,7 @@ public class CowalkPostRdbService {
         return cowalkPostRepository.getCowalkPosts(size, lastId, crewId);
     }
 
-    public void validJoin(Long cowalkPostId, Integer participantCount) {
+    public void validCapacity(Long cowalkPostId, Integer participantCount) {
         CowalkPost cowalkPost = getCowalkPost(cowalkPostId);
         cowalkPost.validCapacity(participantCount);
     }
