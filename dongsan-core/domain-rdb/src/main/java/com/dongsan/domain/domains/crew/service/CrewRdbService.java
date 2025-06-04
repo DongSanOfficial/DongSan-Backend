@@ -52,4 +52,8 @@ public class CrewRdbService {
     public CursorResponse<Crew> getMyCrews(Long memberId, Integer size, Long lastId) {
         return crewRepository.getMyCrews(memberId, size, lastId);
     }
+
+    public CursorResponse<Crew> searchCrews(String name, Integer size, Long lastId) {
+        return crewRepository.searchCrews(name, size, lastId);
+    }
 }

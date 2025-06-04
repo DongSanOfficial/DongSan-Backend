@@ -15,5 +15,7 @@ public interface CrewRepository {
     boolean existsByName(String name);
 
     CursorResponse<Crew> getMyCrews(Long memberId, Integer size, Long lastId);
+
+    CursorResponse<Crew> searchCrews(String name, Integer size, Long lastId);
 }
 

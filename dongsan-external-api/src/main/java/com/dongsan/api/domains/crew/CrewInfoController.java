@@ -1,23 +1,38 @@
 package com.dongsan.api.domains.crew;
 
-import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
-import com.dongsan.api.domains.crew.dto.request.CreateCrewResponse;
-import com.dongsan.api.domains.crew.dto.response.*;
-import com.dongsan.domain.support.paging.CursorRequest;
-import com.dongsan.domain.support.paging.CursorResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import com.dongsan.api.domains.auth.CustomAuthUser;
+import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
+import com.dongsan.api.domains.crew.dto.request.CreateCrewResponse;
+import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
+import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
+import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
+import com.dongsan.api.domains.crew.dto.response.GetCrewMemberRankingResponse;
+import com.dongsan.api.domains.crew.dto.response.GetCrewsResponse;
+import com.dongsan.api.domains.crew.dto.response.IsNameDuplicatedResponse;
+import com.dongsan.domain.support.paging.CursorRequest;
+import com.dongsan.domain.support.paging.CursorResponse;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping("/crews")
@@ -57,7 +72,8 @@ public class CrewInfoController {
             @RequestParam(required = false) Long lastId,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
-        CursorResponse<GetCrewFeedResponse> response = crewInfoFacade.getCrewFeed(crewId, customOAuth2User.getMemberId(),
+        CursorResponse<GetCrewFeedResponse> response = crewInfoFacade.getCrewFeed(crewId,
+                customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
         return ResponseEntity.ok(response);
     }
@@ -76,7 +92,8 @@ public class CrewInfoController {
         CrewRankingSort rankingSort = CrewRankingSort.typeOf(sort);
         CrewRankingPeriod rankingPeriod = CrewRankingPeriod.typeOf(period);
         CursorRequest cursorRequest = new CursorRequest(lastId, size);
-        CursorResponse<GetCrewMemberRankingResponse> response = crewInfoFacade.getCrewMemberRanking(crewId, customOAuth2User.getMemberId(), date,
+        CursorResponse<GetCrewMemberRankingResponse> response = crewInfoFacade.getCrewMemberRanking(crewId,
+                customOAuth2User.getMemberId(), date,
                 rankingSort, rankingPeriod, cursorRequest);
         return ResponseEntity.ok(response);
     }
@@ -113,5 +130,18 @@ public class CrewInfoController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "크루 검색")
+    @DeleteMapping(value = "/search")
+    public ResponseEntity<CursorResponse<GetCrewsResponse>> searchCrews(
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) Long lastId,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        CursorRequest cursorRequest = new CursorRequest(lastId, size);
+        CursorResponse<GetCrewsResponse> result
+                = crewInfoFacade.searchCrews(customOAuth2User.getMemberId(), name, cursorRequest);
+        return ResponseEntity.ok(result);
+    }
 
 }

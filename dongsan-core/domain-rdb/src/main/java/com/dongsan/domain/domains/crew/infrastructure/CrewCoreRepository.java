@@ -56,7 +56,29 @@ public class CrewCoreRepository implements CrewRepository {
         return new CursorResponse<>(crewList, size);
     }
 
+    @Override
+    public CursorResponse<Crew> searchCrews(String name, Integer size, Long lastId) {
+        List<Crew> crewList = queryFactory
+                .selectFrom(crew)
+                .where(
+                        nameLike(name),
+                        crewIdLt(lastId)
+                )
+                .orderBy(crew.id.desc())
+                .limit(size + 1)
+                .fetch();
+
+        return new CursorResponse<>(crewList, size);
+    }
+
     private BooleanExpression crewIdLt(Long id) {
         return id == null ? null : crew.id.lt(id);
+    }
+
+    private BooleanExpression nameLike(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return null;
+        }
+        return crew.name.like("%" + name + "%");
     }
 }
