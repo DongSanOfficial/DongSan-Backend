@@ -2,6 +2,9 @@ package com.dongsan.api.domains.crew.dto.request;
 
 import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
 import com.dongsan.domain.domains.crew.service.CreateCrewCommand;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,7 +29,8 @@ public record CreateCrewRequest(
         @NotNull(message = "크루 가입 제한 여부는 필수 입니다.")
         boolean limitEnable,
 
-        @Size(min = 2, max = 100)
+        @Min(2)
+        @Max(100)
         Integer memberLimit,
 
         Long crewImageId
@@ -40,7 +44,8 @@ public record CreateCrewRequest(
     }
 
     private static String trimToNull(String value) {
-        if (value == null) return null;
+        if (value == null)
+            return null;
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
