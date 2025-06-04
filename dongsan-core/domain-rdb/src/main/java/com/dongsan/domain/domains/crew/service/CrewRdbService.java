@@ -1,9 +1,15 @@
 package com.dongsan.domain.domains.crew.service;
 
-import com.dongsan.domain.domains.crew.domain.*;
+import org.springframework.stereotype.Service;
+
+import com.dongsan.domain.domains.crew.domain.Capacity;
+import com.dongsan.domain.domains.crew.domain.Crew;
+import com.dongsan.domain.domains.crew.domain.CrewRepository;
+import com.dongsan.domain.domains.crew.domain.PrivateCrew;
+import com.dongsan.domain.domains.crew.domain.PublicCrew;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import org.springframework.stereotype.Service;
+import com.dongsan.domain.support.paging.CursorResponse;
 
 @Service
 public class CrewRdbService {
@@ -31,14 +37,19 @@ public class CrewRdbService {
 
         Capacity capacity = new Capacity(command.limitEnable(), command.memberLimit());
         Crew crew = switch (command.exposeLevel()) {
-            case PUBLIC ->
-                    new PublicCrew(command.name(), command.description(), command.rule(), command.crewImageUrl(), capacity);
+            case PUBLIC -> new PublicCrew(command.name(), command.description(), command.rule(), command.crewImageUrl(),
+                    capacity);
             case PRIVATE -> {
                 String hashedPassword = passwordHasher.hash(command.password());
-                yield new PrivateCrew(command.name(), command.description(), command.rule(), command.crewImageUrl(), capacity, hashedPassword);
+                yield new PrivateCrew(command.name(), command.description(), command.rule(), command.crewImageUrl(),
+                        capacity, hashedPassword);
             }
         };
 
         return crewRepository.save(crew);
+    }
+
+    public CursorResponse<Crew> getMyCrews(Long memberId, Integer size, Long lastId) {
+        return crewRepository.getMyCrews(memberId, size, lastId);
     }
 }

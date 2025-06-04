@@ -1,8 +1,10 @@
 package com.dongsan.domain.domains.crew.domain;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.dongsan.domain.support.paging.CursorResponse;
 
 @Repository
 public interface CrewRepository {
@@ -11,5 +13,7 @@ public interface CrewRepository {
     Long save(Crew crew);
 
     boolean existsByName(String name);
+
+    CursorResponse<Crew> getMyCrews(Long memberId, Integer size, Long lastId);
 }
 
