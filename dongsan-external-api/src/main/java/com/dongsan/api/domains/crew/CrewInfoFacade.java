@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
+import com.dongsan.api.domains.crew.dto.request.CreateUpdateCrewRequest;
 import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
@@ -26,6 +26,8 @@ import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
+import com.dongsan.domain.support.error.CoreErrorCode;
+import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
@@ -58,12 +60,25 @@ public class CrewInfoFacade {
     }
 
     @Transactional
-    public Long saveCrew(CreateCrewRequest request, Long memberId) {
+    public Long saveCrew(CreateUpdateCrewRequest request, Long memberId) {
         String imageUrl =
                 request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
-        Long crewId = crewRdbService.save(request.toCreateCrewCommand(imageUrl));
-        crewMemberRdbService.saveManager(crewId, memberId);
+        Long crewId = crewRdbService.save(request.toCrewInfoCommand(imageUrl));
+        crewMemberRdbService.saveCrewManager(crewId, memberId);
         return crewId;
+    }
+
+    @Transactional
+    public void updateCrew(CreateUpdateCrewRequest request, Long crewId, Long memberId) {
+        Crew crew = crewRdbService.getCrew(crewId);
+        crewMemberRdbService.validateIsCrewManager(crewId, memberId);
+        int memberCount = crewMemberRdbService.countCrewMember(crewId);
+        if (request.memberLimit() != null && memberCount > request.memberLimit()) {
+            throw new CoreException(CoreErrorCode.CREW_LIMIT_LT_MEMBER);
+        }
+        String imageUrl =
+                request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
+        crewRdbService.update(crew, request.toCrewInfoCommand(imageUrl));
     }
 
     @Transactional
@@ -71,12 +86,6 @@ public class CrewInfoFacade {
         String imageUrl = s3FileService.saveFile(image);
         Long imageId = imageRdbService.save(imageUrl);
         return new CreateCrewImageResponse(imageId, imageUrl);
-    }
-
-    @Transactional
-    public void leaveCrew(Long crewId, Long memberId) {
-        crewRdbService.getCrew(crewId);
-        crewMemberRdbService.leaveCrew(crewId, memberId);
     }
 
     @Transactional(readOnly = true)
@@ -106,6 +115,7 @@ public class CrewInfoFacade {
         return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat);
     }
 
+    @Transactional(readOnly = true)
     public CursorResponse<GetCrewMemberRankingResponse> getCrewMemberRanking(Long crewId, Long memberId, LocalDate date,
             CrewRankingSort sort, CrewRankingPeriod period, CursorRequest paging) {
         Crew crew = crewRdbService.getCrew(crewId);
@@ -124,6 +134,38 @@ public class CrewInfoFacade {
         Map<Long, Member> memberMap = memberRdbService.getMemberMap(memberIds);
         List<GetCrewMemberRankingResponse> result = GetCrewMemberRankingResponse.from(response.getData(), memberMap);
         return new CursorResponse<>(result, response.getHasNext());
+    }
+
+    @Transactional
+    public void leaveCrew(Long crewId, Long memberId) {
+        crewRdbService.getCrew(crewId);
+        crewMemberRdbService.leaveCrew(crewId, memberId);
+    }
+
+    @Transactional
+    public void joinCrew(Long crewId, Long memberId, String password) {
+        Crew crew = crewRdbService.getCrew(crewId);
+        if (crew.isLimitedCrew()) {
+            joinLimitedCrew(crewId, memberId, password);
+        } else {
+            joinUnLimitedCrew(crew, memberId, password);
+        }
+    }
+
+    private void joinUnLimitedCrew(Crew crew, Long memberId, String password) {
+        crewMemberRdbService.validateNotAlreadyJoined(crew.getId(), memberId);
+        crewRdbService.comparePassword(crew, password);
+        crewMemberRdbService.joinCrew(crew.getId(), memberId);
+    }
+
+    private void joinLimitedCrew(Long crewId, Long memberId, String password) {
+        Crew crew = crewRdbService.getCrewWithLock(crewId);
+        int memberCount = crewMemberRdbService.countCrewMember(crewId);
+
+        crew.validateNotFull(memberCount);
+        crewMemberRdbService.validateNotAlreadyJoined(crewId, memberId);
+        crewRdbService.comparePassword(crew, password);
+        crewMemberRdbService.joinCrew(crewId, memberId);
     }
 
     public CursorResponse<GetCrewsResponse> getMyCrews(Long memberId, CursorRequest paging) {

@@ -1,7 +1,7 @@
 package com.dongsan.api.domains.crew.dto.request;
 
 import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
-import com.dongsan.domain.domains.crew.service.CreateCrewCommand;
+import com.dongsan.domain.domains.crew.service.CrewInfoCommand;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record CreateCrewRequest(
+public record CreateUpdateCrewRequest(
         @NotBlank(message = "이름은 필수입니다.")
         @Size(min = 1, max = 20, message = "이름은 1자 이상 20자 이하 입니다.")
         String name,
@@ -36,7 +36,7 @@ public record CreateCrewRequest(
         Long crewImageId
 ) {
 
-    public CreateCrewRequest {
+    public CreateUpdateCrewRequest {
         name = trimToNull(name);
         description = trimToNull(description);
         rule = trimToNull(rule);
@@ -44,14 +44,13 @@ public record CreateCrewRequest(
     }
 
     private static String trimToNull(String value) {
-        if (value == null)
-            return null;
+        if (value == null) return null;
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
 
-    public CreateCrewCommand toCreateCrewCommand(String imageUrl) {
-        return new CreateCrewCommand(
+    public CrewInfoCommand toCrewInfoCommand(String imageUrl) {
+        return new CrewInfoCommand(
                 name, description, rule, visibility, password, limitEnable, memberLimit, imageUrl
         );
     }

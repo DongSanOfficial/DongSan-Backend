@@ -1,94 +1,84 @@
 package com.dongsan.domain.domains.crew.domain;
 
 import com.dongsan.domain.domains.common.BaseEntity;
-import com.dongsan.domain.support.error.CoreErrorCode;
-import com.dongsan.domain.support.error.CoreException;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "crew")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "crew_type")
-public abstract class Crew extends BaseEntity {
+public class Crew extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    private String description;
-
-    private String rule;
-
-    private String crewImageUrl;
+    @Embedded
+    private CrewInfo info;
 
     @Embedded
     private Capacity capacity;
 
+    @Embedded
+    private CrewAccessPolicy accessPolicy;
+
     protected Crew() {
     }
 
-    public Crew(String name, String description, String rule, String crewImageUrl, Capacity capacity) {
-        validateName(name);
-        validateDescription(description);
-        validateRule(rule);
-
-        this.name = name;
-        this.description = description;
-        this.rule = rule;
-        this.crewImageUrl = crewImageUrl;
+    public Crew(CrewInfo info, Capacity capacity, CrewAccessPolicy accessPolicy) {
+        this.info = info;
         this.capacity = capacity;
+        this.accessPolicy = accessPolicy;
     }
-
-    private void validateName(String name) {
-        if (name == null || name.isBlank() || name.length() > 20) {
-            throw new CoreException(CoreErrorCode.CREW_NAME_NOT_VALID);
-        }
-    }
-
-    private void validateDescription(String description) {
-        if (description != null && !description.isBlank() && description.length() > 250) {
-            throw new CoreException(CoreErrorCode.CREW_DESCRIPTION_NOT_VALID);
-        }
-    }
-
-    private void validateRule(String rule) {
-        if (rule != null && !rule.isBlank() && rule.length() > 250) {
-            throw new CoreException(CoreErrorCode.CREW_RULE_NOT_VALID);
-        }
-    }
-
-    public abstract void canAccess(boolean isCrewMember);
-
-    public abstract String provideVisibility();
 
     public Long getId() {
         return id;
     }
 
     public String getName() {
-        return name;
+        return info.getName();
     }
 
     public String getDescription() {
-        return description;
+        return info.getDescription();
     }
 
     public String getRule() {
-        return rule;
+        return info.getRule();
     }
 
     public String getCrewImageUrl() {
-        return crewImageUrl;
-    }
-
-    public boolean isMemberLimited() {
-        return capacity.isMemberLimited();
+        return info.getCrewImageUrl();
     }
 
     public Integer getMemberLimit() {
         return capacity.getMemberLimit();
     }
 
+    public String getCrewType() {
+        return accessPolicy.getCrewExposeLevel().name();
+    }
+
+    public String getPassword() {
+        return accessPolicy.getHashedPassword();
+    }
+
+    public void validateNotFull(int memberCount) {
+        capacity.validateNotFull(memberCount);
+    }
+
+    public boolean isLimitedCrew() {
+        return capacity.isLimitedCrew();
+    }
+
+    public void canAccess(boolean isCrewMember) {
+        accessPolicy.canAccess(isCrewMember);
+    }
+
+    public boolean needsPassword() {
+        return accessPolicy.needsPassword();
+    }
+
+    public void update(CrewInfo info, Capacity capacity, CrewAccessPolicy accessPolicy) {
+        this.info = info;
+        this.capacity = capacity;
+        this.accessPolicy = accessPolicy;
+    }
 }

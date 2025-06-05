@@ -2,7 +2,7 @@ package com.dongsan.domain.domains.crew.service;
 
 import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
 
-public record CreateCrewCommand(
+public record CrewInfoCommand(
         String name,
         String description,
         String rule,
