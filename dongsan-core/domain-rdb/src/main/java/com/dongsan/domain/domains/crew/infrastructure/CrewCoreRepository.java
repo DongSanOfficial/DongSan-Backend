@@ -58,7 +58,7 @@ public class CrewCoreRepository implements CrewRepository {
                         crewIdLt(lastId)
                 )
                 .orderBy(crew.id.desc())
-                .limit(size + 1)
+                .limit(size + 1L)
                 .fetch();
 
         return new CursorResponse<>(crewList, size);
@@ -73,7 +73,7 @@ public class CrewCoreRepository implements CrewRepository {
                         crewIdLt(lastId)
                 )
                 .orderBy(crew.id.desc())
-                .limit(size + 1)
+                .limit(size + 1L)
                 .fetch();
 
         return new CursorResponse<>(crewList, size);
@@ -107,7 +107,7 @@ public class CrewCoreRepository implements CrewRepository {
                 .from(crewRanking)
                 .join(crew).on(crew.id.eq(crewRanking.crewId))
                 .where(cursorCondition)
-                .limit(size + 1)
+                .limit(size + 1L)
                 .orderBy(crewRanking.logCount.desc(), crewRanking.updatedAt.asc(), crewRanking.crewId.asc())
                 .fetch();
 
