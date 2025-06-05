@@ -17,5 +17,7 @@ public interface CrewRepository {
     CursorResponse<Crew> getMyCrews(Long memberId, Integer size, Long lastId);
 
     CursorResponse<Crew> searchCrews(String name, Integer size, Long lastId);
+
+    CursorResponse<Crew> findCrewsByLogThisWeek(int size, Long lastId);
 }
 

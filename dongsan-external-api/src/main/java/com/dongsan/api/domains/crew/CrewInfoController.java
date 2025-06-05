@@ -131,7 +131,7 @@ public class CrewInfoController {
     }
 
     @Operation(summary = "크루 검색")
-    @DeleteMapping(value = "/search")
+    @GetMapping(value = "/search")
     public ResponseEntity<CursorResponse<GetCrewsResponse>> searchCrews(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "10") Integer size,
@@ -141,6 +141,19 @@ public class CrewInfoController {
         CursorRequest cursorRequest = new CursorRequest(lastId, size);
         CursorResponse<GetCrewsResponse> result
                 = crewInfoFacade.searchCrews(customOAuth2User.getMemberId(), name, cursorRequest);
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(summary = "크루 추천")
+    @GetMapping(value = "/recommend")
+    public ResponseEntity<CursorResponse<GetCrewsResponse>> recommendCrews(
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) Long lastId,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        CursorRequest cursorRequest = new CursorRequest(lastId, size);
+        CursorResponse<GetCrewsResponse> result
+                = crewInfoFacade.recommendCrews(customOAuth2User.getMemberId(), cursorRequest);
         return ResponseEntity.ok(result);
     }
 

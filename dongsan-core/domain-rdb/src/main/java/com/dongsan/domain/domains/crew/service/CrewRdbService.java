@@ -56,4 +56,8 @@ public class CrewRdbService {
     public CursorResponse<Crew> searchCrews(String name, Integer size, Long lastId) {
         return crewRepository.searchCrews(name, size, lastId);
     }
+
+    public CursorResponse<Crew> recommendCrews(Integer size, Long lastId) {
+        return crewRepository.findCrewsByLogThisWeek(size, lastId);
+    }
 }

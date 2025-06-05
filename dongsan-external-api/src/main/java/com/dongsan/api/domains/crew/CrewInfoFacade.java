@@ -152,4 +152,17 @@ public class CrewInfoFacade {
         return new CursorResponse<>(result, crews.getHasNext());
     }
 
+    public CursorResponse<GetCrewsResponse> recommendCrews(Long memberId, CursorRequest paging) {
+        CursorResponse<Crew> crews = crewRdbService.recommendCrews(paging.size(), paging.lastId());
+
+        List<Long> crewIds = crews.getData().stream().map(Crew::getId).toList();
+
+        Map<Long, CrewMember> crewMemberMap = crewMemberRdbService.findByCrewIdAndMemberId(crewIds, memberId);
+        Map<Long, Integer> memberCountMap = crewMemberRdbService.countByCrewIds(crewIds);
+
+        List<GetCrewsResponse> result = GetCrewsResponse.from(crews.getData(), crewMemberMap, memberCountMap);
+
+        return new CursorResponse<>(result, crews.getHasNext());
+    }
+
 }
