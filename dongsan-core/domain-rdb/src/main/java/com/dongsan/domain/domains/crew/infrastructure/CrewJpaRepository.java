@@ -17,5 +17,6 @@ public interface CrewJpaRepository extends JpaRepository<Crew, Long> {
     @Query("select c from Crew c where c.id = :id")
     Optional<Crew> findByIdWithLock(@Param("id") Long id);
 
-    boolean existsByName(String name);
+    boolean existsByInfo_Name(String name);
+    
 }

@@ -31,7 +31,7 @@ public class CrewCoreRepository implements CrewRepository {
 
     @Override
     public boolean existsByName(String name) {
-        return crewJpaRepository.existsByName(name.trim());
+        return crewJpaRepository.existsByInfo_Name(name.trim());
     }
 
 }
