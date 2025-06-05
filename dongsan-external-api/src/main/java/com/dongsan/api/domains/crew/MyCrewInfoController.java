@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/users/crews")
 @Validated
-@Tag(name = "나의 크루")
+@Tag(name = "마이페이지")
 public class MyCrewInfoController {
     private final CrewInfoFacade crewInfoFacade;
 
