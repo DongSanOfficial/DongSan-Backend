@@ -37,17 +37,17 @@ public class Capacity {
         }
     }
 
+    public void validateNotFull(int memberCount) {
+        if (memberCount >= this.memberLimit) {
+            throw new CoreException(CoreErrorCode.CREW_MEMBER_FULL);
+        }
+    }
+
     public boolean isLimitedCrew() {
         return capacityType.isLimitedCrew();
     }
 
     public Integer getMemberLimit() {
         return memberLimit;
-    }
-
-    public void validateNotFull(int memberCount) {
-        if (memberCount >= this.memberLimit) {
-            throw new CoreException(CoreErrorCode.CREW_MEMBER_FULL);
-        }
     }
 }

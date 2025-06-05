@@ -15,7 +15,7 @@ public class CrewMemberRdbService {
         this.crewMemberRepository = crewMemberRepository;
     }
 
-    public void saveManager(Long crewId, Long memberId) {
+    public void saveCrewManager(Long crewId, Long memberId) {
         CrewMember crewMember = new CrewMember(crewId, memberId, CrewMemberRole.MANAGER);
         crewMemberRepository.save(crewMember);
     }

@@ -1,7 +1,6 @@
 package fixture;
 
 import com.dongsan.domain.domains.crew.domain.Capacity;
-import com.dongsan.domain.domains.crew.domain.PrivateCrew;
 
 public class PrivateCrewTestBuilder {
     private String name = "test crew name";

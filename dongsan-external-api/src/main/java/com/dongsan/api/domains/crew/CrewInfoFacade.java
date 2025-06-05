@@ -56,7 +56,7 @@ public class CrewInfoFacade {
     public Long saveCrew(CreateCrewRequest request, Long memberId) {
         String imageUrl = request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
         Long crewId = crewRdbService.save(request.toCreateCrewCommand(imageUrl));
-        crewMemberRdbService.saveManager(crewId, memberId);
+        crewMemberRdbService.saveCrewManager(crewId, memberId);
         return crewId;
     }
 
