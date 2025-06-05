@@ -29,10 +29,21 @@ public class CrewMemberRdbService {
         return crewMemberRepository.existsByCrewIdAndMemberId(crewId, memberId);
     }
 
+    public boolean isCrewManager(Long crewId, Long memberId) {
+        return crewMemberRepository.existsByCrewIdAndMemberIdAndRole(crewId, memberId, CrewMemberRole.MANAGER);
+    }
+
     public void validateIsCrewMember(Long crewId, Long memberId) {
         boolean isCrewMember = isCrewMember(crewId, memberId);
         if (!isCrewMember) {
             throw new CoreException(CoreErrorCode.CREW_NOT_JOINED);
+        }
+    }
+
+    public void validateIsCrewManager(Long crewId, Long memberId) {
+        boolean isCrewManager = isCrewManager(crewId, memberId);
+        if (!isCrewManager) {
+            throw new CoreException(CoreErrorCode.CREW_NOT_MANAGER);
         }
     }
 

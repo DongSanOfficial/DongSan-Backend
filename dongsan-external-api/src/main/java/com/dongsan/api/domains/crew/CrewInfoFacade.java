@@ -1,6 +1,7 @@
 package com.dongsan.api.domains.crew;
 
 import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
+import com.dongsan.api.domains.crew.dto.request.UpdateCrewRequest;
 import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
@@ -16,6 +17,8 @@ import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
+import com.dongsan.domain.support.error.CoreErrorCode;
+import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
@@ -55,9 +58,21 @@ public class CrewInfoFacade {
     @Transactional
     public Long saveCrew(CreateCrewRequest request, Long memberId) {
         String imageUrl = request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
-        Long crewId = crewRdbService.save(request.toCreateCrewCommand(imageUrl));
+        Long crewId = crewRdbService.save(request.toCrewInfoCommand(imageUrl));
         crewMemberRdbService.saveCrewManager(crewId, memberId);
         return crewId;
+    }
+
+    @Transactional
+    public void updateCrew(UpdateCrewRequest request, Long crewId, Long memberId) {
+        Crew crew = crewRdbService.getCrew(crewId);
+        crewMemberRdbService.validateIsCrewManager(crewId, memberId);
+        int memberCount = crewMemberRdbService.countCrewMember(crewId);
+        if (request.memberLimit() != null && memberCount > request.memberLimit()) {
+            throw new CoreException(CoreErrorCode.CREW_LIMIT_LT_MEMBER);
+        }
+        String imageUrl = request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
+        crewRdbService.update(crew, request.toCrewInfoCommand(imageUrl));
     }
 
     @Transactional
@@ -145,6 +160,4 @@ public class CrewInfoFacade {
         crewRdbService.comparePassword(crew, password);
         crewMemberRdbService.joinCrew(crewId, memberId);
     }
-
-
 }

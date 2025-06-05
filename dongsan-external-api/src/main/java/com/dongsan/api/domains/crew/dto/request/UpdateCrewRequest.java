@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record CreateCrewRequest(
+public record UpdateCrewRequest(
         @NotBlank(message = "이름은 필수입니다.")
         @Size(min = 1, max = 20, message = "이름은 1자 이상 20자 이하 입니다.")
         String name,
@@ -32,7 +32,7 @@ public record CreateCrewRequest(
         Long crewImageId
 ) {
 
-    public CreateCrewRequest {
+    public UpdateCrewRequest {
         name = trimToNull(name);
         description = trimToNull(description);
         rule = trimToNull(rule);

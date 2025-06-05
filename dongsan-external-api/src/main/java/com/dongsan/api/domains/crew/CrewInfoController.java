@@ -4,6 +4,7 @@ import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
 import com.dongsan.api.domains.crew.dto.request.CreateCrewResponse;
 import com.dongsan.api.domains.crew.dto.request.JoinCrewRequest;
+import com.dongsan.api.domains.crew.dto.request.UpdateCrewRequest;
 import com.dongsan.api.domains.crew.dto.response.*;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
@@ -112,6 +113,17 @@ public class CrewInfoController {
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         crewInfoFacade.joinCrew(crewId, customOAuth2User.getMemberId(), request.password());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "크루 수정")
+    @PutMapping("/{crewId}")
+    public ResponseEntity<Void> updateCrew(
+            @PathVariable Long crewId,
+            @Valid @RequestBody UpdateCrewRequest request,
+            @AuthenticationPrincipal CustomAuthUser customOAuth2User
+    ) {
+        crewInfoFacade.updateCrew(request, crewId, customOAuth2User.getMemberId());
         return ResponseEntity.ok().build();
     }
 

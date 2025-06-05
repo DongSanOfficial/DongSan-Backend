@@ -76,4 +76,9 @@ public class Crew extends BaseEntity {
         return accessPolicy.needsPassword();
     }
 
+    public void update(CrewInfo info, Capacity capacity, CrewAccessPolicy accessPolicy) {
+        this.info = info;
+        this.capacity = capacity;
+        this.accessPolicy = accessPolicy;
+    }
 }

@@ -2,6 +2,7 @@ package com.dongsan.domain.domains.crew.infrastructure;
 
 import com.dongsan.domain.domains.crew.domain.CrewMember;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRepository;
+import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,6 +21,11 @@ public class CrewMemberCoreRepository implements CrewMemberRepository {
     @Override
     public boolean existsByCrewIdAndMemberId(Long crewId, Long memberId) {
         return crewMemberJpaRepository.existsByCrewIdAndMemberId(crewId, memberId);
+    }
+
+    @Override
+    public boolean existsByCrewIdAndMemberIdAndRole(Long crewId, Long memberId, CrewMemberRole role) {
+        return crewMemberJpaRepository.existsByCrewIdAndMemberIdAndRole(crewId, memberId, role);
     }
 
     @Override
