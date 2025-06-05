@@ -61,6 +61,8 @@ public abstract class Crew extends BaseEntity {
 
     public abstract void canAccess(boolean isCrewMember);
 
+    public abstract boolean needsPassword();
+
     public abstract String provideVisibility();
 
     public Long getId() {
@@ -84,11 +86,18 @@ public abstract class Crew extends BaseEntity {
     }
 
     public boolean isMemberLimited() {
-        return capacity.isMemberLimited();
+        return capacity.isLimitedCrew();
     }
 
     public Integer getMemberLimit() {
         return capacity.getMemberLimit();
     }
 
+    public void validateNotFull(int memberCount) {
+        capacity.validateNotFull(memberCount);
+    }
+
+    public boolean isLimitedCrew() {
+        return capacity.isLimitedCrew();
+    }
 }

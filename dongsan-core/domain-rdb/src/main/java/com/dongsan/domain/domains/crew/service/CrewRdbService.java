@@ -20,6 +20,11 @@ public class CrewRdbService {
                 .orElseThrow(() -> new CoreException(CoreErrorCode.CREW_NOT_FOUND));
     }
 
+    public Crew getCrewWithLock(Long crewId) {
+        return crewRepository.findByIdWithLock(crewId)
+                .orElseThrow(() -> new CoreException(CoreErrorCode.CREW_NOT_FOUND));
+    }
+
     public boolean isNameDuplicated(String name) {
         return crewRepository.existsByName(name);
     }
@@ -40,5 +45,15 @@ public class CrewRdbService {
         };
 
         return crewRepository.save(crew);
+    }
+
+    public void comparePassword(Crew crew, String password) {
+        if (!crew.needsPassword()) {
+            return;
+        }
+        boolean verified = passwordHasher.verify(password.trim(), ((PrivateCrew) crew).getHashedPassword());
+        if (!verified) {
+            throw new CoreException(CoreErrorCode.CREW_PASSWORD_INVALID);
+        }
     }
 }

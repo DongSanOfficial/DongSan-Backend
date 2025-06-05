@@ -4,7 +4,8 @@ import com.dongsan.domain.domains.common.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "crew_member")
+@Table(name = "crew_member",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"crewId", "memberId"}))
 public class CrewMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

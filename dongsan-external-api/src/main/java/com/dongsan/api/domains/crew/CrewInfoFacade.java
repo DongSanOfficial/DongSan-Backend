@@ -67,12 +67,6 @@ public class CrewInfoFacade {
         return new CreateCrewImageResponse(imageId, imageUrl);
     }
 
-    @Transactional
-    public void leaveCrew(Long crewId, Long memberId) {
-        crewRdbService.getCrew(crewId);
-        crewMemberRdbService.leaveCrew(crewId, memberId);
-    }
-
     @Transactional(readOnly = true)
     public CursorResponse<GetCrewFeedResponse> getCrewFeed(Long crewId, Long memberId, CursorRequest paging) {
         Crew crew = crewRdbService.getCrew(crewId);
@@ -99,6 +93,7 @@ public class CrewInfoFacade {
         return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat);
     }
 
+    @Transactional(readOnly = true)
     public CursorResponse<GetCrewMemberRankingResponse> getCrewMemberRanking(Long crewId, Long memberId, LocalDate date,
                                                                              CrewRankingSort sort, CrewRankingPeriod period, CursorRequest paging) {
         Crew crew = crewRdbService.getCrew(crewId);
@@ -118,4 +113,38 @@ public class CrewInfoFacade {
         List<GetCrewMemberRankingResponse> result = GetCrewMemberRankingResponse.from(response.getData(), memberMap);
         return new CursorResponse<>(result, response.getHasNext());
     }
+
+    @Transactional
+    public void leaveCrew(Long crewId, Long memberId) {
+        crewRdbService.getCrew(crewId);
+        crewMemberRdbService.leaveCrew(crewId, memberId);
+    }
+
+    @Transactional
+    public void joinCrew(Long crewId, Long memberId, String password) {
+        Crew crew = crewRdbService.getCrew(crewId);
+        if (crew.isLimitedCrew()) {
+            joinLimitedCrew(crewId, memberId, password);
+        } else {
+            joinUnLimitedCrew(crew, memberId, password);
+        }
+    }
+
+    private void joinUnLimitedCrew(Crew crew, Long memberId, String password) {
+        crewMemberRdbService.validateNotAlreadyJoined(crew.getId(), memberId);
+        crewRdbService.comparePassword(crew, password);
+        crewMemberRdbService.joinCrew(crew.getId(), memberId);
+    }
+
+    private void joinLimitedCrew(Long crewId, Long memberId, String password) {
+        Crew crew = crewRdbService.getCrewWithLock(crewId);
+        int memberCount = crewMemberRdbService.countCrewMember(crewId);
+
+        crew.validateNotFull(memberCount);
+        crewMemberRdbService.validateNotAlreadyJoined(crewId, memberId);
+        crewRdbService.comparePassword(crew, password);
+        crewMemberRdbService.joinCrew(crewId, memberId);
+    }
+
+
 }

@@ -20,6 +20,11 @@ public class PublicCrew extends Crew {
     }
 
     @Override
+    public boolean needsPassword() {
+        return false;
+    }
+
+    @Override
     public String provideVisibility() {
         return CrewExposeLevel.PUBLIC.toString();
     }

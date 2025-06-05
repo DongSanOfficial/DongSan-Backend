@@ -21,10 +21,7 @@ public class CrewMemberRdbService {
     }
 
     public void leaveCrew(Long crewId, Long memberId) {
-        boolean isCrewMember = isCrewMember(crewId, memberId);
-        if (!isCrewMember) {
-            throw new CoreException(CoreErrorCode.CREW_NOT_JOINED);
-        }
+        validateIsCrewMember(crewId, memberId);
         crewMemberRepository.deleteByCrewIdAndMemberId(crewId, memberId);
     }
 
@@ -39,7 +36,19 @@ public class CrewMemberRdbService {
         }
     }
 
+    public void joinCrew(Long crewId, Long memberId) {
+        CrewMember crewMember = new CrewMember(crewId, memberId, CrewMemberRole.PARTICIPANT);
+        crewMemberRepository.save(crewMember);
+    }
+
     public int countCrewMember(Long crewId) {
         return crewMemberRepository.countByCrewId(crewId);
+    }
+
+    public void validateNotAlreadyJoined(Long crewId, Long memberId) {
+        boolean hasJoined = isCrewMember(crewId, memberId);
+        if (hasJoined) {
+            throw new CoreException(CoreErrorCode.CREW_ALREADY_JOINED);
+        }
     }
 }

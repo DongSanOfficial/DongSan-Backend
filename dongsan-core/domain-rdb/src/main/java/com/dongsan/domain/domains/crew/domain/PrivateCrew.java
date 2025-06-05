@@ -36,9 +36,17 @@ public class PrivateCrew extends Crew {
     }
 
     @Override
+    public boolean needsPassword() {
+        return true;
+    }
+
+    @Override
     public String provideVisibility() {
         return CrewExposeLevel.PRIVATE.toString();
     }
 
 
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
 }

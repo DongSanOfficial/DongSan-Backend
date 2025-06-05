@@ -30,12 +30,6 @@ jobs:
       - name: Build
         run: ./gradlew clean build
 
-      - name: SonarCloud 동작
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonar --info
-
       - name: Docker Hub Login
         uses: docker/login-action@v2
         with:
