@@ -1,10 +1,8 @@
 package com.dongsan.api.domains.crew;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
-import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
-import com.dongsan.api.domains.crew.dto.request.CreateCrewResponse;
+import com.dongsan.api.domains.crew.dto.request.CreateUpdateCrewRequest;
 import com.dongsan.api.domains.crew.dto.request.JoinCrewRequest;
-import com.dongsan.api.domains.crew.dto.request.UpdateCrewRequest;
 import com.dongsan.api.domains.crew.dto.response.*;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
@@ -86,7 +84,7 @@ public class CrewInfoController {
     @Operation(summary = "크루 등록")
     @PostMapping()
     public ResponseEntity<CreateCrewResponse> createCrew(
-            @Valid @RequestBody CreateCrewRequest request,
+            @Valid @RequestBody CreateUpdateCrewRequest request,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         Long crewId = crewInfoFacade.saveCrew(request, customOAuth2User.getMemberId());
@@ -120,7 +118,7 @@ public class CrewInfoController {
     @PutMapping("/{crewId}")
     public ResponseEntity<Void> updateCrew(
             @PathVariable Long crewId,
-            @Valid @RequestBody UpdateCrewRequest request,
+            @Valid @RequestBody CreateUpdateCrewRequest request,
             @AuthenticationPrincipal CustomAuthUser customOAuth2User
     ) {
         crewInfoFacade.updateCrew(request, crewId, customOAuth2User.getMemberId());

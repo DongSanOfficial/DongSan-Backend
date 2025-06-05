@@ -1,7 +1,6 @@
 package com.dongsan.api.domains.crew;
 
-import com.dongsan.api.domains.crew.dto.request.CreateCrewRequest;
-import com.dongsan.api.domains.crew.dto.request.UpdateCrewRequest;
+import com.dongsan.api.domains.crew.dto.request.CreateUpdateCrewRequest;
 import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
@@ -56,7 +55,7 @@ public class CrewInfoFacade {
     }
 
     @Transactional
-    public Long saveCrew(CreateCrewRequest request, Long memberId) {
+    public Long saveCrew(CreateUpdateCrewRequest request, Long memberId) {
         String imageUrl = request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
         Long crewId = crewRdbService.save(request.toCrewInfoCommand(imageUrl));
         crewMemberRdbService.saveCrewManager(crewId, memberId);
@@ -64,7 +63,7 @@ public class CrewInfoFacade {
     }
 
     @Transactional
-    public void updateCrew(UpdateCrewRequest request, Long crewId, Long memberId) {
+    public void updateCrew(CreateUpdateCrewRequest request, Long crewId, Long memberId) {
         Crew crew = crewRdbService.getCrew(crewId);
         crewMemberRdbService.validateIsCrewManager(crewId, memberId);
         int memberCount = crewMemberRdbService.countCrewMember(crewId);
