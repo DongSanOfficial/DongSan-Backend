@@ -20,13 +20,18 @@ public class CrewCoreRepository implements CrewRepository {
     }
 
     @Override
+    public Optional<Crew> findByIdWithLock(Long crewId) {
+        return crewJpaRepository.findByIdWithLock(crewId);
+    }
+
+    @Override
     public Long save(Crew crew) {
         return crewJpaRepository.save(crew).getId();
     }
 
     @Override
     public boolean existsByName(String name) {
-        return crewJpaRepository.existsByName(name.trim());
+        return crewJpaRepository.existsByInfo_Name(name.trim());
     }
 
 }

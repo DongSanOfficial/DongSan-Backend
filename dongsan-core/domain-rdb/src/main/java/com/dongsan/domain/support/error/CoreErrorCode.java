@@ -57,6 +57,10 @@ public enum CoreErrorCode {
     CREW_CANT_ACCESS(CoreErrorStatus.FORBIDDEN, "CREW-10", "해당 크루에 접근할 수 없습니다. (가입하지 않은 비공개크루)"),
     CREW_INVALID_SORT(CoreErrorStatus.BAD_REQUEST, "CREW-11", "존재하지 않는 정렬 방식 입니다. (지원 정렬 방식 : distance, duration"),
     CREW_INVALID_PERIOD(CoreErrorStatus.BAD_REQUEST, "CREW-12", "지원하지 않는 기간 입니다. (지원 기간 : daily, weekly, monthly"),
+    CREW_MEMBER_FULL(CoreErrorStatus.CONFLICT, "CREW-13", "가입 가능 인원이 다 차서 가입할 수 없습니다."),
+    CREW_PASSWORD_INVALID(CoreErrorStatus.CONFLICT, "CREW-14", "비밀번호가 일치하지 않습니다."),
+    CREW_NOT_MANAGER(CoreErrorStatus.FORBIDDEN, "CREW-14", "크루의 메니저가 아닙니다."),
+    CREW_LIMIT_LT_MEMBER(CoreErrorStatus.FORBIDDEN, "CREW-15", "가입 제한 인원을 크루에 이미 가입한 사용자 수 보다 적은 인원으로 설정할 수 없습니다."),
 
 
     // cowalk

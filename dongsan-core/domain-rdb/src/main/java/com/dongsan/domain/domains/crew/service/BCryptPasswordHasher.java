@@ -15,6 +15,7 @@ public class BCryptPasswordHasher implements PasswordHasher {
 
     @Override
     public boolean verify(String rawPassword, String hashedPassword) {
+        validatePassword(rawPassword);
         return BCrypt.checkpw(rawPassword, hashedPassword);
     }
 

@@ -4,7 +4,7 @@ public enum CapacityType {
     LIMITED,
     UNLIMITED;
 
-    public boolean isMemberLimited() {
+    public boolean isLimitedCrew() {
         return this.equals(LIMITED);
     }
 }
