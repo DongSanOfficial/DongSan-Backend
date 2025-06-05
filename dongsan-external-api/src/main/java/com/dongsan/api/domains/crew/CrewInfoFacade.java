@@ -170,41 +170,28 @@ public class CrewInfoFacade {
 
     public CursorResponse<GetCrewsResponse> getMyCrews(Long memberId, CursorRequest paging) {
         CursorResponse<Crew> crews = crewRdbService.getMyCrews(memberId, paging.size(), paging.lastId());
-
-        List<Long> crewIds = crews.getData().stream().map(Crew::getId).toList();
-
-        Map<Long, CrewMember> crewMemberMap = crewMemberRdbService.findByCrewIdAndMemberId(crewIds, memberId);
-        Map<Long, Integer> memberCountMap = crewMemberRdbService.countByCrewIds(crewIds);
-
-        List<GetCrewsResponse> result = GetCrewsResponse.from(crews.getData(), crewMemberMap, memberCountMap);
-
+        List<GetCrewsResponse> result = this.getCrewsResponseList(crews.getData(), memberId);
         return new CursorResponse<>(result, crews.getHasNext());
     }
 
     public CursorResponse<GetCrewsResponse> searchCrews(Long memberId, String name, CursorRequest paging) {
         CursorResponse<Crew> crews = crewRdbService.searchCrews(name, paging.size(), paging.lastId());
-
-        List<Long> crewIds = crews.getData().stream().map(Crew::getId).toList();
-
-        Map<Long, CrewMember> crewMemberMap = crewMemberRdbService.findByCrewIdAndMemberId(crewIds, memberId);
-        Map<Long, Integer> memberCountMap = crewMemberRdbService.countByCrewIds(crewIds);
-
-        List<GetCrewsResponse> result = GetCrewsResponse.from(crews.getData(), crewMemberMap, memberCountMap);
-
+        List<GetCrewsResponse> result = this.getCrewsResponseList(crews.getData(), memberId);
         return new CursorResponse<>(result, crews.getHasNext());
     }
 
     public CursorResponse<GetCrewsResponse> recommendCrews(Long memberId, CursorRequest paging) {
         CursorResponse<Crew> crews = crewRdbService.recommendCrews(paging.size(), paging.lastId());
+        List<GetCrewsResponse> result = this.getCrewsResponseList(crews.getData(), memberId);
+        return new CursorResponse<>(result, crews.getHasNext());
+    }
 
-        List<Long> crewIds = crews.getData().stream().map(Crew::getId).toList();
+    private List<GetCrewsResponse> getCrewsResponseList(List<Crew> crewList, Long memberId) {
+        List<Long> crewIds = crewList.stream().map(Crew::getId).toList();
 
         Map<Long, CrewMember> crewMemberMap = crewMemberRdbService.findByCrewIdAndMemberId(crewIds, memberId);
         Map<Long, Integer> memberCountMap = crewMemberRdbService.countByCrewIds(crewIds);
 
-        List<GetCrewsResponse> result = GetCrewsResponse.from(crews.getData(), crewMemberMap, memberCountMap);
-
-        return new CursorResponse<>(result, crews.getHasNext());
+        return GetCrewsResponse.from(crewList, crewMemberMap, memberCountMap);
     }
-
 }
