@@ -1,7 +1,16 @@
 package com.dongsan.domain.domains.crew.domain;
 
 import com.dongsan.domain.domains.common.BaseEntity;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "crew_member",
@@ -26,5 +35,13 @@ public class CrewMember extends BaseEntity {
         this.crewId = crewId;
         this.memberId = memberId;
         this.role = role;
+    }
+
+    public boolean isManager() {
+        return role.equals(CrewMemberRole.MANAGER);
+    }
+
+    public Long getCrewId() {
+        return crewId;
     }
 }

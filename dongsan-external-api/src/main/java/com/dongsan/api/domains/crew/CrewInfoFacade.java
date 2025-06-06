@@ -1,12 +1,22 @@
 package com.dongsan.api.domains.crew;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dongsan.api.domains.crew.dto.request.CreateUpdateCrewRequest;
 import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewMemberRankingResponse;
+import com.dongsan.api.domains.crew.dto.response.GetCrewsResponse;
 import com.dongsan.api.support.util.DateRangeUtil;
 import com.dongsan.domain.domains.crew.domain.Crew;
+import com.dongsan.domain.domains.crew.domain.CrewMember;
 import com.dongsan.domain.domains.crew.domain.CrewMemberStatistic;
 import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
 import com.dongsan.domain.domains.crew.service.CrewMemberRdbService;
@@ -21,13 +31,6 @@ import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -39,7 +42,9 @@ public class CrewInfoFacade {
     private final S3FileService s3FileService;
     private final ImageRdbService imageRdbService;
 
-    public CrewInfoFacade(CrewRdbService crewRdbService, CrewMemberRdbService crewMemberRdbService, WalkwayLogRdbService walkwayLogRdbService, MemberRdbService memberRdbService, S3FileService s3FileService, ImageRdbService imageRdbService) {
+    public CrewInfoFacade(CrewRdbService crewRdbService, CrewMemberRdbService crewMemberRdbService,
+            WalkwayLogRdbService walkwayLogRdbService, MemberRdbService memberRdbService, S3FileService s3FileService,
+            ImageRdbService imageRdbService) {
         this.crewRdbService = crewRdbService;
         this.crewMemberRdbService = crewMemberRdbService;
         this.walkwayLogRdbService = walkwayLogRdbService;
@@ -56,7 +61,8 @@ public class CrewInfoFacade {
 
     @Transactional
     public Long saveCrew(CreateUpdateCrewRequest request, Long memberId) {
-        String imageUrl = request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
+        String imageUrl =
+                request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
         Long crewId = crewRdbService.save(request.toCrewInfoCommand(imageUrl));
         crewMemberRdbService.saveCrewManager(crewId, memberId);
         return crewId;
@@ -70,7 +76,8 @@ public class CrewInfoFacade {
         if (request.memberLimit() != null && memberCount > request.memberLimit()) {
             throw new CoreException(CoreErrorCode.CREW_LIMIT_LT_MEMBER);
         }
-        String imageUrl = request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
+        String imageUrl =
+                request.crewImageId() == null ? null : imageRdbService.getImage(request.crewImageId()).getUrl();
         crewRdbService.update(crew, request.toCrewInfoCommand(imageUrl));
     }
 
@@ -87,7 +94,8 @@ public class CrewInfoFacade {
         boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
         crew.canAccess(isCrewMember);
 
-        CursorResponse<WalkwayLog> walkwayLogs = walkwayLogRdbService.getCrewFeed(crewId, paging.lastId(), paging.size());
+        CursorResponse<WalkwayLog> walkwayLogs = walkwayLogRdbService.getCrewFeed(crewId, paging.lastId(),
+                paging.size());
         List<Long> memberIds = walkwayLogs.getData().stream().map(WalkwayLog::getMemberId).toList();
         Map<Long, Member> memberMap = memberRdbService.getMemberMap(memberIds);
         List<GetCrewFeedResponse> result = GetCrewFeedResponse.from(walkwayLogs, memberMap);
@@ -109,7 +117,7 @@ public class CrewInfoFacade {
 
     @Transactional(readOnly = true)
     public CursorResponse<GetCrewMemberRankingResponse> getCrewMemberRanking(Long crewId, Long memberId, LocalDate date,
-                                                                             CrewRankingSort sort, CrewRankingPeriod period, CursorRequest paging) {
+            CrewRankingSort sort, CrewRankingPeriod period, CursorRequest paging) {
         Crew crew = crewRdbService.getCrew(crewId);
         boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
         crew.canAccess(isCrewMember);
@@ -117,8 +125,8 @@ public class CrewInfoFacade {
         LocalDate startDay = DateRangeUtil.getStartDay(date, period);
         LocalDate endDay = DateRangeUtil.getEndDay(date, period);
         CursorResponse<CrewMemberStatistic> response = switch (sort) {
-            case DISTANCE ->
-                    walkwayLogRdbService.getCrewRankingByDistance(crewId, paging.lastId(), startDay, endDay, paging.size());
+            case DISTANCE -> walkwayLogRdbService.getCrewRankingByDistance(crewId, paging.lastId(), startDay, endDay,
+                    paging.size());
             case DURATION ->
                     walkwayLogRdbService.getCrewRankingByTime(crewId, paging.lastId(), startDay, endDay, paging.size());
         };
@@ -158,5 +166,32 @@ public class CrewInfoFacade {
         crewMemberRdbService.validateNotAlreadyJoined(crewId, memberId);
         crewRdbService.comparePassword(crew, password);
         crewMemberRdbService.joinCrew(crewId, memberId);
+    }
+
+    public CursorResponse<GetCrewsResponse> getMyCrews(Long memberId, CursorRequest paging) {
+        CursorResponse<Crew> crews = crewRdbService.getMyCrews(memberId, paging.size(), paging.lastId());
+        List<GetCrewsResponse> result = this.getCrewsResponseList(crews.getData(), memberId);
+        return new CursorResponse<>(result, crews.getHasNext());
+    }
+
+    public CursorResponse<GetCrewsResponse> searchCrews(Long memberId, String name, CursorRequest paging) {
+        CursorResponse<Crew> crews = crewRdbService.searchCrews(name, paging.size(), paging.lastId());
+        List<GetCrewsResponse> result = this.getCrewsResponseList(crews.getData(), memberId);
+        return new CursorResponse<>(result, crews.getHasNext());
+    }
+
+    public CursorResponse<GetCrewsResponse> recommendCrews(Long memberId, CursorRequest paging) {
+        CursorResponse<Crew> crews = crewRdbService.recommendCrews(paging.size(), paging.lastId());
+        List<GetCrewsResponse> result = this.getCrewsResponseList(crews.getData(), memberId);
+        return new CursorResponse<>(result, crews.getHasNext());
+    }
+
+    private List<GetCrewsResponse> getCrewsResponseList(List<Crew> crewList, Long memberId) {
+        List<Long> crewIds = crewList.stream().map(Crew::getId).toList();
+
+        Map<Long, CrewMember> crewMemberMap = crewMemberRdbService.findByCrewIdAndMemberId(crewIds, memberId);
+        Map<Long, Integer> memberCountMap = crewMemberRdbService.countByCrewIds(crewIds);
+
+        return GetCrewsResponse.from(crewList, crewMemberMap, memberCountMap);
     }
 }

@@ -1,11 +1,15 @@
 package com.dongsan.domain.domains.crew.service;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import com.dongsan.domain.domains.crew.domain.CrewMember;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRepository;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import org.springframework.stereotype.Service;
 
 @Service
 public class CrewMemberRdbService {
@@ -61,5 +65,13 @@ public class CrewMemberRdbService {
         if (hasJoined) {
             throw new CoreException(CoreErrorCode.CREW_ALREADY_JOINED);
         }
+    }
+
+    public Map<Long, CrewMember> findByCrewIdAndMemberId(List<Long> crewIds, Long memberId) {
+        return crewMemberRepository.findMapByCrewIdAndMemberId(crewIds, memberId);
+    }
+
+    public Map<Long, Integer> countByCrewIds(List<Long> crewIds) {
+        return crewMemberRepository.countByCrewIds(crewIds);
     }
 }
