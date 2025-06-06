@@ -1,7 +1,7 @@
 package com.dongsan.domain.domains.crew.infrastructure;
 
 import static com.dongsan.domain.domains.crew.domain.QCrewMember.*;
-import static com.dongsan.domain.domains.crew.domain.QCrewRanking.*;
+import static com.dongsan.domain.domains.crew.domain.QMetaCrewRanking.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.dongsan.domain.domains.crew.domain.Crew;
-import com.dongsan.domain.domains.crew.domain.CrewRanking;
+import com.dongsan.domain.domains.crew.domain.MetaCrewRanking;
 import com.dongsan.domain.domains.crew.domain.CrewRepository;
 import com.dongsan.domain.domains.crew.domain.QCrew;
 import com.dongsan.domain.support.paging.CursorResponse;
@@ -81,11 +81,11 @@ public class CrewCoreRepository implements CrewRepository {
 
     @Override
     public CursorResponse<Crew> findCrewsByLogThisWeek(int size, Long lastId) {
-        CrewRanking cursorRanking = null;
+        MetaCrewRanking cursorRanking = null;
 
         if (lastId != null) {
-            cursorRanking = queryFactory.selectFrom(crewRanking)
-                    .where(crewRanking.crewId.eq(lastId))
+            cursorRanking = queryFactory.selectFrom(metaCrewRanking)
+                    .where(metaCrewRanking.crewId.eq(lastId))
                     .fetchOne();
         }
 
@@ -93,22 +93,22 @@ public class CrewCoreRepository implements CrewRepository {
 
         if (cursorRanking != null) {
             cursorCondition.and(
-                    crewRanking.logCount.lt(cursorRanking.getLogCount())
-                            .or(crewRanking.logCount.eq(cursorRanking.getLogCount())
-                                    .and(crewRanking.updatedAt.gt(cursorRanking.getUpdatedAt())))
-                            .or(crewRanking.logCount.eq(cursorRanking.getLogCount())
-                                    .and(crewRanking.updatedAt.eq(cursorRanking.getUpdatedAt()))
-                                    .and(crewRanking.crewId.gt(cursorRanking.getCrewId())))
+                    metaCrewRanking.logCount.lt(cursorRanking.getLogCount())
+                            .or(metaCrewRanking.logCount.eq(cursorRanking.getLogCount())
+                                    .and(metaCrewRanking.updatedAt.gt(cursorRanking.getUpdatedAt())))
+                            .or(metaCrewRanking.logCount.eq(cursorRanking.getLogCount())
+                                    .and(metaCrewRanking.updatedAt.eq(cursorRanking.getUpdatedAt()))
+                                    .and(metaCrewRanking.crewId.gt(cursorRanking.getCrewId())))
             );
         }
 
         // 랭킹에 있는 count 기준으로 불러오기
         List<Crew> crewList = queryFactory.select(crew)
-                .from(crewRanking)
-                .join(crew).on(crew.id.eq(crewRanking.crewId))
+                .from(metaCrewRanking)
+                .join(crew).on(crew.id.eq(metaCrewRanking.crewId))
                 .where(cursorCondition)
                 .limit(size + 1L)
-                .orderBy(crewRanking.logCount.desc(), crewRanking.updatedAt.asc(), crewRanking.crewId.asc())
+                .orderBy(metaCrewRanking.logCount.desc(), metaCrewRanking.updatedAt.asc(), metaCrewRanking.crewId.asc())
                 .fetch();
 
         return new CursorResponse<>(crewList, size);

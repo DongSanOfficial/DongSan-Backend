@@ -8,8 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "crew_ranking")
-public class CrewRanking extends BaseEntity {
+@Table(name = "meta_crew_ranking")
+public class MetaCrewRanking extends BaseEntity {
 
     @Id
     private Long crewId;
@@ -17,10 +17,10 @@ public class CrewRanking extends BaseEntity {
     @Column(name = "log_count", nullable = false)
     private Long logCount;
 
-    protected CrewRanking() {
+    protected MetaCrewRanking() {
     }
 
-    public CrewRanking(Long crewId) {
+    public MetaCrewRanking(Long crewId) {
         this.crewId = crewId;
         this.logCount = 0L;
     }

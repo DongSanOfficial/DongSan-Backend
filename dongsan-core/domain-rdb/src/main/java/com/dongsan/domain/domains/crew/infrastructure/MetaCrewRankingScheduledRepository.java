@@ -5,6 +5,7 @@ import static com.dongsan.domain.domains.crew.domain.QCrewMember.*;
 import static com.dongsan.domain.domains.member.QMember.*;
 import static com.dongsan.domain.domains.walkwayLog.QWalkwayLog.*;
 
+import com.dongsan.domain.domains.crew.domain.QMetaCrewRanking;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,27 +13,26 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dongsan.domain.domains.crew.domain.CrewRanking;
-import com.dongsan.domain.domains.crew.domain.QCrewRanking;
+import com.dongsan.domain.domains.crew.domain.MetaCrewRanking;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
 @Transactional
-public class CrewRankingScheduledRepository {
+public class MetaCrewRankingScheduledRepository {
     private final JPAQueryFactory queryFactory;
-    private final CrewRankingJpaRepository crewRankingJpaRepository;
-    private final QCrewRanking crewRanking = QCrewRanking.crewRanking;
+    private final MetaCrewRankingJpaRepository crewRankingJpaRepository;
+    private final QMetaCrewRanking metaCrewRanking = QMetaCrewRanking.metaCrewRanking;
 
-    public CrewRankingScheduledRepository(JPAQueryFactory queryFactory,
-            CrewRankingJpaRepository crewRankingJpaRepository) {
+    public MetaCrewRankingScheduledRepository(JPAQueryFactory queryFactory,
+                                              MetaCrewRankingJpaRepository crewRankingJpaRepository) {
         this.queryFactory = queryFactory;
         this.crewRankingJpaRepository = crewRankingJpaRepository;
     }
 
     @Scheduled(cron = "0 0 0 * * MON")
     public void resetCrewRanking() {
-        queryFactory.delete(crewRanking).execute();
+        queryFactory.delete(metaCrewRanking).execute();
     }
 
     @Scheduled(cron = "0 0 1-23 * * *")
@@ -56,13 +56,13 @@ public class CrewRankingScheduledRepository {
             Long crewId = result.get(crew.id);
             Long count = result.get(walkwayLog.count());
 
-            CrewRanking ranking = queryFactory
-                    .selectFrom(crewRanking)
-                    .where(crewRanking.crewId.eq(crewId))
+            MetaCrewRanking ranking = queryFactory
+                    .selectFrom(metaCrewRanking)
+                    .where(metaCrewRanking.crewId.eq(crewId))
                     .fetchOne();
 
             if (ranking == null) {
-                ranking = new CrewRanking(crewId);
+                ranking = new MetaCrewRanking(crewId);
             }
 
             ranking.addLogCount(count);
