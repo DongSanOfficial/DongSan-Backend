@@ -1,40 +1,23 @@
 package com.dongsan.api.domains.crew;
 
-import java.time.LocalDate;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.crew.dto.request.CreateUpdateCrewRequest;
 import com.dongsan.api.domains.crew.dto.request.JoinCrewRequest;
-import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
-import com.dongsan.api.domains.crew.dto.response.CreateCrewResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewMemberRankingResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewsResponse;
-import com.dongsan.api.domains.crew.dto.response.IsNameDuplicatedResponse;
+import com.dongsan.api.domains.crew.dto.response.*;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/crews")
@@ -49,11 +32,11 @@ public class CrewInfoController {
 
     @Operation(summary = "크루 이름 중복 체크")
     @GetMapping("/exists")
-    public ResponseEntity<IsNameDuplicatedResponse> isNameDuplicated(
+    public ResponseEntity<IsNameUniqueResponse> isNameUnique(
             @RequestParam @NotBlank String name
     ) {
-        boolean isValid = crewInfoFacade.isNameDuplicated(name);
-        return ResponseEntity.ok(new IsNameDuplicatedResponse(isValid));
+        boolean isUnique = crewInfoFacade.isNameUnique(name);
+        return ResponseEntity.ok(new IsNameUniqueResponse(isUnique));
     }
 
     @Operation(summary = "크루 정보 조회")
