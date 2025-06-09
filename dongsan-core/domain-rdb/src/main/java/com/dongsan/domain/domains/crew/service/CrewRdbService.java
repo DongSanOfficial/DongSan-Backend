@@ -1,15 +1,10 @@
 package com.dongsan.domain.domains.crew.service;
 
-import org.springframework.stereotype.Service;
-
-import com.dongsan.domain.domains.crew.domain.Capacity;
-import com.dongsan.domain.domains.crew.domain.Crew;
-import com.dongsan.domain.domains.crew.domain.CrewAccessPolicy;
-import com.dongsan.domain.domains.crew.domain.CrewInfo;
-import com.dongsan.domain.domains.crew.domain.CrewRepository;
+import com.dongsan.domain.domains.crew.domain.*;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorResponse;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CrewRdbService {
@@ -32,7 +27,7 @@ public class CrewRdbService {
     }
 
     public boolean isNameDuplicated(String name) {
-        return crewRepository.existsByName(name);
+        return !crewRepository.existsByName(name);
     }
 
     public Long save(CrewInfoCommand command) {
