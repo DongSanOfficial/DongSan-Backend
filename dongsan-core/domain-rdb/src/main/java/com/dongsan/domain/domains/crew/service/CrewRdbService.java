@@ -27,7 +27,7 @@ public class CrewRdbService {
     }
 
     public boolean isNameDuplicated(String name) {
-        return !crewRepository.existsByName(name);
+        return crewRepository.existsByName(name);
     }
 
     public Long save(CrewInfoCommand command) {
