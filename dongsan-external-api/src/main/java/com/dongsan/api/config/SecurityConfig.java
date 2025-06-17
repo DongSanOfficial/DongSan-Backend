@@ -71,10 +71,11 @@ public class SecurityConfig {
                         "http://localhost:3000",
                         "http://dongsanwalk.site",
                         "http://api.dongsanwalk.site:8080",
+                        "http://front.dongsanwalk.site:3000",
                         "https://dongsanwalk.site",
                         "https://www.dongsanwalk.site",
                         "https://api.dongsanwalk.site",
-                        "http://front.dongsanwalk.site:3000",
+                        "https://testui.dongsanwalk.site",
                         "https://appleid.apple.com"
                 )
         );
