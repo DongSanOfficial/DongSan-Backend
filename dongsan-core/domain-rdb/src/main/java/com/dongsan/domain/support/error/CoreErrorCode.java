@@ -61,6 +61,7 @@ public enum CoreErrorCode {
     CREW_PASSWORD_INVALID(CoreErrorStatus.CONFLICT, "CREW-14", "비밀번호가 일치하지 않습니다."),
     CREW_NOT_MANAGER(CoreErrorStatus.FORBIDDEN, "CREW-14", "크루의 메니저가 아닙니다."),
     CREW_LIMIT_LT_MEMBER(CoreErrorStatus.FORBIDDEN, "CREW-15", "가입 제한 인원을 크루에 이미 가입한 사용자 수 보다 적은 인원으로 설정할 수 없습니다."),
+    CREW_MANAGER_CANT_LEAVE(CoreErrorStatus.FORBIDDEN, "CREW-16", "크루 관리자는 크루를 탈퇴할 수 없습니다."),
 
 
     // cowalk
