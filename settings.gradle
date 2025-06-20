@@ -1,6 +1,7 @@
 rootProject.name = 'DongSan'
 
 include 'dongsan-external-api'
+include 'dongsan-socket'
 include 'dongsan-core:domain-rdb'
 include 'dongsan-core:domain-redis'
 include 'dongsan-infra:infra-file'
