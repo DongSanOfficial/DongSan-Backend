@@ -83,9 +83,8 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
                 .from(crewMember)
                 .leftJoin(walkwayLog).on(walkwayLog.memberId.eq(crewMember.memberId)
                         .and(dateBetweenCondition(startDay, endDay)))
-                .where(crewMember.crewId.eq(crewId),
-                        distanceCondition(lastMemberId, lastDistance)
-                )
+                .where(crewMember.crewId.eq(crewId))
+                .having(distanceCondition(lastMemberId, lastDistance))
                 .groupBy(crewMember.memberId)
                 .orderBy(TOTAL_DISTANCE.desc(), crewMember.memberId.asc())
                 .limit((long) size + 1)
@@ -107,9 +106,8 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
                 .from(crewMember)
                 .leftJoin(walkwayLog).on(walkwayLog.memberId.eq(crewMember.memberId)
                         .and(dateBetweenCondition(startDay, endDay)))
-                .where(crewMember.crewId.eq(crewId),
-                        timeCondition(lastMemberId, lastTime)
-                )
+                .where(crewMember.crewId.eq(crewId))
+                .having(timeCondition(lastMemberId, lastTime))
                 .groupBy(crewMember.memberId)
                 .orderBy(TOTAL_TIME.desc(), crewMember.memberId.asc())
                 .limit((long) size + 1)

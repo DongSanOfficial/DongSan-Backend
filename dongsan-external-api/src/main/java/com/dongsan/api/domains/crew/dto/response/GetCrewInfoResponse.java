@@ -17,10 +17,11 @@ public record GetCrewInfoResponse(
         Integer memberLimit,
         String crewImageUrl,
         LocalDate createdAt,
-        WeeklyStatsResponse weeklyStats
+        WeeklyStatsResponse weeklyStats,
+        boolean isJoined
 ) {
 
-    public GetCrewInfoResponse(Crew crew, int memberCount, CrewWeeklyStatistic crewWeeklyStat) {
+    public GetCrewInfoResponse(Crew crew, int memberCount, CrewWeeklyStatistic crewWeeklyStat, boolean isJoined) {
         this(
                 crew.getName(),
                 crew.getDescription(),
@@ -31,7 +32,8 @@ public record GetCrewInfoResponse(
                 crew.getMemberLimit(),
                 crew.getCrewImageUrl(),
                 crew.getCreatedAt().toLocalDate(),
-                new WeeklyStatsResponse(crewWeeklyStat)
+                new WeeklyStatsResponse(crewWeeklyStat),
+                isJoined
         );
     }
 

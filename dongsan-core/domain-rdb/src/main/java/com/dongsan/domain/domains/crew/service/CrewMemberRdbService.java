@@ -1,15 +1,14 @@
 package com.dongsan.domain.domains.crew.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
 import com.dongsan.domain.domains.crew.domain.CrewMember;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRepository;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CrewMemberRdbService {
@@ -26,7 +25,15 @@ public class CrewMemberRdbService {
 
     public void leaveCrew(Long crewId, Long memberId) {
         validateIsCrewMember(crewId, memberId);
+        validateCrewManagerCanLeave(crewId, memberId);
         crewMemberRepository.deleteByCrewIdAndMemberId(crewId, memberId);
+    }
+
+    private void validateCrewManagerCanLeave(Long crewId, Long memberId) {
+        boolean isCrewManager = isCrewManager(crewId, memberId);
+        if (isCrewManager) {
+            throw new CoreException(CoreErrorCode.CREW_MANAGER_CANT_LEAVE);
+        }
     }
 
     public boolean isCrewMember(Long crewId, Long memberId) {

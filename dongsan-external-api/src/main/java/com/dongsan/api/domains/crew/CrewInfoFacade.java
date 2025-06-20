@@ -112,7 +112,7 @@ public class CrewInfoFacade {
         LocalDate startDate = DateRangeUtil.getStartOfWeek(LocalDate.now());
         LocalDate endDate = DateRangeUtil.getEndOfWeek(LocalDate.now());
         CrewWeeklyStatistic crewWeeklyStat = walkwayLogRdbService.getCrewWeeklyStat(crewId, startDate, endDate);
-        return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat);
+        return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat, isCrewMember);
     }
 
     @Transactional(readOnly = true)
