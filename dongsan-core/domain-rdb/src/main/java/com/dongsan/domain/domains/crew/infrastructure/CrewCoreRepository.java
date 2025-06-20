@@ -9,8 +9,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.dongsan.domain.domains.crew.domain.Crew;
-import com.dongsan.domain.domains.crew.domain.MetaCrewRanking;
 import com.dongsan.domain.domains.crew.domain.CrewRepository;
+import com.dongsan.domain.domains.crew.domain.MetaCrewRanking;
 import com.dongsan.domain.domains.crew.domain.QCrew;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.BooleanBuilder;
@@ -80,7 +80,7 @@ public class CrewCoreRepository implements CrewRepository {
     }
 
     @Override
-    public CursorResponse<Crew> findCrewsByLogThisWeek(int size, Long lastId) {
+    public CursorResponse<Crew> findCrewsByLogThisWeek(int size, Long lastId, Long memberId) {
         MetaCrewRanking cursorRanking = null;
 
         if (lastId != null) {
@@ -103,10 +103,14 @@ public class CrewCoreRepository implements CrewRepository {
         }
 
         // 랭킹에 있는 count 기준으로 불러오기
-        List<Crew> crewList = queryFactory.select(crew)
-                .from(metaCrewRanking)
-                .join(crew).on(crew.id.eq(metaCrewRanking.crewId))
-                .where(cursorCondition)
+        List<Crew> crewList = queryFactory.selectFrom(crew)
+                .join(metaCrewRanking).on(crew.id.eq(metaCrewRanking.crewId))
+                .leftJoin(crewMember)
+                .on(crewMember.crewId.eq(crew.id).and(crewMember.memberId.eq(memberId)))
+                .where(
+                        cursorCondition,
+                        crewMember.isNull()
+                )
                 .limit(size + 1L)
                 .orderBy(metaCrewRanking.logCount.desc(), metaCrewRanking.updatedAt.asc(), metaCrewRanking.crewId.asc())
                 .fetch();
