@@ -20,6 +20,6 @@ public interface CrewRepository {
 
     CursorResponse<Crew> searchCrews(String name, Integer size, Long lastId);
 
-    CursorResponse<Crew> findCrewsByLogThisWeek(int size, Long lastId);
+    CursorResponse<Crew> findCrewsByLogThisWeek(int size, Long lastId, Long memberId);
 }
 
