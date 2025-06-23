@@ -5,8 +5,8 @@ WORKDIR /app
 ARG JAR_FILE="dongsan-external-api/build/libs/*.jar"
 ARG PROFILE=dev
 
-COPY ${JAR_FILE} dongsan-server.jar
+COPY ${JAR_FILE} dongsan-api-server.jar
 
 ENV PROFILE=${PROFILE}
 
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Duser.timezone=Asia/Seoul", "dongsan-server.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Duser.timezone=Asia/Seoul", "dongsan-api-server.jar"]
