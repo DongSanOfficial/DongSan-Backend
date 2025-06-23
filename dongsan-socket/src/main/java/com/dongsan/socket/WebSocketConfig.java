@@ -1,5 +1,9 @@
 package com.dongsan.socket;
 
+import com.dongsan.socket.authenticate.SocketCookieService;
+import com.dongsan.socket.authenticate.SocketJwtService;
+import com.dongsan.socket.authenticate.WebSocketHandshakeHandler;
+import com.dongsan.socket.authenticate.WebSocketHandshakeInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -9,10 +13,22 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final SocketJwtService socketJwtService;
+    private final SocketCookieService socketCookieService;
+
+    public WebSocketConfig(SocketJwtService socketJwtService, SocketCookieService socketCookieService) {
+        this.socketJwtService = socketJwtService;
+        this.socketCookieService = socketCookieService;
+    }
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
+                .setAllowedOrigins("*")
+                .setAllowedOriginPatterns("*")  // 이거 위의 두개랑 차이 뭐지
+                .addInterceptors(new WebSocketHandshakeInterceptor(socketCookieService, socketJwtService))
+                .setHandshakeHandler(new WebSocketHandshakeHandler())
                 .withSockJS();
     }
 
@@ -21,13 +37,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/topic");
         registry.setApplicationDestinationPrefixes("/app");
     }
-
-    // 스프링 시큐리티를 인터프리터로 주입해야 하나..?
-    /**
-     *     @Override
-     *     public void configureClientInboundChannel(ChannelRegistration registration) {
-     *         registration.interceptors(chatSubscriptionInterceptor); // 여기에서 주입됨
-     *     }
-     */
 
 }

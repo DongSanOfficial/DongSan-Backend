@@ -25,7 +25,7 @@ public class JwtService {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final Logger log = LoggerFactory.getLogger(JwtService.class);
-
+    private final MemberRdbService memberRdbService;
     @Value("${jwt.access.secret}")
     private String accessTokenSecret;
     @Value("${jwt.access.expires-in}")
@@ -36,8 +36,6 @@ public class JwtService {
     private long refreshTokenExpiresIn;
     private SecretKey accessTokenSecretKey;
     private SecretKey refreshTokenSecretKey;
-
-    private final MemberRdbService memberRdbService;
 
     public JwtService(MemberRdbService memberRdbService) {
         this.memberRdbService = memberRdbService;
@@ -82,14 +80,14 @@ public class JwtService {
     }
 
     public boolean isAccessTokenExpired(String accessToken) {
-        return isTokenExpired(accessToken, accessTokenSecretKey, TokenType.ACCESS);
+        return isTokenExpired(accessToken, accessTokenSecretKey);
     }
 
     public boolean isRefreshTokenExpired(String refreshToken) {
-        return isTokenExpired(refreshToken, refreshTokenSecretKey, TokenType.REFRESH);
+        return isTokenExpired(refreshToken, refreshTokenSecretKey);
     }
 
-    private boolean isTokenExpired(String token, SecretKey secretKey, TokenType tokenType) {
+    private boolean isTokenExpired(String token, SecretKey secretKey) {
         if (token == null)
             return true;
         long remainingTime = getRemainingTimeMillis(token, secretKey);

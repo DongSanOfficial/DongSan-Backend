@@ -2,10 +2,12 @@ package com.dongsan.socket;
 
 import com.dongsan.domain.domains.crew.CrewWalkCacheRepository;
 import com.dongsan.domain.domains.crew.WalkData;
+import com.dongsan.socket.authenticate.SocketUserPrincipal;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -29,11 +31,14 @@ public class WalkController {
 
     @MessageMapping("/walk/ongoing")
     public void ongoingWalk(
-            OngoingWalkRequest request
+            OngoingWalkRequest payload,
+            Principal principal
     ) {
-        for (Long crewId : request.crewIds()) {
-            crewWalkCacheRepository.saveCrewMemberWalk(crewId, request.memberId(), request.nickname(),
-                    request.distanceMeter(), request.timeMin());
+        SocketUserPrincipal user = (SocketUserPrincipal) principal;
+
+        for (Long crewId : payload.crewIds()) {
+            crewWalkCacheRepository.saveCrewMemberWalk(crewId, user.getMemberId(), user.getNickname(),
+                    payload.distanceMeter(), payload.timeMin());
             List<WalkData> walkDataList = crewWalkCacheRepository.getAllCrewMemberWalk(crewId);
             simpMessagingTemplate.convertAndSend(getCrewCountDestination(crewId), walkDataList.size());
             simpMessagingTemplate.convertAndSend(getCrewDetailDestination(crewId), walkDataList);
@@ -42,10 +47,13 @@ public class WalkController {
 
     @MessageMapping("/walk/end")
     public void endWalk(
-            EndWalkRequest request
+            EndWalkRequest payload,
+            Principal principal
     ) {
-        for (Long crewId : request.crewIds()) {
-            crewWalkCacheRepository.deleteCrewMemberWalk(crewId, request.memberId());
+        SocketUserPrincipal user = (SocketUserPrincipal) principal;
+
+        for (Long crewId : payload.crewIds()) {
+            crewWalkCacheRepository.deleteCrewMemberWalk(crewId, user.getMemberId());
             List<WalkData> walkDataList = crewWalkCacheRepository.getAllCrewMemberWalk(crewId);
             simpMessagingTemplate.convertAndSend(getCrewCountDestination(crewId), walkDataList.size());
             simpMessagingTemplate.convertAndSend(getCrewDetailDestination(crewId), walkDataList);
