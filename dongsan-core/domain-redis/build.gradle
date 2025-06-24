@@ -8,8 +8,8 @@ dependencies {
 
 // application.yml 설정 파일 복사
 tasks.register('copyConfig', Copy) {
-    from '../../Config/storage/redis'
-    include "application*.yml"
+    from '../../Config'
+    include "application-redis.yml"
     into 'src/main/resources'
 }
 

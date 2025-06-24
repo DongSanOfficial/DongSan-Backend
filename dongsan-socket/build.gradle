@@ -1,0 +1,29 @@
+dependencies {
+    implementation project(':dongsan-core:domain-redis')
+    implementation project(':dongsan-core:domain-rdb')
+
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework:spring-messaging'
+
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+}
+
+// application.yml 설정 파일 복사
+tasks.register('copyConfig', Copy) {
+    from '../Config'
+    include "application-socket.yml", "application.yml"
+    into 'src/main/resources'
+}
+
+processResources.dependsOn('copyConfig')
+
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+}

@@ -38,8 +38,10 @@ jobs:
 
       - name: Docker build & push to dev
         run: |
-          docker build -t ${{secrets.DOCKER_REPO}}:latest -f dongsan-external-api/Dockerfile .
-          docker push ${{secrets.DOCKER_REPO}}:latest
+          docker build -t ${{secrets.DOCKER_REPO}}:api -f dongsan-external-api/Dockerfile .
+          docker push ${{secrets.DOCKER_REPO}}:api
+          docker build -t ${{secrets.DOCKER_REPO}}:socket -f dongsan-socket/Dockerfile .
+          docker push ${{secrets.DOCKER_REPO}}:socket
 
       - name: Deploy to dev
         uses: appleboy/ssh-action@master
@@ -49,14 +51,14 @@ jobs:
           key: ${{ secrets.EC2_PEM_KEY }}
           port: 22
           script: |
-            sudo docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
-            sudo docker ps
-            if [ "$(sudo docker ps -qa)" ]; then
-            sudo docker rm -f $(sudo docker ps -qa | grep -v $(sudo docker ps -q -f name=dongsan-redis))
-            fi
-            sudo docker pull ${{ secrets.DOCKER_REPO }}:latest
-            sudo docker run -d --network dongsan-network -p 8080:8080 -v /home/ubuntu/secret:/app/secret ${{secrets.DOCKER_REPO}}:latest
-            sudo docker image prune -f 
+            sudo docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+            sudo docker ps -qa --filter "name=dongsan-api" --filter "name=dongsan-websocket" | xargs -r sudo docker rm -f
+            sudo docker pull ${{secrets.DOCKER_REPO}}:api
+            sudo docker pull ${{secrets.DOCKER_REPO}}:socket
+            cd /home/ubuntu/deploy
+            sudo docker-compose pull
+            sudo docker-compose up -d
+            sudo docker image prune -f
 
       - name: Report to CodeCov
         uses: codecov/codecov-action@v3
