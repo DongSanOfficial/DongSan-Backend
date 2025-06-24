@@ -40,7 +40,7 @@ dependencies {
 // application.yml 설정 파일 복사
 tasks.register('copyConfig', Copy) {
     from '../Config'
-    include "application-api.yml"
+    include "application-api.yml", "application.yml"
     into 'src/main/resources'
 }
 
