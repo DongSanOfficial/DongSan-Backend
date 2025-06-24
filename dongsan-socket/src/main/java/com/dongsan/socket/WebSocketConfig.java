@@ -25,8 +25,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("*")
-                .setAllowedOriginPatterns("*")  // 이거 위의 두개랑 차이 뭐지
+                .setAllowedOriginPatterns(
+                        "http://localhost:8080",
+                        "http://localhost:3000",
+                        "http://dongsanwalk.site",
+                        "http://api.dongsanwalk.site:8080",
+                        "https://dongsanwalk.site",
+                        "https://www.dongsanwalk.site",
+                        "https://api.dongsanwalk.site",
+                        "http://front.dongsanwalk.site:3000"
+                )
                 .addInterceptors(new WebSocketHandshakeInterceptor(socketCookieService, socketJwtService))
                 .setHandshakeHandler(new WebSocketHandshakeHandler())
                 .withSockJS();

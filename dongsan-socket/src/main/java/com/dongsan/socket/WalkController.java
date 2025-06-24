@@ -1,9 +1,12 @@
 package com.dongsan.socket;
 
+import com.dongsan.domain.domains.cowalk.CowalkCacheRepository;
 import com.dongsan.domain.domains.crew.CrewWalkCacheRepository;
 import com.dongsan.domain.domains.crew.WalkData;
 import com.dongsan.socket.authenticate.SocketUserPrincipal;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -15,10 +18,12 @@ public class WalkController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final CrewWalkCacheRepository crewWalkCacheRepository;
+    private final CowalkCacheRepository cowalkCacheRepository;
 
-    public WalkController(SimpMessagingTemplate simpMessagingTemplate, CrewWalkCacheRepository crewWalkCacheRepository) {
+    public WalkController(SimpMessagingTemplate simpMessagingTemplate, CrewWalkCacheRepository crewWalkCacheRepository, CowalkCacheRepository cowalkCacheRepository) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.crewWalkCacheRepository = crewWalkCacheRepository;
+        this.cowalkCacheRepository = cowalkCacheRepository;
     }
 
     private static String getCrewCountDestination(Long crewId) {
@@ -29,9 +34,13 @@ public class WalkController {
         return "/topic/walk/crew/" + crewId + "/detail";
     }
 
+    private static String getCowalkCountDestination(Long cowalkId) {
+        return "/topic/walk/cowalk/" + cowalkId + "/count";
+    }
+
     @MessageMapping("/walk/ongoing")
     public void ongoingWalk(
-            OngoingWalkRequest payload,
+            @Payload OngoingWalkRequest payload,
             Principal principal
     ) {
         SocketUserPrincipal user = (SocketUserPrincipal) principal;
@@ -40,14 +49,14 @@ public class WalkController {
             crewWalkCacheRepository.saveCrewMemberWalk(crewId, user.getMemberId(), user.getNickname(),
                     payload.distanceMeter(), payload.timeMin());
             List<WalkData> walkDataList = crewWalkCacheRepository.getAllCrewMemberWalk(crewId);
-            simpMessagingTemplate.convertAndSend(getCrewCountDestination(crewId), walkDataList.size());
+            simpMessagingTemplate.convertAndSend(getCrewCountDestination(crewId), new CountResponse(walkDataList.size()));
             simpMessagingTemplate.convertAndSend(getCrewDetailDestination(crewId), walkDataList);
         }
     }
 
     @MessageMapping("/walk/end")
     public void endWalk(
-            EndWalkRequest payload,
+            @Payload EndWalkRequest payload,
             Principal principal
     ) {
         SocketUserPrincipal user = (SocketUserPrincipal) principal;
@@ -55,12 +64,30 @@ public class WalkController {
         for (Long crewId : payload.crewIds()) {
             crewWalkCacheRepository.deleteCrewMemberWalk(crewId, user.getMemberId());
             List<WalkData> walkDataList = crewWalkCacheRepository.getAllCrewMemberWalk(crewId);
-            simpMessagingTemplate.convertAndSend(getCrewCountDestination(crewId), walkDataList.size());
+            simpMessagingTemplate.convertAndSend(getCrewCountDestination(crewId), new CountResponse(walkDataList.size()));
             simpMessagingTemplate.convertAndSend(getCrewDetailDestination(crewId), walkDataList);
         }
     }
 
-    //@MessageMapping("/walk/cowalk/{cowalkId}/ongoing")
+    @MessageMapping("/walk/cowalk/{cowalkId}/ongoing")
+    public void ongoingCowalk(
+            @DestinationVariable("cowalkId") Long cowalkId,
+            Principal principal
+    ) {
+        SocketUserPrincipal user = (SocketUserPrincipal) principal;
+        cowalkCacheRepository.saveCowalker(cowalkId, user.getMemberId());
+        int count = cowalkCacheRepository.countCowalker(cowalkId);
+        simpMessagingTemplate.convertAndSend(getCowalkCountDestination(cowalkId), new CountResponse(count));
+    }
 
-
+    @MessageMapping("/walk/cowalk/{cowalkId}/end")
+    public void endCowalk(
+            @DestinationVariable("cowalkId") Long cowalkId,
+            Principal principal
+    ) {
+        SocketUserPrincipal user = (SocketUserPrincipal) principal;
+        cowalkCacheRepository.deleteCowalker(cowalkId, user.getMemberId());
+        int count = cowalkCacheRepository.countCowalker(cowalkId);
+        simpMessagingTemplate.convertAndSend(getCowalkCountDestination(cowalkId), new CountResponse(count));
+    }
 }

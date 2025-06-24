@@ -64,6 +64,7 @@ public class SocketJwtService {
     public Member getMemberFromAccessToken(String accessToken) {
         Long memberId = extractAll(accessToken, accessTokenSecretKey)
                 .get("memberId", Long.class);
+        log.info("websocket 인증 사용자 ID : {}", memberId);
         return memberRdbService.getOptionalMember(memberId)
                 .orElseThrow(() -> new CoreException(CoreErrorCode.MEMBER_NOT_FOUND));
     }

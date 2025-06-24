@@ -1,9 +1,12 @@
 package com.dongsan.domain.domains.crew;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ public class CrewWalkCacheRepository {
     static final String FIELD_NICKNAME = "nickname";
     static final String FIELD_DISTANCE_METER = "distanceMeter";
     static final String FIELD_TIME_MIN = "timeMin";
-
+    private static final Logger log = LoggerFactory.getLogger(CrewWalkCacheRepository.class);
     private final StringRedisTemplate redisTemplate;
 
     public CrewWalkCacheRepository(StringRedisTemplate redisTemplate) {
@@ -28,14 +31,15 @@ public class CrewWalkCacheRepository {
     }
 
     private static String getCrewWalkKeyPattern(Long crewId) {
-        return "walk:crew:" + crewId + ":member:";
+        return "walk:crew:" + crewId + ":member:*";
     }
 
+    @Transactional
     public void saveCrewMemberWalk(Long crewId, Long memberId,
-                                   String name, long distanceMeter, long timeMin) {
+                                   String nickname, long distanceMeter, long timeMin) {
         String key = getCrewMemberWalkKey(crewId, memberId);
         Map<String, String> map = new HashMap<>();
-        map.put(FIELD_NICKNAME, name);
+        map.put(FIELD_NICKNAME, nickname);
         map.put(FIELD_DISTANCE_METER, String.valueOf(distanceMeter));
         map.put(FIELD_TIME_MIN, String.valueOf(timeMin));
         redisTemplate.opsForHash().putAll(key, map);  // HSET (hash putAll)
@@ -51,14 +55,16 @@ public class CrewWalkCacheRepository {
     public List<WalkData> getAllCrewMemberWalk(Long crewId) {
         List<WalkData> walks = new ArrayList<>();
         String pattern = getCrewWalkKeyPattern(crewId);
-
         ScanOptions options = ScanOptions.scanOptions().match(pattern).count(100).build();
-        Cursor<byte[]> cursor = redisTemplate.getConnectionFactory().getConnection().scan(options);
 
-        while (cursor.hasNext()) {
-            String key = new String(cursor.next());
-            Map<Object, Object> walkInfo = redisTemplate.opsForHash().entries(key);
-            walks.add(WalkData.of(key, walkInfo));
+        try (Cursor<String> cursor = redisTemplate.scan(options)) {
+            while (cursor.hasNext()) {
+                String key = cursor.next();
+                Map<Object, Object> walkInfo = redisTemplate.opsForHash().entries(key);
+                walks.add(WalkData.of(key, walkInfo));
+            }
+        } catch (Exception e) {
+            log.error("crew의 현재 산책 중인 member 가져오는 중에 문제 발생 : {}", e.getMessage(), e);
         }
         return walks;
     }
