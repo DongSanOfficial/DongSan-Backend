@@ -65,6 +65,10 @@ public class CowalkPost extends BaseEntity {
         return startedAt.toLocalTime();
     }
 
+    public LocalDateTime getStartedAt() {
+        return startedAt;
+    }
+
     public Integer getCapacity() {
         return capacity;
     }
