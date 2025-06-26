@@ -1,21 +1,15 @@
 package com.dongsan.domain.domains.cowalk.domain;
 
-import static com.dongsan.domain.support.error.CoreErrorCode.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 import com.dongsan.domain.domains.common.BaseEntity;
 import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
 import com.dongsan.domain.support.error.CoreException;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import static com.dongsan.domain.support.error.CoreErrorCode.COWALK_PARTICIPANT_LIMIT;
 
 @Entity
 @Table(name = "cowalk_post")
@@ -28,14 +22,14 @@ public class CowalkPost extends BaseEntity {
 
     private Long memberId;
 
-    private LocalDate date;
-
-    private LocalTime time;
+    private LocalDateTime startedAt;
 
     private Integer capacity;
 
     @Enumerated(EnumType.STRING)
     private CapacityType capacityType;
+
+    private String memo;
 
     protected CowalkPost() {
     }
@@ -43,10 +37,10 @@ public class CowalkPost extends BaseEntity {
     public CowalkPost(CreateCowalkPostCommand command) {
         this.crewId = command.crewId();
         this.memberId = command.memberId();
-        this.date = command.date();
-        this.time = command.time();
+        this.startedAt = LocalDateTime.of(command.date(), command.time());
         this.capacity = command.capacity();
         this.capacityType = command.capacity() == null ? CapacityType.UNLIMITED : CapacityType.LIMITED;
+        this.memo = command.memo();
     }
 
     public void validCapacity(Integer participantCount) {
@@ -67,11 +61,15 @@ public class CowalkPost extends BaseEntity {
     }
 
     public LocalDate getDate() {
-        return date;
+        return startedAt.toLocalDate();
     }
 
     public LocalTime getTime() {
-        return time;
+        return startedAt.toLocalTime();
+    }
+
+    public LocalDateTime getStartedAt() {
+        return startedAt;
     }
 
     public Integer getCapacity() {
@@ -80,5 +78,9 @@ public class CowalkPost extends BaseEntity {
 
     public CapacityType getCapacityType() {
         return capacityType;
+    }
+
+    public String getMemo() {
+        return memo;
     }
 }

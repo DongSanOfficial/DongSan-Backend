@@ -1,14 +1,13 @@
 package com.dongsan.api.domains.cowalk.dto.request;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-import org.hibernate.validator.constraints.Range;
-
 import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public record CreateCowalkPostRequest(
         @NotNull(message = "산책 날짜를 입력해주세요")
@@ -22,7 +21,10 @@ public record CreateCowalkPostRequest(
         Boolean limitEnable,
 
         @Range(min = 2, max = 100, message = "인원은 2~100명까지 가능합니다")
-        Integer memberLimit
+        Integer memberLimit,
+
+        @Size(max = 200, message = "메모는 200자를 넘길 수 없습니다.")
+        String memo
 ) {
     public CreateCowalkPostCommand toCreateCowalkPostCommand(Long crewId, Long memberId) {
         return new CreateCowalkPostCommand(
@@ -30,7 +32,8 @@ public record CreateCowalkPostRequest(
                 memberId,
                 date,
                 time,
-                memberLimit
+                memberLimit,
+                memo
         );
     }
 }

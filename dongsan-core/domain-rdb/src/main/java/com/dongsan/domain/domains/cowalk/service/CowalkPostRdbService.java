@@ -8,6 +8,8 @@ import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 import static com.dongsan.domain.support.error.CoreErrorCode.COWALK_NOT_FOUND;
 
 @Service
@@ -37,5 +39,10 @@ public class CowalkPostRdbService {
     public void validCapacity(Long cowalkPostId, Integer participantCount) {
         CowalkPost cowalkPost = getCowalkPost(cowalkPostId);
         cowalkPost.validCapacity(participantCount);
+    }
+
+    public CursorResponse<CowalkPost> getJoinedCowalkPost(Long memberId, Long lastId, int size) {
+        LocalDateTime twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
+        return cowalkPostRepository.getJoinedCowalkPost(memberId, twentyFourHoursAgo, lastId, size);
     }
 }
