@@ -35,6 +35,10 @@ dependencies {
 
     // test 시 patch 가능하게
     testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.2'
+
+    // socket 모듈 이전 시 삭제
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework:spring-messaging'
 }
 
 // application.yml 설정 파일 복사
