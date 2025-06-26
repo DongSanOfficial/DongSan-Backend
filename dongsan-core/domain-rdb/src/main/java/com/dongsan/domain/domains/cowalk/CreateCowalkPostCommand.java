@@ -8,6 +8,7 @@ public record CreateCowalkPostCommand(
         Long memberId,
         LocalDate date,
         LocalTime time,
-        Integer capacity
+        Integer capacity,
+        String memo
 ) {
 }

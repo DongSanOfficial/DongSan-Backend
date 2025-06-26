@@ -1,13 +1,13 @@
 package com.dongsan.api.domains.cowalk.dto.response;
 
+import com.dongsan.domain.domains.cowalk.domain.CapacityType;
+import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
+import com.dongsan.domain.domains.member.Member;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
-
-import com.dongsan.domain.domains.cowalk.domain.CapacityType;
-import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
-import com.dongsan.domain.domains.member.Member;
 
 public record CowalkPostsResponse(
         Long cowalkId,
@@ -18,7 +18,8 @@ public record CowalkPostsResponse(
         Boolean limitEnable,
         Integer memberCount,
         Integer memberLimit,
-        Integer commentCount
+        Integer commentCount,
+        String memo
 ) {
     public CowalkPostsResponse(CowalkPost cowalkPost, Integer memberCount, Integer commentCount, Member member) {
         this(
@@ -30,7 +31,8 @@ public record CowalkPostsResponse(
                 cowalkPost.getCapacityType().equals(CapacityType.LIMITED),
                 memberCount,
                 cowalkPost.getCapacity(),
-                commentCount
+                commentCount,
+                cowalkPost.getMemo()
         );
     }
 

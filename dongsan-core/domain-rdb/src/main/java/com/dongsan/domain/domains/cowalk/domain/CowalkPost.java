@@ -29,6 +29,8 @@ public class CowalkPost extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CapacityType capacityType;
 
+    private String memo;
+
     protected CowalkPost() {
     }
 
@@ -38,6 +40,7 @@ public class CowalkPost extends BaseEntity {
         this.startedAt = LocalDateTime.of(command.date(), command.time());
         this.capacity = command.capacity();
         this.capacityType = command.capacity() == null ? CapacityType.UNLIMITED : CapacityType.LIMITED;
+        this.memo = command.memo();
     }
 
     public void validCapacity(Integer participantCount) {
@@ -75,5 +78,9 @@ public class CowalkPost extends BaseEntity {
 
     public CapacityType getCapacityType() {
         return capacityType;
+    }
+
+    public String getMemo() {
+        return memo;
     }
 }
