@@ -31,13 +31,17 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
                                    ServerHttpResponse response,
                                    WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) throws Exception {
+        log.info("[websocket] beforeHandshake 진입");
         if (!(request instanceof ServletServerHttpRequest servletRequest)) return false;
 
         HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
         try {
             String accessToken = socketCookieService.getAccessTokenFromCookie(httpServletRequest);
+            log.info("[websocket] accessToken : {}", accessToken);
+
             if (!socketJwtService.isAccessTokenExpired(accessToken)) {
                 Member member = socketJwtService.getMemberFromAccessToken(accessToken);
+                log.info("[websocket] memberId : {}", member.getId());
                 SocketUserPrincipal user = new SocketUserPrincipal(member);
                 attributes.put("user", user);  // 세션에 넣기
                 return true;

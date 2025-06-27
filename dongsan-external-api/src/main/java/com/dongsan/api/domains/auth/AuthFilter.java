@@ -18,8 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 
 public class AuthFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
@@ -41,12 +39,8 @@ public class AuthFilter extends OncePerRequestFilter {
      */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        Set<String> excludeUrl = new HashSet<>(Set.of(
-        ));
-
-        String url = request.getRequestURI();
-        return excludeUrl.stream()
-                .anyMatch(url::startsWith);
+        String path = request.getRequestURI();
+        return path.startsWith("/ws");
     }
 
     /**

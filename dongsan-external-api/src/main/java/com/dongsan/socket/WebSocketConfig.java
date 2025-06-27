@@ -36,8 +36,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         "http://front.dongsanwalk.site:3000"
                 )
                 .addInterceptors(new WebSocketHandshakeInterceptor(socketCookieService, socketJwtService))
-                .setHandshakeHandler(new WebSocketHandshakeHandler())
-                .withSockJS();
+                .setHandshakeHandler(new WebSocketHandshakeHandler());
+        //.withSockJS();
     }
 
     @Override
