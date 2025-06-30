@@ -1,9 +1,10 @@
 package com.dongsan.domain.domains.image;
 
-import com.dongsan.domain.support.error.CoreErrorCode;
-import com.dongsan.domain.support.error.CoreException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.dongsan.domain.support.error.CoreErrorCode;
+import com.dongsan.domain.support.error.CoreException;
 
 @Service
 @Transactional
@@ -23,4 +24,8 @@ public class ImageRdbService {
                 .orElseThrow(() -> new CoreException(CoreErrorCode.IMAGE_NOT_EXISTS));
     }
 
+    public Image getImageByUrl(String url) {
+        return imageRepository.findByUrl(url)
+                .orElseThrow(() -> new CoreException(CoreErrorCode.IMAGE_NOT_EXISTS));
+    }
 }
