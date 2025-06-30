@@ -1,11 +1,12 @@
 package com.dongsan.api.domains.crew.dto.response;
 
-import com.dongsan.domain.domains.crew.domain.Crew;
-import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+
+import com.dongsan.domain.domains.crew.domain.Crew;
+import com.dongsan.domain.domains.crew.domain.CrewWeeklyStatistic;
+import com.dongsan.domain.domains.member.Member;
 
 public record GetCrewInfoResponse(
         String name,
@@ -18,10 +19,13 @@ public record GetCrewInfoResponse(
         String crewImageUrl,
         LocalDate createdAt,
         WeeklyStatsResponse weeklyStats,
-        boolean isJoined
+        boolean isJoined,
+        Long crewImageId,
+        String managerNickname
 ) {
 
-    public GetCrewInfoResponse(Crew crew, int memberCount, CrewWeeklyStatistic crewWeeklyStat, boolean isJoined) {
+    public GetCrewInfoResponse(Crew crew, int memberCount, CrewWeeklyStatistic crewWeeklyStat, boolean isJoined,
+            Long crewImageId, Member manager) {
         this(
                 crew.getName(),
                 crew.getDescription(),
@@ -33,7 +37,9 @@ public record GetCrewInfoResponse(
                 crew.getCrewImageUrl(),
                 crew.getCreatedAt().toLocalDate(),
                 new WeeklyStatsResponse(crewWeeklyStat),
-                isJoined
+                isJoined,
+                crewImageId,
+                manager.getNickname()
         );
     }
 
