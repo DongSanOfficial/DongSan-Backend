@@ -81,4 +81,9 @@ public class CrewMemberCoreRepository implements CrewMemberRepository {
                         tuple -> tuple.get(crewMember.count()).intValue()
                 ));
     }
+
+    @Override
+    public CrewMember findByCrewIdAndRole(Long crewId, CrewMemberRole crewMemberRole) {
+        return crewMemberJpaRepository.findByCrewIdAndRole(crewId, crewMemberRole);
+    }
 }

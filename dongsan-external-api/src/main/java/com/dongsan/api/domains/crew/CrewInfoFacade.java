@@ -112,7 +112,12 @@ public class CrewInfoFacade {
         LocalDate startDate = DateRangeUtil.getStartOfWeek(LocalDate.now());
         LocalDate endDate = DateRangeUtil.getEndOfWeek(LocalDate.now());
         CrewWeeklyStatistic crewWeeklyStat = walkwayLogRdbService.getCrewWeeklyStat(crewId, startDate, endDate);
-        return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat, isCrewMember);
+        Long imageId = crew.getCrewImageUrl().isBlank()
+                ? null
+                : imageRdbService.getImageByUrl(crew.getCrewImageUrl()).getId();
+        Long managerId = crewMemberRdbService.getManager(crew.getId()).getMemberId();
+        Member manager = memberRdbService.getMember(managerId);
+        return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat, isCrewMember, imageId, manager);
     }
 
     @Transactional(readOnly = true)

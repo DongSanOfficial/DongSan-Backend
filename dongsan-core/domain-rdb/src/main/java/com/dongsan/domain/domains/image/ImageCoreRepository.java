@@ -1,9 +1,9 @@
 package com.dongsan.domain.domains.image;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public class ImageCoreRepository implements ImageRepository {
@@ -24,5 +24,10 @@ public class ImageCoreRepository implements ImageRepository {
         Image image = imageJpaRepository.save(new Image(url));
         return image.getId();
     }
-    
+
+    @Override
+    public Optional<Image> findByUrl(String url) {
+        return imageJpaRepository.findByUrl(url);
+    }
+
 }

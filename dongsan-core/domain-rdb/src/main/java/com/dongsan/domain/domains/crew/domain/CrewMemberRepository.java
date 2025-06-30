@@ -20,4 +20,6 @@ public interface CrewMemberRepository {
     Map<Long, CrewMember> findMapByCrewIdAndMemberId(List<Long> crewIds, Long memberId);
 
     Map<Long, Integer> countByCrewIds(List<Long> crewIds);
+
+    CrewMember findByCrewIdAndRole(Long crewId, CrewMemberRole crewMemberRole);
 }
