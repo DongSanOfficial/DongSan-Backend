@@ -1,9 +1,10 @@
 package com.dongsan.domain.domains.crew.infrastructure;
 
-import com.dongsan.domain.domains.crew.domain.CrewMember;
-import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.dongsan.domain.domains.crew.domain.CrewMember;
+import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
 
 @Repository
 public interface CrewMemberJpaRepository extends JpaRepository<CrewMember, Long> {
@@ -14,4 +15,6 @@ public interface CrewMemberJpaRepository extends JpaRepository<CrewMember, Long>
     int countByCrewId(Long crewId);
 
     void deleteByCrewIdAndMemberId(Long crewId, Long memberId);
+
+    CrewMember findByCrewIdAndRole(Long crewId, CrewMemberRole role);
 }

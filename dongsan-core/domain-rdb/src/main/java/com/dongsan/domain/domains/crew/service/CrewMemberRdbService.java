@@ -1,14 +1,15 @@
 package com.dongsan.domain.domains.crew.service;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import com.dongsan.domain.domains.crew.domain.CrewMember;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRepository;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class CrewMemberRdbService {
@@ -80,5 +81,9 @@ public class CrewMemberRdbService {
 
     public Map<Long, Integer> countByCrewIds(List<Long> crewIds) {
         return crewMemberRepository.countByCrewIds(crewIds);
+    }
+
+    public CrewMember getManager(Long crewId) {
+        return crewMemberRepository.findByCrewIdAndRole(crewId, CrewMemberRole.MANAGER);
     }
 }
