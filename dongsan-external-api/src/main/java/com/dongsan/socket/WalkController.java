@@ -1,8 +1,8 @@
 package com.dongsan.socket;
 
-import com.dongsan.domain.domains.cowalk.CowalkCacheRepository;
-import com.dongsan.domain.domains.crew.CrewWalkCacheRepository;
-import com.dongsan.domain.domains.crew.WalkData;
+import com.dongsan.domain.cache.CowalkCacheRepository;
+import com.dongsan.domain.cache.CrewWalkCacheRepository;
+import com.dongsan.domain.cache.WalkData;
 import com.dongsan.socket.authenticate.SocketUserPrincipal;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;

@@ -2,6 +2,7 @@ dependencies {
     implementation project(":dongsan-core:domain-rdb")
     implementation project(':dongsan-core:domain-redis')
     implementation project(':dongsan-infra:infra-file')
+    testImplementation(testFixtures(project(":dongsan-core:domain-rdb")))
 
     // spring boot web
     implementation 'org.springframework.boot:spring-boot-starter-web'

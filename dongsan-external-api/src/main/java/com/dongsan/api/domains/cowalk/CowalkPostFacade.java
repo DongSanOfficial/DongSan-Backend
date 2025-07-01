@@ -1,17 +1,10 @@
 package com.dongsan.api.domains.cowalk;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkCommentRequest;
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkPostRequest;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkCommentResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostDetailResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostsResponse;
-import com.dongsan.domain.domains.cowalk.CowalkPostLockService;
 import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
 import com.dongsan.domain.domains.cowalk.domain.CowalkComment;
 import com.dongsan.domain.domains.cowalk.domain.CowalkCommentRepository;
@@ -22,9 +15,15 @@ import com.dongsan.domain.domains.cowalk.service.CowalkPostRdbService;
 import com.dongsan.domain.domains.crew.service.CrewMemberRdbService;
 import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberRdbService;
+import com.dongsan.domain.lock.CowalkPostLockService;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorResponse;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CowalkPostFacade {
@@ -111,13 +110,13 @@ public class CowalkPostFacade {
 
     @Transactional
     public Long saveCowalkComment(Long memberId, Long cowalkPostId,
-            CreateCowalkCommentRequest createCowalkCommentRequest) {
+                                  CreateCowalkCommentRequest createCowalkCommentRequest) {
         cowalkParticipantRdbService.validNotJoin(cowalkPostId, memberId);
         return cowalkCommentRdbService.save(memberId, cowalkPostId, createCowalkCommentRequest.content());
     }
 
     public CursorResponse<CowalkCommentResponse> getCowalkComments(Long cowalkPostId, Long crewId, Long memberId,
-            Integer size, Long lastId) {
+                                                                   Integer size, Long lastId) {
         crewMemberRdbService.validateIsCrewMember(crewId, memberId);
 
         CursorResponse<CowalkComment> cowalkComments

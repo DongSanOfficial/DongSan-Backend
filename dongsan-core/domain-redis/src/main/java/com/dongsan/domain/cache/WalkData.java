@@ -1,8 +1,8 @@
-package com.dongsan.domain.domains.crew;
+package com.dongsan.domain.cache;
 
 import java.util.Map;
 
-import static com.dongsan.domain.domains.crew.CrewWalkCacheRepository.*;
+import static com.dongsan.domain.cache.CrewWalkCacheRepository.*;
 
 public record WalkData(
         String memberId,
