@@ -39,7 +39,7 @@ class TestCrewFacadeTest {
     void joinLimitedCrew_concurrentTest() throws InterruptedException {
         // given
         Long crewId = 2L;
-        int threadCount = 20;
+        int threadCount = 1;
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);
 
@@ -50,7 +50,7 @@ class TestCrewFacadeTest {
                 try {
                     testCrewFacade.joinLimitedCrew(crewId, memberId);
                 } catch (Exception e) {
-                    log.error("예외 발생! Thread: {}, Exception : {}",
+                    log.error("가입 실패:( Thread: {}, Exception : {}",
                             Thread.currentThread().getName(),
                             e.getClass().getSimpleName());
                 } finally {

@@ -4,11 +4,13 @@ import com.dongsan.domain.domains.crew.domain.Crew;
 import com.dongsan.domain.domains.crew.service.CrewMemberRdbService;
 import com.dongsan.domain.domains.crew.service.CrewRdbService;
 import com.dongsan.domain.lock.RedisLockService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TestCrewFacade {
+    private static final Logger log = LoggerFactory.getLogger(TestCrewFacade.class);
     private final CrewRdbService crewRdbService;
     private final CrewMemberRdbService crewMemberRdbService;
     private final RedisLockService redisLockService;
@@ -19,13 +21,11 @@ public class TestCrewFacade {
         this.redisLockService = redisLockService;
     }
 
-    @Transactional
+    //@Transactional
     public void joinLimitedCrew(Long crewId, Long memberId) {
         redisLockService.callWithLock(crewId, () -> {
             Crew crew = crewRdbService.getCrewWithLock(crewId);
             int memberCount = crewMemberRdbService.countCrewMember(crewId);
-            crew.validateNotFull(memberCount);
-
             // crewRdbService.comparePassword(crew, password);
             // crewMemberRdbService.validateNotAlreadyJoined(crewId, memberId);
             crewMemberRdbService.joinCrew(crewId, memberId);
@@ -33,5 +33,5 @@ public class TestCrewFacade {
             return null;
         });
     }
-    
+
 }

@@ -17,19 +17,21 @@ public class RedisLockService {
     private static final Logger log = LoggerFactory.getLogger(RedisLockService.class);
     private final RedissonClient redissonClient;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final RedisLockTransactionExecutor redisLockTransactionExecutor;
 
-    public RedisLockService(RedissonClient redissonClient, ApplicationEventPublisher applicationEventPublisher) {
+    public RedisLockService(RedissonClient redissonClient, ApplicationEventPublisher applicationEventPublisher, RedisLockTransactionExecutor redisLockTransactionExecutor) {
         this.redissonClient = redissonClient;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.redisLockTransactionExecutor = redisLockTransactionExecutor;
     }
-    
+
     public <T> T callWithLock(final Long crewId, final Supplier<T> supplier) {
         String key = this.generateCrewLockKey(crewId);
         final RLock rLock = redissonClient.getLock(key);
-        return this.execute(supplier, key, rLock);
+        return this.execute_v2(supplier, key, rLock);
     }
 
-    private <T> T execute(Supplier<T> supplier, String key, RLock rLock) {
+    private <T> T execute_v1(Supplier<T> supplier, String key, RLock rLock) {
         try {
             log.info("{} - lock 획득 시도", key);
             if (rLock.tryLock(5, 10, TimeUnit.SECONDS)) {
@@ -45,6 +47,22 @@ public class RedisLockService {
         }
     }
 
+    private <T> T execute_v2(Supplier<T> supplier, String key, RLock rLock) {
+        try {
+            log.info("{} - lock 획득 시도", key);
+            if (rLock.tryLock(5, 10, TimeUnit.SECONDS)) {
+                log.info("{} - lock 획득 성공", key);
+                return redisLockTransactionExecutor.execute(supplier);
+            }
+            throw new InterruptedException();
+        } catch (InterruptedException e) {
+            log.error("{} - lock 획득 실패", key);
+            throw new RuntimeException("락 획득 실패", e);
+        } finally {
+            this.unlock(rLock, key);
+        }
+    }
+
     private String generateCrewLockKey(Long crewId) {
         return "REDISSON_LOCK:crewId:" + crewId;
     }
@@ -56,6 +74,15 @@ public class RedisLockService {
             log.info("{} - lock 해제 성공", lockEvent.key());
         } catch (IllegalMonitorStateException e) {
             log.warn("{} - 이미 해제된 lock 입니다.", lockEvent.key());
+        }
+    }
+
+    private void unlock(final RLock rLock, String key) {
+        try {
+            rLock.unlock();
+            log.info("{} - lock 해제 성공", key);
+        } catch (IllegalMonitorStateException e) {
+            log.warn("{} - 이미 해제된 lock 입니다.", key);
         }
     }
 
