@@ -3,7 +3,6 @@ package com.dongsan.domain.domains.cowalk.domain;
 import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -14,5 +13,5 @@ public interface CowalkPostRepository {
 
     CursorResponse<CowalkPost> getCowalkPosts(Integer size, Long lastId, Long crewId);
 
-    CursorResponse<CowalkPost> getJoinedCowalkPost(Long memberId, LocalDateTime twentyFourHoursAgo, Long lastId, int size);
+    CursorResponse<CowalkPost> getJoinedCowalkPost(Long memberId, Long lastId, int size);
 }

@@ -5,8 +5,7 @@ import com.dongsan.domain.support.error.CoreException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -23,7 +22,7 @@ class CowalkPostTest {
         String memo = "memo";
 
         CreateCowalkPostCommand command
-                = new CreateCowalkPostCommand(crewId, memberId, LocalDate.now(), LocalTime.now(), capacity, memo);
+                = new CreateCowalkPostCommand(crewId, memberId, LocalDateTime.now(), LocalDateTime.now().plusHours(2), capacity, memo);
 
         CowalkPost cowalkPost = new CowalkPost(command);
 

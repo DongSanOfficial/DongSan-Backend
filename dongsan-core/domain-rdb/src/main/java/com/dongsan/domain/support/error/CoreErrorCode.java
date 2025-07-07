@@ -70,8 +70,9 @@ public enum CoreErrorCode {
     COWALK_PARTICIPANT_LIMIT(CoreErrorStatus.BAD_REQUEST, "COWALK-03", "같이 산책 인원이 이미 모두 찼습니다."),
     COWALK_LOCK_FAIL(CoreErrorStatus.CONFLICT, "COWALK-04", "같이 산책 참여에 실패했습니다."),
     COWALK_PARTICIPANT_NOT_JOIN(CoreErrorStatus.BAD_REQUEST, "COWALK-05", "같이 산책에 참여하지 않은 사용자입니다."),
-
-    ;
+    COWALK_STARTEDAT_ENDEDAT_NOTNULL(CoreErrorStatus.BAD_REQUEST, "COWALK-06", "같이 산책하기의 시작, 종료 시간은 null이 아닙니다."),
+    COWALK_STARTEDAT_EARLY_ENDEDAT(CoreErrorStatus.BAD_REQUEST, "COWALK-07", "같이 산책하기의 시작 시간은 종료 시간보다 일러야 합니다."),
+    COWALK_DURATION_BETWEEN_1H_3H(CoreErrorStatus.BAD_REQUEST, "COWALK-08", "종료 시간 - 시작 시간 : 1시간 이상 ~ 3시간 이하 입니다.");
 
     private final CoreErrorStatus httpStatus;
     private final String code;
