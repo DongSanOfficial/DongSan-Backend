@@ -28,10 +28,26 @@ public class WalkwayInfo {
     @Column(nullable = false, name = "distance")
     private Double distanceKm;
 
-    @Column(nullable = false, name = "time")
+    @Column(nullable = false, name = "startTime")
     private Integer timeSec;
 
     protected WalkwayInfo() {
+    }
+
+    public WalkwayInfo(String name, Double distanceKm, Integer timeSec, WalkwayExposeLevel exposeLevel, String memo, List<String> hashtags) {
+        name = name.trim();
+        memo = memo.trim();
+
+        validateName(name);
+        validateDistance(distanceKm);
+        validateTime(timeSec);
+
+        this.name = name;
+        this.distanceKm = distanceKm;
+        this.timeSec = timeSec;
+        this.exposeLevel = exposeLevel;
+        this.memo = memo;
+        this.hashtags = Objects.requireNonNullElseGet(hashtags, List::of);
     }
 
     private void validateName(String name) {
@@ -50,22 +66,6 @@ public class WalkwayInfo {
         if (time == null || time < MIN_TIME_SEC) {
             throw new CoreException(CoreErrorCode.WALKWAY_TIME_NOT_ENOUGH);
         }
-    }
-
-    public WalkwayInfo(String name, Double distanceKm, Integer timeSec, WalkwayExposeLevel exposeLevel, String memo, List<String> hashtags) {
-        name = name.trim();
-        memo = memo.trim();
-
-        validateName(name);
-        validateDistance(distanceKm);
-        validateTime(timeSec);
-
-        this.name = name;
-        this.distanceKm = distanceKm;
-        this.timeSec = timeSec;
-        this.exposeLevel = exposeLevel;
-        this.memo = memo;
-        this.hashtags = Objects.requireNonNullElseGet(hashtags, List::of);
     }
 
     public void updateWalkwayInfo(String name, String memo, WalkwayExposeLevel walkwayExposeLevel, List<String> hashtags) {

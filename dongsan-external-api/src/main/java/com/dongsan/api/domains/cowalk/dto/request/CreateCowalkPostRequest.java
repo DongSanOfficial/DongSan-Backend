@@ -7,15 +7,23 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record CreateCowalkPostRequest(
-        @NotNull(message = "산책 날짜를 입력해주세요")
-        LocalDate date,
+        @NotNull(message = "산책 시작 날짜를 입력해주세요")
+        LocalDate startDate,
 
         @Schema(type = "string", example = "08:00:00", description = "산책 시작 시간")
-        @NotNull(message = "산책 시간을 입력해주세요")
-        LocalTime time,
+        @NotNull(message = "산책 시작 시간을 입력해주세요")
+        LocalTime startTime,
+
+        @NotNull(message = "산책 종료 날짜를 입력해주세요")
+        LocalDate endDate,
+
+        @Schema(type = "string", example = "08:00:00", description = "산책 종료 시간")
+        @NotNull(message = "산책 종료 시간을 입력해주세요")
+        LocalTime endTime,
 
         @NotNull(message = "인원 제한 여부를 입력해주세요")
         Boolean limitEnable,
@@ -30,8 +38,8 @@ public record CreateCowalkPostRequest(
         return new CreateCowalkPostCommand(
                 crewId,
                 memberId,
-                date,
-                time,
+                LocalDateTime.of(startDate, startTime),
+                LocalDateTime.of(endDate, endTime),
                 memberLimit,
                 memo
         );

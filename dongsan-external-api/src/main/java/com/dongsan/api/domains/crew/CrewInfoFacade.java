@@ -1,19 +1,7 @@
 package com.dongsan.api.domains.crew;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.dongsan.api.domains.crew.dto.request.CreateUpdateCrewRequest;
-import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewMemberRankingResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewsResponse;
+import com.dongsan.api.domains.crew.dto.response.*;
 import com.dongsan.api.support.util.DateRangeUtil;
 import com.dongsan.domain.domains.crew.domain.Crew;
 import com.dongsan.domain.domains.crew.domain.CrewMember;
@@ -31,6 +19,13 @@ import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -43,8 +38,8 @@ public class CrewInfoFacade {
     private final ImageRdbService imageRdbService;
 
     public CrewInfoFacade(CrewRdbService crewRdbService, CrewMemberRdbService crewMemberRdbService,
-            WalkwayLogRdbService walkwayLogRdbService, MemberRdbService memberRdbService, S3FileService s3FileService,
-            ImageRdbService imageRdbService) {
+                          WalkwayLogRdbService walkwayLogRdbService, MemberRdbService memberRdbService, S3FileService s3FileService,
+                          ImageRdbService imageRdbService) {
         this.crewRdbService = crewRdbService;
         this.crewMemberRdbService = crewMemberRdbService;
         this.walkwayLogRdbService = walkwayLogRdbService;
@@ -112,7 +107,7 @@ public class CrewInfoFacade {
         LocalDate startDate = DateRangeUtil.getStartOfWeek(LocalDate.now());
         LocalDate endDate = DateRangeUtil.getEndOfWeek(LocalDate.now());
         CrewWeeklyStatistic crewWeeklyStat = walkwayLogRdbService.getCrewWeeklyStat(crewId, startDate, endDate);
-        Long imageId = crew.getCrewImageUrl().isBlank()
+        Long imageId = crew.getCrewImageUrl() == null
                 ? null
                 : imageRdbService.getImageByUrl(crew.getCrewImageUrl()).getId();
         Long managerId = crewMemberRdbService.getManager(crew.getId()).getMemberId();
@@ -122,7 +117,7 @@ public class CrewInfoFacade {
 
     @Transactional(readOnly = true)
     public CursorResponse<GetCrewMemberRankingResponse> getCrewMemberRanking(Long crewId, Long memberId, LocalDate date,
-            CrewRankingSort sort, CrewRankingPeriod period, CursorRequest paging) {
+                                                                             CrewRankingSort sort, CrewRankingPeriod period, CursorRequest paging) {
         Crew crew = crewRdbService.getCrew(crewId);
         boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
         crew.canAccess(isCrewMember);
