@@ -62,7 +62,7 @@ public class CrewRdbService {
     }
 
     public void update(Crew crew, CrewInfoCommand command) {
-        if (isNameDuplicated(command.name())) {
+        if (isNameDuplicatedExceptSelf(command.name(), crew.getId())) {
             throw new CoreException(CoreErrorCode.CREW_NAME_DUPLICATED);
         }
 
