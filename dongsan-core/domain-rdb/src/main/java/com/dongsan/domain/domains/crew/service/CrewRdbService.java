@@ -1,5 +1,7 @@
 package com.dongsan.domain.domains.crew.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.dongsan.domain.domains.crew.domain.Capacity;
@@ -98,5 +100,9 @@ public class CrewRdbService {
 
     public CursorResponse<Crew> recommendCrews(Integer size, Long lastId, Long memberId) {
         return crewRepository.findCrewsByLogThisWeek(size, lastId, memberId);
+    }
+
+    public List<Long> getMyCrewIds(Long memberId) {
+        return crewRepository.getAllMyCrewIds(memberId);
     }
 }
