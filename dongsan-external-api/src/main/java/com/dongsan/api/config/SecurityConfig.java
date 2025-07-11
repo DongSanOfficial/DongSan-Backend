@@ -160,7 +160,8 @@ public class SecurityConfig {
                                 "/health",
                                 "/dev/**",
                                 "/auth/refresh",
-                                "/ws/**"
+                                "/ws/**",
+                                "/actuator/**"
                         )
                         .permitAll()
                         // 이외 요청 모두 jwt 필터를 타도록 설정
