@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.crew.dto.response.GetCrewsResponse;
+import com.dongsan.api.domains.crew.dto.response.GetMyCrewIdsResponse;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
 
@@ -37,6 +38,16 @@ public class MyCrewInfoController {
         CursorRequest cursorRequest = new CursorRequest(lastId, size);
         CursorResponse<GetCrewsResponse> result
                 = crewInfoFacade.getMyCrews(customAuthUser.getMemberId(), cursorRequest);
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(summary = "나의 크루 아이디 조회")
+    @GetMapping("/ids")
+    public ResponseEntity<GetMyCrewIdsResponse> getMyCrewIds(
+            @AuthenticationPrincipal CustomAuthUser customAuthUser
+    ) {
+        GetMyCrewIdsResponse result
+                = crewInfoFacade.getMyCrewIds(customAuthUser.getMemberId());
         return ResponseEntity.ok(result);
     }
 }

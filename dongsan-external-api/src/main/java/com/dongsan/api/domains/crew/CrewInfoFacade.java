@@ -14,6 +14,7 @@ import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewMemberRankingResponse;
 import com.dongsan.api.domains.crew.dto.response.GetCrewsResponse;
+import com.dongsan.api.domains.crew.dto.response.GetMyCrewIdsResponse;
 import com.dongsan.api.support.util.DateRangeUtil;
 import com.dongsan.domain.domains.crew.domain.Crew;
 import com.dongsan.domain.domains.crew.domain.CrewMember;
@@ -198,5 +199,10 @@ public class CrewInfoFacade {
         Map<Long, Integer> memberCountMap = crewMemberRdbService.countByCrewIds(crewIds);
 
         return GetCrewsResponse.from(crewList, crewMemberMap, memberCountMap);
+    }
+
+    public GetMyCrewIdsResponse getMyCrewIds(Long memberId) {
+        List<Long> myCrewIds = crewRdbService.getMyCrewIds(memberId);
+        return new GetMyCrewIdsResponse(myCrewIds);
     }
 }
