@@ -35,6 +35,14 @@ public class CrewRdbService {
         return crewRepository.existsByName(name);
     }
 
+    public boolean isNameDuplicatedExceptSelf(String name, Long crewId) {
+        Crew crew = getCrew(crewId);
+        if (crew.getName().equals(name)) {
+            return false;
+        }
+        return isNameDuplicated(name);
+    }
+
     public Long save(CrewInfoCommand command) {
         if (isNameDuplicated(command.name())) {
             throw new CoreException(CoreErrorCode.CREW_NAME_DUPLICATED);
@@ -54,7 +62,7 @@ public class CrewRdbService {
     }
 
     public void update(Crew crew, CrewInfoCommand command) {
-        if (isNameDuplicated(command.name())) {
+        if (isNameDuplicatedExceptSelf(command.name(), crew.getId())) {
             throw new CoreException(CoreErrorCode.CREW_NAME_DUPLICATED);
         }
 
