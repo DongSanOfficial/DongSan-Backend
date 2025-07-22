@@ -143,10 +143,9 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 /**
-                 * JwtAuthFilter 를 @Component 로 등록하면 WebSecurityCustomizer 에서 ignoring 을 해준 경로에도 jwt 필터가 실행된다.
+                 * AuthFilter 를 @Component 로 등록하면 WebSecurityCustomizer 에서 ignoring 을 해준 경로에도 auth 필터가 실행된다.
                  * 관련 링크: https://stackoverflow.com/questions/39152803/spring-websecurity-ignoring-doesnt-ignore-custom
-                 * -filter/40969780#40969780
-                 * shouldNotFilter 로 jwt 필터에서 해당 경로를 타지 않도록 해주거나
+                 * shouldNotFilter 로 auth 필터에서 해당 경로를 타지 않도록 해주거나
                  * 아래처럼 컴포넌트로 등록하지 않고, 수동으로 등록하는 방법을 사용할 수 있다.
                  */
                 .addFilterBefore(new AuthFilter(jwtService, cookieService, tokenReader, tokenWriter),
@@ -164,7 +163,7 @@ public class SecurityConfig {
                                 "/actuator/**"
                         )
                         .permitAll()
-                        // 이외 요청 모두 jwt 필터를 타도록 설정
+                        // 이외 요청 모두 auth 필터를 타도록 설정
                         .anyRequest()
                         .authenticated())
                 .exceptionHandling(exceptionHandling ->
