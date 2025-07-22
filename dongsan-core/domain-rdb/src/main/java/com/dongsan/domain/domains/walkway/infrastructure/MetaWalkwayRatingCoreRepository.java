@@ -23,4 +23,9 @@ public class MetaWalkwayRatingCoreRepository implements MetaWalkwayRatingReposit
     public void save(MetaWalkwayRating metaWalkwayRating) {
         metaWalkwayRatingJpaRepository.save(metaWalkwayRating);
     }
+
+    @Override
+    public Optional<MetaWalkwayRating> findByWalkwayIdForUpdate(Long walkwayId) {
+        return metaWalkwayRatingJpaRepository.findByWalkwayIdForUpdate(walkwayId);
+    }
 }

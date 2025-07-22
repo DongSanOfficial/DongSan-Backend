@@ -20,23 +20,17 @@ public class MetaWalkwayRatingRdbService {
         return metaWalkwayRatingRepository.findByWalkwayId(walkwayId);
     }
 
-    @Async
-    @Transactional
-    public void addRating(Long walkwayId, int rating) {
-        MetaWalkwayRating metaRating = findByWalkwayId(walkwayId)
-                .orElseGet(() -> new MetaWalkwayRating(walkwayId));
-        metaRating.addRating(rating);
-        metaWalkwayRatingRepository.save(metaRating);
+    private Optional<MetaWalkwayRating> findByWalkwayIdForUpdate(Long walkwayId) {
+        return metaWalkwayRatingRepository.findByWalkwayIdForUpdate(walkwayId);
     }
 
     @Async
     @Transactional
-    public void removeRating(Long walkwayId, int rating) {
-        findByWalkwayId(walkwayId).ifPresent(
-                metaRating -> {
-                    metaRating.removeRating(rating);
-                }
-        );
+    public void addRating(Long walkwayId, int rating) {
+        MetaWalkwayRating metaRating = findByWalkwayIdForUpdate(walkwayId)
+                .orElseGet(() -> new MetaWalkwayRating(walkwayId));
+        metaRating.addRating(rating);
+        metaWalkwayRatingRepository.save(metaRating);
     }
 
     public void saveByWalkwayId(Long walkwayId) {
