@@ -40,7 +40,11 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.startsWith("/ws");
+        return path.startsWith("/actuator")
+                || path.startsWith("/health")
+                || path.startsWith("/auth/refresh")
+                || path.startsWith("/ws")
+                || path.startsWith("/dev");
     }
 
     /**
@@ -86,10 +90,10 @@ public class AuthFilter extends OncePerRequestFilter {
                 authenticateUser(jwtService.getMemberFromAccessToken(accessToken));
             }
         } catch (CoreException ex) {
-            log.error("[AUTH] CustomException 발생 : {}", ex.getMessage());
+            log.warn("[AUTH] CustomException 발생 : {}", ex.getMessage());
             request.setAttribute("error", ex.getErrorCode());
         } catch (Exception e) {
-            log.error("[AUTH] auth filter 에서 문제 발생 : {}", e.getMessage());
+            log.warn("[AUTH] auth filter 에서 문제 발생 : {}", e.getMessage());
             request.setAttribute("error", null);
         }
 

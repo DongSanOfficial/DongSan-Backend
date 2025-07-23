@@ -20,10 +20,14 @@ public class MetaWalkwayLikedRdbService {
         return metaWalkwayLikedRepository.findByWalkwayId(walkwayId);
     }
 
+    private Optional<MetaWalkwayLiked> findByWalkwayIdForUpdate(Long walkwayId) {
+        return metaWalkwayLikedRepository.findByWalkwayIdForUpdate(walkwayId);
+    }
+
     @Async
     @Transactional
     public void increaseLikeCount(Long walkwayId) {
-        MetaWalkwayLiked metaLiked = findByWalkwayId(walkwayId)
+        MetaWalkwayLiked metaLiked = findByWalkwayIdForUpdate(walkwayId)
                 .orElseGet(() -> new MetaWalkwayLiked(walkwayId));
         metaLiked.increaseLikeCount();
         metaWalkwayLikedRepository.save(metaLiked);
@@ -32,7 +36,7 @@ public class MetaWalkwayLikedRdbService {
     @Async
     @Transactional
     public void decreaseLikeCount(Long walkwayId) {
-        findByWalkwayId(walkwayId).ifPresent(
+        findByWalkwayIdForUpdate(walkwayId).ifPresent(
                 MetaWalkwayLiked::decreaseLikeCount
         );
     }

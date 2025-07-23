@@ -20,8 +20,7 @@ public class MetaWalkwayRating extends BaseEntity {
 
     protected MetaWalkwayRating() {
     }
-
-    // 비동기 예외 필요
+    
     public MetaWalkwayRating(Long walkwayId) {
         this.walkwayId = walkwayId;
         this.ratingCount = 0;
@@ -40,15 +39,6 @@ public class MetaWalkwayRating extends BaseEntity {
         this.ratingSum += rating;
         this.ratingCount += 1;
         this.rating = (double) this.ratingSum / this.ratingCount;
-    }
-
-    public void removeRating(int rating) {
-        if (rating < 0 || rating > 5) {
-            return;
-        }
-        this.ratingSum -= rating;
-        this.ratingCount -= Math.max(0, this.ratingCount - 1);
-        this.rating = this.ratingCount == 0 ? 0.0 : (double) this.ratingSum / this.ratingCount;
     }
 
     public double getRating() {
