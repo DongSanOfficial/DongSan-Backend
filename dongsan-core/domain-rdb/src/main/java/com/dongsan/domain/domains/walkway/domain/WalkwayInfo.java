@@ -28,7 +28,7 @@ public class WalkwayInfo {
     @Column(nullable = false, name = "distance")
     private Double distanceKm;
 
-    @Column(nullable = false, name = "startTime")
+    @Column(nullable = false, name = "time")
     private Integer timeSec;
 
     protected WalkwayInfo() {
