@@ -33,9 +33,9 @@ public class WalkwayRdbService {
                 .orElseThrow(() -> new CoreException(CoreErrorCode.WALKWAY_NOT_FOUND));
     }
 
-//    public Optional<Walkway> findById(Long walkwayId) {
-//        return walkwayRepository.findById(walkwayId);
-//    }
+    public Optional<Walkway> findById(Long walkwayId) {
+        return walkwayRepository.findById(walkwayId);
+    }
 
     public Walkway getWalkwayWithAccessValidation(Long walkwayId, Long memberId) {
         Walkway walkway = getWalkway(walkwayId);
