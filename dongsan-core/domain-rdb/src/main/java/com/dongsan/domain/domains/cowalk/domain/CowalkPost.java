@@ -1,16 +1,23 @@
 package com.dongsan.domain.domains.cowalk.domain;
 
-import com.dongsan.domain.domains.common.BaseEntity;
-import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
-import com.dongsan.domain.support.error.CoreErrorCode;
-import com.dongsan.domain.support.error.CoreException;
-import jakarta.persistence.*;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import com.dongsan.domain.domains.common.BaseEntity;
+import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
+import com.dongsan.domain.support.error.CoreErrorCode;
+import com.dongsan.domain.support.error.CoreException;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "cowalk_post")
@@ -111,5 +118,9 @@ public class CowalkPost extends BaseEntity {
 
     public String getMemo() {
         return memo;
+    }
+
+    public LocalTime getEndTime() {
+        return endedAt.toLocalTime();
     }
 }

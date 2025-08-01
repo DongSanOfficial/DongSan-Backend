@@ -70,7 +70,7 @@ public class CowalkPostFacade {
         CowalkPost cowalkPost = cowalkPostRdbService.getCowalkPost(cowalkPostId);
         Integer participantCount = cowalkParticipantRdbService.countByCowalkPostId(cowalkPostId);
         Integer commentCount = cowalkCommentRdbService.countByCowalkPostId(cowalkPostId);
-        Member member = memberRdbService.getMember(memberId);
+        Member member = memberRdbService.getMember(cowalkPost.getMemberId());
         return new CowalkPostDetailResponse(cowalkPost, participantCount, commentCount, member);
     }
 
