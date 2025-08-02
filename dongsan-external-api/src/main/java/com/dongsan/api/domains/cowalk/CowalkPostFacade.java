@@ -1,5 +1,7 @@
 package com.dongsan.api.domains.cowalk;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +57,9 @@ public class CowalkPostFacade {
     @Transactional
     public Long saveCowalkPost(CreateCowalkPostRequest createCowalkPostRequest, Long crewId, Long memberId) {
         crewMemberRdbService.validateIsCrewMember(crewId, memberId);
-        CreateCowalkPostCommand command = createCowalkPostRequest.toCreateCowalkPostCommand(crewId, memberId);
+        LocalDate endDate = calculateEndDate(createCowalkPostRequest.startDate(), createCowalkPostRequest.startTime(),
+                createCowalkPostRequest.endTime());
+        CreateCowalkPostCommand command = createCowalkPostRequest.toCreateCowalkPostCommand(crewId, memberId, endDate);
         Long cowalkPostId = cowalkPostRdbService.save(command);
         cowalkParticipantRdbService.save(memberId, cowalkPostId);
         return cowalkPostId;
@@ -66,7 +70,7 @@ public class CowalkPostFacade {
         CowalkPost cowalkPost = cowalkPostRdbService.getCowalkPost(cowalkPostId);
         Integer participantCount = cowalkParticipantRdbService.countByCowalkPostId(cowalkPostId);
         Integer commentCount = cowalkCommentRdbService.countByCowalkPostId(cowalkPostId);
-        Member member = memberRdbService.getMember(memberId);
+        Member member = memberRdbService.getMember(cowalkPost.getMemberId());
         return new CowalkPostDetailResponse(cowalkPost, participantCount, commentCount, member);
     }
 
@@ -134,5 +138,9 @@ public class CowalkPostFacade {
         List<CowalkCommentResponse> responseList = CowalkCommentResponse.from(cowalkCommentList, memberMap);
 
         return new CursorResponse<>(responseList, cowalkComments.getHasNext());
+    }
+
+    private LocalDate calculateEndDate(LocalDate startDate, LocalTime startTime, LocalTime endTime) {
+        return startTime.isAfter(endTime) ? startDate.plusDays(1) : startDate;
     }
 }
