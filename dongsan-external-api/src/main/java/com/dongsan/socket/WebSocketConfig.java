@@ -31,9 +31,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         "http://dongsanwalk.site",
                         "http://api.dongsanwalk.site:8080",
                         "https://dongsanwalk.site",
+                        "https://testui.dongsanwalk.site",
                         "https://www.dongsanwalk.site",
-                        "https://api.dongsanwalk.site",
-                        "http://front.dongsanwalk.site:3000"
+                        "https://api.dongsanwalk.site"
                 )
                 .addInterceptors(new WebSocketHandshakeInterceptor(socketCookieService, socketJwtService))
                 .setHandshakeHandler(new WebSocketHandshakeHandler());
