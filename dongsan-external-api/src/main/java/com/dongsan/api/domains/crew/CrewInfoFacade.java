@@ -57,6 +57,9 @@ public class CrewInfoFacade {
     @Transactional(readOnly = true)
     public boolean isNameUnique(String name, Long crewId) {
         name = name.trim();
+        if (crewId == null) {
+            return !crewRdbService.isNameDuplicated(name);
+        }
         return !crewRdbService.isNameDuplicatedExceptSelf(name, crewId);
     }
 

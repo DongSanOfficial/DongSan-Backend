@@ -35,7 +35,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/crews")
@@ -52,7 +51,7 @@ public class CrewInfoController {
     @GetMapping("/exists")
     public ResponseEntity<IsNameUniqueResponse> isNameUnique(
             @RequestParam @NotBlank String name,
-            @RequestParam @NotNull Long crewId
+            @RequestParam(required = false) Long crewId
     ) {
         boolean isUnique = crewInfoFacade.isNameUnique(name, crewId);
         return ResponseEntity.ok(new IsNameUniqueResponse(isUnique));
