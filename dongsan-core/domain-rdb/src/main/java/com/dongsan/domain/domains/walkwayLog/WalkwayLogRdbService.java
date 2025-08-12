@@ -49,9 +49,9 @@ public class WalkwayLogRdbService {
         return walkwayLogRepository.getUserWalkwayLog(memberId, lastCreatedAt, size);
     }
 
-    public CursorResponse<WalkwayLog> getCrewFeed(Long crewId, Long lastWalkwayLogId, int size) {
+    public CursorResponse<WalkwayLog> getCrewFeed(Long crewId, LocalDateTime crewCreatedAt, Long lastWalkwayLogId, int size) {
         LocalDateTime lastCreatedAt = getWalkwayLogCreatedAt(lastWalkwayLogId);
-        return walkwayLogRepository.getCrewWalkwayLog(crewId, lastCreatedAt, size);
+        return walkwayLogRepository.getCrewWalkwayLog(crewId, crewCreatedAt, lastCreatedAt, size);
     }
 
     public CrewWeeklyStatistic getCrewWeeklyStat(Long crewId, LocalDate startDay, LocalDate endDay) {
