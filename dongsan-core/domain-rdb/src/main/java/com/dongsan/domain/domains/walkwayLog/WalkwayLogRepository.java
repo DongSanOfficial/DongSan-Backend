@@ -17,7 +17,7 @@ public interface WalkwayLogRepository {
 
     CursorResponse<WalkwayLog> getUserWalkwayLog(Long memberId, LocalDateTime lastCreatedAt, int size);
 
-    CursorResponse<WalkwayLog> getCrewWalkwayLog(Long crewId, LocalDateTime lastCreatedAt, int size);
+    CursorResponse<WalkwayLog> getCrewWalkwayLog(Long crewId, LocalDateTime crewCreatedAt, LocalDateTime lastCreatedAt, int size);
 
     CursorResponse<CrewMemberStatistic> getCrewRankingByDistance(Long crewId, Long lastMemberId, LocalDate startDay, LocalDate endDay, int size);
 

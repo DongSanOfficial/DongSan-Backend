@@ -57,17 +57,25 @@ public class WalkwayLogCoreRepository implements WalkwayLogRepository {
     }
 
     @Override
-    public CursorResponse<WalkwayLog> getCrewWalkwayLog(Long crewId, LocalDateTime lastCreatedAt, int size) {
+    public CursorResponse<WalkwayLog> getCrewWalkwayLog(Long crewId, LocalDateTime crewCreatedAt, LocalDateTime lastCreatedAt, int size) {
         List<WalkwayLog> result = queryFactory
                 .selectFrom(walkwayLog)
                 .join(crewMember).on(crewMember.memberId.eq(walkwayLog.memberId))
                 .where(crewMember.crewId.eq(crewId),
-                        createdAtLt(lastCreatedAt))
+                        walkwayLogCreatedAtRange(crewCreatedAt, lastCreatedAt))
                 .orderBy(walkwayLog.createdAt.desc())
                 .limit((long) size + 1)
                 .fetch();
 
         return new CursorResponse<>(result, size);
+    }
+
+    private BooleanExpression walkwayLogCreatedAtRange(LocalDateTime crewCreatedAt, LocalDateTime lastCreatedAt) {
+        BooleanExpression expression = walkwayLog.createdAt.goe(crewCreatedAt);
+        if (lastCreatedAt != null) {
+            return expression.and(walkwayLog.createdAt.lt(lastCreatedAt));
+        }
+        return expression;
     }
 
     @Override
