@@ -1,6 +1,6 @@
 package com.dongsan.api.domains.auth;
 
-import com.dongsan.domain.domains.refresh.TokenWriter;
+import com.dongsan.domain.refresh.TokenWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

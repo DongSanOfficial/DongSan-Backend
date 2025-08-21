@@ -14,11 +14,14 @@ import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberRdbService;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
 import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
+import com.dongsan.domain.lock.RedisLockService;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,24 +31,27 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
 public class CrewInfoFacade {
+    private static final Logger log = LoggerFactory.getLogger(CrewInfoFacade.class);
+
     private final CrewRdbService crewRdbService;
     private final CrewMemberRdbService crewMemberRdbService;
     private final WalkwayLogRdbService walkwayLogRdbService;
     private final MemberRdbService memberRdbService;
     private final S3FileService s3FileService;
     private final ImageRdbService imageRdbService;
+    private final RedisLockService redisLockService;
 
     public CrewInfoFacade(CrewRdbService crewRdbService, CrewMemberRdbService crewMemberRdbService,
                           WalkwayLogRdbService walkwayLogRdbService, MemberRdbService memberRdbService, S3FileService s3FileService,
-                          ImageRdbService imageRdbService) {
+                          ImageRdbService imageRdbService, RedisLockService redisLockService) {
         this.crewRdbService = crewRdbService;
         this.crewMemberRdbService = crewMemberRdbService;
         this.walkwayLogRdbService = walkwayLogRdbService;
         this.memberRdbService = memberRdbService;
         this.s3FileService = s3FileService;
         this.imageRdbService = imageRdbService;
+        this.redisLockService = redisLockService;
     }
 
     @Transactional(readOnly = true)
@@ -145,30 +151,34 @@ public class CrewInfoFacade {
         crewMemberRdbService.leaveCrew(crewId, memberId);
     }
 
-    @Transactional
     public void joinCrew(Long crewId, Long memberId, String password) {
         Crew crew = crewRdbService.getCrew(crewId);
         if (crew.isLimitedCrew()) {
-            joinLimitedCrew(crewId, memberId, password);
+            joinLimitedCrew(crew, memberId, password);
         } else {
             joinUnLimitedCrew(crew, memberId, password);
         }
     }
 
-    private void joinUnLimitedCrew(Crew crew, Long memberId, String password) {
+    @Transactional
+    public void joinUnLimitedCrew(Crew crew, Long memberId, String password) {
         crewMemberRdbService.validateNotAlreadyJoined(crew.getId(), memberId);
         crewRdbService.comparePassword(crew, password);
         crewMemberRdbService.joinCrew(crew.getId(), memberId);
     }
 
-    private void joinLimitedCrew(Long crewId, Long memberId, String password) {
-        Crew crew = crewRdbService.getCrewWithLock(crewId);
-        int memberCount = crewMemberRdbService.countCrewMember(crewId);
+    private void joinLimitedCrew(Crew crew, Long memberId, String password) {
+        redisLockService.callWithLock(crew.getId(), () -> {
+            crewRdbService.comparePassword(crew, password);
 
-        crew.validateNotFull(memberCount);
-        crewMemberRdbService.validateNotAlreadyJoined(crewId, memberId);
-        crewRdbService.comparePassword(crew, password);
-        crewMemberRdbService.joinCrew(crewId, memberId);
+            int memberCount = crewMemberRdbService.countCrewMember(crew.getId());
+            log.info("memberCount : {}", memberCount);
+            crew.validateNotFull(memberCount);
+            crewMemberRdbService.validateNotAlreadyJoined(crew.getId(), memberId);
+            crewMemberRdbService.joinCrew(crew.getId(), memberId);
+
+            return null;
+        });
     }
 
     public CursorResponse<GetCrewsResponse> getMyCrews(Long memberId, CursorRequest paging) {

@@ -6,7 +6,7 @@ import com.dongsan.api.support.error.ApiErrorCode;
 import com.dongsan.api.support.error.ApiException;
 import com.dongsan.domain.domains.member.Member;
 import com.dongsan.domain.domains.member.MemberRdbService;
-import com.dongsan.domain.domains.refresh.TokenWriter;
+import com.dongsan.domain.refresh.TokenWriter;
 import com.dongsan.file.service.S3FileService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package com.dongsan.domain.domains.refresh;
+package com.dongsan.domain.refresh;
 
 import org.springframework.stereotype.Repository;
 
