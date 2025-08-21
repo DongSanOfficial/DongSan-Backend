@@ -1,14 +1,14 @@
 package com.dongsan.domain.domains.cowalk;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public record CreateCowalkPostCommand(
         Long crewId,
         Long memberId,
-        LocalDate date,
-        LocalTime time,
+        LocalDateTime startedAt,
+        LocalDateTime endedAt,
         Integer capacity,
         String memo
 ) {
+
 }

@@ -44,4 +44,8 @@ public class CrewMember extends BaseEntity {
     public Long getCrewId() {
         return crewId;
     }
+
+    public Long getMemberId() {
+        return memberId;
+    }
 }

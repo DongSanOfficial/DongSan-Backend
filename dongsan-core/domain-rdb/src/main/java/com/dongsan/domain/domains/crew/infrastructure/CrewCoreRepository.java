@@ -98,6 +98,17 @@ public class CrewCoreRepository implements CrewRepository {
         return new CursorResponse<>(crewList, size);
     }
 
+    @Override
+    public List<Long> getAllMyCrewIds(Long memberId) {
+        return queryFactory
+                .select(crew.id)
+                .from(crew)
+                .join(crewMember)
+                .on(crew.id.eq(crewMember.crewId).and(crewMember.memberId.eq(memberId)))
+                .orderBy(crew.id.desc())
+                .fetch();
+    }
+
     private MetaCrewRanking findCursorRanking(Long lastId) {
         if (lastId == null)
             return null;

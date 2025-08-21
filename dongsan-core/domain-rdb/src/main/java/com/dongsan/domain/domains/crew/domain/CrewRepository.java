@@ -1,5 +1,6 @@
 package com.dongsan.domain.domains.crew.domain;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,7 @@ public interface CrewRepository {
     CursorResponse<Crew> searchCrews(String name, Integer size, Long lastId);
 
     CursorResponse<Crew> findCrewsByLogThisWeek(int size, Long lastId, Long memberId);
+
+    List<Long> getAllMyCrewIds(Long memberId);
 }
 

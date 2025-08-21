@@ -29,6 +29,12 @@ dependencies {
     // tx
     implementation 'org.springframework:spring-tx'
 
+    // Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // micrometer
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
     // test container
     testImplementation 'org.testcontainers:testcontainers:1.20.1'
     testImplementation 'org.testcontainers:junit-jupiter:1.20.1'

@@ -9,4 +9,7 @@ COPY ${JAR_FILE} dongsan-api-server.jar
 
 ENV PROFILE=${PROFILE}
 
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${PROFILE}", "-Duser.timezone=Asia/Seoul", "dongsan-api-server.jar"]
+ENTRYPOINT ["java", \
+  "-Dspring.profiles.active=${PROFILE}", \
+  "-Duser.timezone=Asia/Seoul", \
+  "-jar", "dongsan-api-server.jar"]

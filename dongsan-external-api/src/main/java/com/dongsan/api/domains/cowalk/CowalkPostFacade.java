@@ -7,7 +7,6 @@ import com.dongsan.api.domains.cowalk.dto.response.CowalkPostDetailResponse;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkPostsResponse;
 import com.dongsan.domain.domains.cowalk.CreateCowalkPostCommand;
 import com.dongsan.domain.domains.cowalk.domain.CowalkComment;
-import com.dongsan.domain.domains.cowalk.domain.CowalkCommentRepository;
 import com.dongsan.domain.domains.cowalk.domain.CowalkPost;
 import com.dongsan.domain.domains.cowalk.service.CowalkCommentRdbService;
 import com.dongsan.domain.domains.cowalk.service.CowalkParticipantRdbService;
@@ -22,6 +21,8 @@ import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -33,28 +34,28 @@ public class CowalkPostFacade {
     private final CrewMemberRdbService crewMemberRdbService;
     private final MemberRdbService memberRdbService;
     private final CowalkPostLockService cowalkPostLockService;
-    private final CowalkCommentRepository cowalkCommentRepository;
 
     public CowalkPostFacade(
             CowalkParticipantRdbService cowalkParticipantRdbService,
             CowalkCommentRdbService cowalkCommentRdbService,
             CowalkPostRdbService cowalkPostRdbService,
             CrewMemberRdbService crewMemberRdbService,
-            MemberRdbService memberRdbService, CowalkPostLockService cowalkPostLockService,
-            CowalkCommentRepository cowalkCommentRepository) {
+            MemberRdbService memberRdbService,
+            CowalkPostLockService cowalkPostLockService) {
         this.cowalkParticipantRdbService = cowalkParticipantRdbService;
         this.cowalkCommentRdbService = cowalkCommentRdbService;
         this.cowalkPostRdbService = cowalkPostRdbService;
         this.crewMemberRdbService = crewMemberRdbService;
         this.memberRdbService = memberRdbService;
         this.cowalkPostLockService = cowalkPostLockService;
-        this.cowalkCommentRepository = cowalkCommentRepository;
     }
 
     @Transactional
     public Long saveCowalkPost(CreateCowalkPostRequest createCowalkPostRequest, Long crewId, Long memberId) {
         crewMemberRdbService.validateIsCrewMember(crewId, memberId);
-        CreateCowalkPostCommand command = createCowalkPostRequest.toCreateCowalkPostCommand(crewId, memberId);
+        LocalDate endDate = calculateEndDate(createCowalkPostRequest.startDate(), createCowalkPostRequest.startTime(),
+                createCowalkPostRequest.endTime());
+        CreateCowalkPostCommand command = createCowalkPostRequest.toCreateCowalkPostCommand(crewId, memberId, endDate);
         Long cowalkPostId = cowalkPostRdbService.save(command);
         cowalkParticipantRdbService.save(memberId, cowalkPostId);
         return cowalkPostId;
@@ -65,7 +66,7 @@ public class CowalkPostFacade {
         CowalkPost cowalkPost = cowalkPostRdbService.getCowalkPost(cowalkPostId);
         Integer participantCount = cowalkParticipantRdbService.countByCowalkPostId(cowalkPostId);
         Integer commentCount = cowalkCommentRdbService.countByCowalkPostId(cowalkPostId);
-        Member member = memberRdbService.getMember(memberId);
+        Member member = memberRdbService.getMember(cowalkPost.getMemberId());
         return new CowalkPostDetailResponse(cowalkPost, participantCount, commentCount, member);
     }
 
@@ -133,5 +134,9 @@ public class CowalkPostFacade {
         List<CowalkCommentResponse> responseList = CowalkCommentResponse.from(cowalkCommentList, memberMap);
 
         return new CursorResponse<>(responseList, cowalkComments.getHasNext());
+    }
+
+    private LocalDate calculateEndDate(LocalDate startDate, LocalTime startTime, LocalTime endTime) {
+        return startTime.isAfter(endTime) ? startDate.plusDays(1) : startDate;
     }
 }

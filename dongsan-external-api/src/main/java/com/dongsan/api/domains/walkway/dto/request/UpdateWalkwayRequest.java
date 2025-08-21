@@ -14,14 +14,14 @@ public record UpdateWalkwayRequest(
         @NotNull
         List<String> hashtags,
         @NotNull
-        WalkwayExposeLevel walkwayExposeLevel
+        WalkwayExposeLevel exposeLevel
 ) {
     public UpdateWalkwayCommand toUpdateWalkway(Long walkwayId) {
         return new UpdateWalkwayCommand(
                 walkwayId,
                 this.name(),
                 this.memo(),
-                this.walkwayExposeLevel(),
+                this.exposeLevel(),
                 this.hashtags()
         );
     }

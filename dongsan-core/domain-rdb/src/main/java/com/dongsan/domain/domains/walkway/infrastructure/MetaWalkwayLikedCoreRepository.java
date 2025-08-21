@@ -23,4 +23,9 @@ public class MetaWalkwayLikedCoreRepository implements MetaWalkwayLikedRepositor
     public void save(MetaWalkwayLiked metaWalkwayLiked) {
         metaWalkwayLikedJpaRepository.save(metaWalkwayLiked);
     }
+
+    @Override
+    public Optional<MetaWalkwayLiked> findByWalkwayIdForUpdate(Long walkwayId) {
+        return metaWalkwayLikedJpaRepository.findByWalkwayIdForUpdate(walkwayId);
+    }
 }

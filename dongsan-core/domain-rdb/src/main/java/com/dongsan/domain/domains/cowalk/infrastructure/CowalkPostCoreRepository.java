@@ -56,14 +56,15 @@ public class CowalkPostCoreRepository implements CowalkPostRepository {
     }
 
     @Override
-    public CursorResponse<CowalkPost> getJoinedCowalkPost(Long memberId, LocalDateTime twentyFourHoursAgo, Long lastId, int size) {
+    public CursorResponse<CowalkPost> getJoinedCowalkPost(Long memberId, Long lastId, int size) {
         CowalkPost lastCowalkPost = this.getCowalkPostEntity(lastId);
+        LocalDateTime now = LocalDateTime.now();
 
         List<CowalkPost> cowalkPosts = queryFactory.selectFrom(cowalkPost)
                 .join(cowalkParticipant).on(cowalkPost.id.eq(cowalkParticipant.cowalkPostId))
                 .where(cowalkParticipant.memberId.eq(memberId),
-                        cowalkPost.startedAt.gt(twentyFourHoursAgo),
-                        cowalkPostStartedAtLt(lastCowalkPost)
+                        cowalkPost.endedAt.gt(now),
+                        cowalkPostStartedAtGt(lastCowalkPost)
                 )
                 .orderBy(cowalkPost.startedAt.asc(), cowalkPost.id.asc())
                 .limit(size + 1L)
@@ -72,7 +73,7 @@ public class CowalkPostCoreRepository implements CowalkPostRepository {
         return new CursorResponse<>(cowalkPosts, size);
     }
 
-    private BooleanExpression cowalkPostStartedAtLt(CowalkPost lastCowalkPost) {
+    private BooleanExpression cowalkPostStartedAtGt(CowalkPost lastCowalkPost) {
         if (lastCowalkPost == null) {
             return null;
         }

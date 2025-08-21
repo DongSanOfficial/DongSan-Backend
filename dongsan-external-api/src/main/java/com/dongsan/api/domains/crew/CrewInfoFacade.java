@@ -55,9 +55,12 @@ public class CrewInfoFacade {
     }
 
     @Transactional(readOnly = true)
-    public boolean isNameUnique(String name) {
+    public boolean isNameUnique(String name, Long crewId) {
         name = name.trim();
-        return !crewRdbService.isNameDuplicated(name);
+        if (crewId == null) {
+            return !crewRdbService.isNameDuplicated(name);
+        }
+        return !crewRdbService.isNameDuplicatedExceptSelf(name, crewId);
     }
 
     @Transactional
@@ -95,7 +98,7 @@ public class CrewInfoFacade {
         boolean isCrewMember = crewMemberRdbService.isCrewMember(crewId, memberId);
         crew.canAccess(isCrewMember);
 
-        CursorResponse<WalkwayLog> walkwayLogs = walkwayLogRdbService.getCrewFeed(crewId, paging.lastId(),
+        CursorResponse<WalkwayLog> walkwayLogs = walkwayLogRdbService.getCrewFeed(crewId, crew.getCreatedAt(), paging.lastId(),
                 paging.size());
         List<Long> memberIds = walkwayLogs.getData().stream().map(WalkwayLog::getMemberId).toList();
         Map<Long, Member> memberMap = memberRdbService.getMemberMap(memberIds);
@@ -113,7 +116,12 @@ public class CrewInfoFacade {
         LocalDate startDate = DateRangeUtil.getStartOfWeek(LocalDate.now());
         LocalDate endDate = DateRangeUtil.getEndOfWeek(LocalDate.now());
         CrewWeeklyStatistic crewWeeklyStat = walkwayLogRdbService.getCrewWeeklyStat(crewId, startDate, endDate);
-        return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat, isCrewMember);
+        Long imageId = crew.getCrewImageUrl() == null
+                ? null
+                : imageRdbService.getImageByUrl(crew.getCrewImageUrl()).getId();
+        Long managerId = crewMemberRdbService.getManager(crew.getId()).getMemberId();
+        Member manager = memberRdbService.getMember(managerId);
+        return new GetCrewInfoResponse(crew, memberCount, crewWeeklyStat, isCrewMember, imageId, manager);
     }
 
     @Transactional(readOnly = true)
@@ -198,5 +206,10 @@ public class CrewInfoFacade {
         Map<Long, Integer> memberCountMap = crewMemberRdbService.countByCrewIds(crewIds);
 
         return GetCrewsResponse.from(crewList, crewMemberMap, memberCountMap);
+    }
+
+    public GetMyCrewIdsResponse getMyCrewIds(Long memberId) {
+        List<Long> myCrewIds = crewRdbService.getMyCrewIds(memberId);
+        return new GetMyCrewIdsResponse(myCrewIds);
     }
 }

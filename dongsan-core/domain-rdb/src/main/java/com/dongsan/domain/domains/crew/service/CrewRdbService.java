@@ -1,5 +1,7 @@
 package com.dongsan.domain.domains.crew.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.dongsan.domain.domains.crew.domain.Capacity;
@@ -35,6 +37,14 @@ public class CrewRdbService {
         return crewRepository.existsByName(name);
     }
 
+    public boolean isNameDuplicatedExceptSelf(String name, Long crewId) {
+        Crew crew = getCrew(crewId);
+        if (crew.getName().equals(name)) {
+            return false;
+        }
+        return isNameDuplicated(name);
+    }
+
     public Long save(CrewInfoCommand command) {
         if (isNameDuplicated(command.name())) {
             throw new CoreException(CoreErrorCode.CREW_NAME_DUPLICATED);
@@ -54,7 +64,7 @@ public class CrewRdbService {
     }
 
     public void update(Crew crew, CrewInfoCommand command) {
-        if (isNameDuplicated(command.name())) {
+        if (isNameDuplicatedExceptSelf(command.name(), crew.getId())) {
             throw new CoreException(CoreErrorCode.CREW_NAME_DUPLICATED);
         }
 
@@ -90,5 +100,9 @@ public class CrewRdbService {
 
     public CursorResponse<Crew> recommendCrews(Integer size, Long lastId, Long memberId) {
         return crewRepository.findCrewsByLogThisWeek(size, lastId, memberId);
+    }
+
+    public List<Long> getMyCrewIds(Long memberId) {
+        return crewRepository.getAllMyCrewIds(memberId);
     }
 }
