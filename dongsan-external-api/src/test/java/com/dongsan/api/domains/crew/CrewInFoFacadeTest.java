@@ -1,45 +1,49 @@
 package com.dongsan.api.domains.crew;
 
+import com.dongsan.api.support.IntegrationTest;
+import com.dongsan.domain.domains.crew.domain.Capacity;
+import com.dongsan.domain.domains.crew.domain.Crew;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRepository;
 import com.dongsan.domain.domains.crew.domain.CrewRepository;
+import com.dongsan.domain.domains.crew.service.BCryptPasswordHasher;
+import fixture.CrewTestBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@SpringBootTest
-class TestCrewFacadeTest {
+class CrewInFoFacadeTest extends IntegrationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(TestCrewFacadeTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CrewInFoFacadeTest.class);
 
     @Autowired
-    TestCrewFacade testCrewFacade;
+    CrewInfoFacade crewInfoFacade;
+    @Autowired
+    BCryptPasswordHasher bCryptPasswordHasher;
     @Autowired
     CrewRepository crewRepository;
     @Autowired
     CrewMemberRepository crewMemberRepository;
 
-//    @BeforeEach
-//    void setUp() {
-//        Capacity capacity = new Capacity(true, 100);
-//        Crew crew = new CrewTestBuilder()
-//                .privateCrew("hashed")
-//                .capacity(capacity)
-//                .build();
-//        crewRepository.save(crew);
-//    }
-
     @Test
     void joinLimitedCrew_concurrentTest() throws InterruptedException {
         // given
-        Long crewId = 2L;
-        int threadCount = 1;
+        String password = "123456789";
+        String hashedPassword = bCryptPasswordHasher.hash(password);
+        int memberLimit = 2;
+        Crew crew = new CrewTestBuilder()
+                .privateCrew(hashedPassword)
+                .capacity(new Capacity(true, memberLimit))
+                .build();
+        crewRepository.save(crew);
+        Long crewId = crew.getId();
+
+        int threadCount = 5;
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);
 
@@ -48,7 +52,7 @@ class TestCrewFacadeTest {
             Long memberId = (long) (i + 1);
             executorService.submit(() -> {
                 try {
-                    testCrewFacade.joinLimitedCrew(crewId, memberId);
+                    crewInfoFacade.joinCrew(crewId, memberId, password);
                 } catch (Exception e) {
                     log.error("가입 실패:( Thread: {}, Exception : {}",
                             Thread.currentThread().getName(),
@@ -62,7 +66,7 @@ class TestCrewFacadeTest {
 
         // then
         int count = crewMemberRepository.countByCrewId(crewId);
-        Assertions.assertEquals(count, 10);
+        Assertions.assertEquals(memberLimit, count);
     }
 
 }
