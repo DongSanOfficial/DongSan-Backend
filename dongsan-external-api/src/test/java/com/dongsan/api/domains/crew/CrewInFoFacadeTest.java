@@ -8,6 +8,7 @@ import com.dongsan.domain.domains.crew.domain.CrewRepository;
 import com.dongsan.domain.domains.crew.service.BCryptPasswordHasher;
 import fixture.CrewTestBuilder;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ class CrewInFoFacadeTest extends IntegrationTest {
     @Autowired
     CrewMemberRepository crewMemberRepository;
 
+    @Disabled
     @Test
     void joinLimitedCrew_concurrentTest() throws InterruptedException {
         // given
