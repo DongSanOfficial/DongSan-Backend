@@ -1,10 +1,10 @@
-package com.dongsan.domain.domains.cowalk;
-
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
+package com.dongsan.domain.lock;
 
 import org.redisson.api.RLock;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @Service
 public class CowalkPostLockService {

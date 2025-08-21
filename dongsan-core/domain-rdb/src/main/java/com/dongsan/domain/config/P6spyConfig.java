@@ -24,9 +24,12 @@ public class P6spyConfig implements MessageFormattingStrategy {
     public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared,
                                 String sql, String url) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-        sql = formatSql(category, sql);
+        String currentTime = formatter.format(new Date());
+        String threadName = Thread.currentThread().getName();
+        String formattedSql = formatSqlOneLine(category, sql);
 
-        return formatter.format(new Date()) + " | " + "Operation Time : " + elapsed + "ms" + sql;
+        return String.format("%s | Operation Time : %dms | Thread: %s\n%s",
+                currentTime, elapsed, threadName, formattedSql);
     }
 
     private String formatSql(String category, String sql) {
@@ -49,5 +52,14 @@ public class P6spyConfig implements MessageFormattingStrategy {
             }
         }
         return sql;
+    }
+
+    private String formatSqlOneLine(String category, String sql) {
+        if (sql == null || sql.trim().isEmpty()) {
+            return sql;
+        }
+
+        // DDL, DML 등 모두 한 줄로
+        return sql.replaceAll("\\s+", " ").trim();
     }
 }
