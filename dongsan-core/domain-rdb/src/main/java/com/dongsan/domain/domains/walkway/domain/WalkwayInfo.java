@@ -11,7 +11,7 @@ import java.util.Objects;
 @Embeddable
 public class WalkwayInfo {
     private static final double MIN_DISTANCE_KM = 0.2;
-    private static final int MIN_TIME_SEC = 600;
+    private static final int MIN_TIME_SEC = 300;
 
     @Column(nullable = false)
     private String name;
