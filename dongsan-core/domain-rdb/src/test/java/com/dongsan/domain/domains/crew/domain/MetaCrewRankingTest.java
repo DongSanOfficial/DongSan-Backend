@@ -14,7 +14,7 @@ class MetaCrewRankingTest {
         MetaCrewRanking metaCrewRanking = new MetaCrewRanking(crewId);
 
         assertThat(metaCrewRanking.getCrewId()).isEqualTo(crewId);
-        assertThat(metaCrewRanking.getLogCount()).isEqualTo(0L);
+        assertThat(metaCrewRanking.getLogCount()).isZero();
     }
 
     @Test

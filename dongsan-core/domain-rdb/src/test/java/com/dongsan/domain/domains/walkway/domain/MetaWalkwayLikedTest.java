@@ -13,7 +13,7 @@ class MetaWalkwayLikedTest {
 
         MetaWalkwayLiked metaWalkwayLiked = new MetaWalkwayLiked(walkwayId);
 
-        assertThat(metaWalkwayLiked.getLikeCount()).isEqualTo(0);
+        assertThat(metaWalkwayLiked.getLikeCount()).isZero();
         assertThat(metaWalkwayLiked.getId()).isNull();
     }
 
@@ -47,7 +47,7 @@ class MetaWalkwayLikedTest {
 
         metaWalkwayLiked.decreaseLikeCount();
 
-        assertThat(metaWalkwayLiked.getLikeCount()).isEqualTo(0);
+        assertThat(metaWalkwayLiked.getLikeCount()).isZero();
     }
 
 }
