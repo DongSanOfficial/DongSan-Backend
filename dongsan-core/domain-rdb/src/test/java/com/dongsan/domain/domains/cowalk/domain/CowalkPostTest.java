@@ -13,7 +13,7 @@ class CowalkPostTest {
 
     @Test
     @DisplayName("participantCount(참가인원)이 capacity 이상이면 예외가 발생한다")
-    void Throw_Exception_Capacity_Limit() {
+    void shouldThrowException_whenCapacityLimit() {
         // given
         Integer participantCount = 5;
         Integer capacity = 5;

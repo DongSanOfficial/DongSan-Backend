@@ -2,10 +2,10 @@ package com.dongsan.domain.domains.crew.domain;
 
 import com.dongsan.domain.support.error.CoreException;
 import fixture.CrewInfoTestBuilder;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CrewInfoTest {
@@ -61,7 +61,26 @@ class CrewInfoTest {
     @DisplayName("모든 필드가 유효하면 객체 생성에 성공한다")
     void shouldCreateCrew_whenAllFieldsAreValid() {
         CrewInfo info = new CrewInfoTestBuilder().build();
-        Assertions.assertThat(info).isNotNull();
+        assertThat(info).isNotNull();
+    }
+
+    @Test
+    @DisplayName("CrewInfo를 생성한다")
+    void shouldCreateCrewInfo_withValidValues() {
+        // given
+        String name = "유효한 크루명";
+        String description = "유효한 설명";
+        String rule = "유효한 규칙";
+        String imageUrl = "http://example.com/image.jpg";
+
+        // when
+        CrewInfo crewInfo = new CrewInfo(name, description, rule, imageUrl);
+
+        // then
+        assertThat(crewInfo.getName()).isEqualTo(name);
+        assertThat(crewInfo.getDescription()).isEqualTo(description);
+        assertThat(crewInfo.getRule()).isEqualTo(rule);
+        assertThat(crewInfo.getCrewImageUrl()).isEqualTo(imageUrl);
     }
 
 }

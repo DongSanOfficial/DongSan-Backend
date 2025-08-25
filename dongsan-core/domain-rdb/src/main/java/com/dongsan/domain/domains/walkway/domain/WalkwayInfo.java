@@ -35,12 +35,12 @@ public class WalkwayInfo {
     }
 
     public WalkwayInfo(String name, Double distanceKm, Integer timeSec, WalkwayExposeLevel exposeLevel, String memo, List<String> hashtags) {
-        name = name.trim();
-        memo = memo.trim();
-
         validateName(name);
         validateDistance(distanceKm);
         validateTime(timeSec);
+
+        name = name.trim();
+        memo = memo == null ? null : memo.trim();
 
         this.name = name;
         this.distanceKm = distanceKm;
@@ -76,13 +76,13 @@ public class WalkwayInfo {
     }
 
     private void updateName(String name) {
-        name = name.trim();
         validateName(name);
+        name = name.trim();
         this.name = name;
     }
 
     private void updateMemo(String memo) {
-        memo = memo.trim();
+        memo = memo == null ? null : memo.trim();
         this.memo = memo;
     }
 
