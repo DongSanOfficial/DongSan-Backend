@@ -20,7 +20,7 @@ public class MetaWalkwayRating extends BaseEntity {
 
     protected MetaWalkwayRating() {
     }
-    
+
     public MetaWalkwayRating(Long walkwayId) {
         this.walkwayId = walkwayId;
         this.ratingCount = 0;
@@ -33,7 +33,7 @@ public class MetaWalkwayRating extends BaseEntity {
     }
 
     public void addRating(int rating) {
-        if (rating < 0 || rating > 5) {
+        if (rating < 1 || rating > 5) {
             return;
         }
         this.ratingSum += rating;
