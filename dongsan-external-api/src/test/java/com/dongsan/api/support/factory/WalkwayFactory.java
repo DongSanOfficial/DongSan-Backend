@@ -20,20 +20,20 @@ import com.dongsan.domain.domains.walkway.domain.WalkwayRepository;
 
 @Component
 public class WalkwayFactory {
-    LineString DEFAULT_COURSE = LineStringMapper.toLineString(
+    private static final LineString DEFAULT_COURSE = LineStringMapper.toLineString(
             List.of(
                     new WalkwayCoordinate(37.5000, 127.0000),
                     new WalkwayCoordinate(37.5010, 127.0010),
                     new WalkwayCoordinate(37.5020, 127.0020)
             )
     );
-    String DEFAULT_NAME = "test Walkway";
-    String DEFAULT_MEMO = "test memo";
-    String DEFAULT_IMAGE_URL = "test image url";
-    Double DEFAULT_DISTANCE = 0.2;
-    Integer DEFAULT_TIME = 300;
-    List<String> DEFAULT_HASHTAG = List.of("test");
-    Long DEFAULT_MEMBER_ID = 1L;
+    private static final String DEFAULT_NAME = "test Walkway";
+    private static final String DEFAULT_MEMO = "test memo";
+    private static final String DEFAULT_IMAGE_URL = "test image url";
+    private static final Double DEFAULT_DISTANCE = 0.2;
+    private static final Integer DEFAULT_TIME = 300;
+    private static final List<String> DEFAULT_HASHTAG = List.of("test");
+    private static final Long DEFAULT_MEMBER_ID = 1L;
 
 
     @Autowired

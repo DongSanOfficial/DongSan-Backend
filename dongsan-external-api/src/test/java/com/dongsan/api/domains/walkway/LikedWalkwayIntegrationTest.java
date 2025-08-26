@@ -17,7 +17,7 @@ import com.dongsan.api.support.factory.LikedWalkwayFactory;
 import com.dongsan.api.support.factory.WalkwayFactory;
 import com.dongsan.api.support.factory.WalkwayLogFactory;
 
-public class LikedWalkwayIntegrationTest extends IntegrationTest {
+class LikedWalkwayIntegrationTest extends IntegrationTest {
     @Autowired
     private TestAuthHelper authHelper;
     @Autowired

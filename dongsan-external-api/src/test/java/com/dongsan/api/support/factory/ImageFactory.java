@@ -7,7 +7,7 @@ import com.dongsan.domain.domains.image.ImageRepository;
 
 @Component
 public class ImageFactory {
-    String DEFAULT_IMAGE_URL = "test image url";
+    private static final String DEFAULT_IMAGE_URL = "test image url";
 
     @Autowired
     private ImageRepository imageRepository;

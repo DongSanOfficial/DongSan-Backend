@@ -35,7 +35,7 @@ import com.dongsan.api.support.factory.WalkwayFactory;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
 
-public class WalkwayIntegrationTest extends IntegrationTest {
+class WalkwayIntegrationTest extends IntegrationTest {
     @Autowired
     private TestAuthHelper authHelper;
     @Autowired

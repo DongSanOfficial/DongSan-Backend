@@ -23,7 +23,7 @@ import com.dongsan.api.support.factory.WalkwayFactory;
 import com.dongsan.api.support.factory.WalkwayLogFactory;
 import com.dongsan.domain.support.paging.CursorResponse;
 
-public class UserWalkwayIntegrationTest extends IntegrationTest {
+class UserWalkwayIntegrationTest extends IntegrationTest {
     @Autowired
     private TestAuthHelper authHelper;
     @Autowired
@@ -38,7 +38,7 @@ public class UserWalkwayIntegrationTest extends IntegrationTest {
     @Test
     void getUserUploadWalkwayTest() {
         imageFactory.save();
-        Long walkwayId = walkwayFactory.save();
+        walkwayFactory.save();
         Long memberId = 1L;
         HttpHeaders headers = authHelper.generateTokenHeader(memberId);
         HttpEntity<String> entity = new HttpEntity<>(headers);
