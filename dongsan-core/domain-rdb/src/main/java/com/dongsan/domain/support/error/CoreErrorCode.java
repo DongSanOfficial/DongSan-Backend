@@ -22,7 +22,7 @@ public enum CoreErrorCode {
     ALREADY_REVIEWED(CoreErrorStatus.CONFLICT, "WALKWAY-08", "이미 리뷰를 작성하였습니다."),
     WALKWAY_NAME_NOT_BLANK(CoreErrorStatus.BAD_REQUEST, "WALKWAY-10", "산책로 이름은 공백일 수 없습니다."),
     WALKWAY_DISTANCE_NOT_ENOUGH(CoreErrorStatus.BAD_REQUEST, "WALKWAY-11", "산책로 등록 가능 거리는 0.2km 이상입니다."),
-    WALKWAY_TIME_NOT_ENOUGH(CoreErrorStatus.BAD_REQUEST, "WALKWAY-12", "산책로 등록 가능 시간은 10분(600초) 이상 입니다."),
+    WALKWAY_TIME_NOT_ENOUGH(CoreErrorStatus.BAD_REQUEST, "WALKWAY-12", "산책로 등록 가능 시간은 5분(300초) 이상 입니다."),
 
     // member
     MEMBER_NOT_FOUND(CoreErrorStatus.NOT_FOUND, "MEMBER-01", "해당 회원이 존재하지 않습니다."),
