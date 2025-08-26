@@ -1,12 +1,12 @@
 package com.dongsan.api.domains.crew.dto.response;
 
-import com.dongsan.domain.domains.member.Member;
-import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
-import com.dongsan.domain.support.paging.CursorResponse;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import com.dongsan.domain.domains.member.Member;
+import com.dongsan.domain.domains.walkwayLog.WalkwayLog;
+import com.dongsan.domain.support.paging.CursorResponse;
 
 public record GetCrewFeedResponse(
         Long walkwayHistoryId,
@@ -17,7 +17,7 @@ public record GetCrewFeedResponse(
         int durationSec
 ) {
     public static List<GetCrewFeedResponse> from(CursorResponse<WalkwayLog> walkwayLogs, Map<Long, Member> memberMap) {
-        return walkwayLogs.getData().stream()
+        return walkwayLogs.data().stream()
                 .map(walkwayLog -> {
                     Member member = memberMap.get(walkwayLog.getMemberId());
                     if (member == null) {

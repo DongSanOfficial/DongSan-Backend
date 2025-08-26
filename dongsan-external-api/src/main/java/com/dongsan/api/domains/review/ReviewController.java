@@ -1,5 +1,17 @@
 package com.dongsan.api.domains.review;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.review.dto.CreateReviewRequest;
 import com.dongsan.api.domains.review.dto.CreateReviewResponse;
@@ -8,13 +20,9 @@ import com.dongsan.domain.domains.review.domain.ReviewStatistic;
 import com.dongsan.domain.domains.review.infrastructure.ReviewWithMemberQuery;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/walkways")
@@ -53,7 +61,7 @@ public class ReviewController {
                 = reviewFacade.getWalkwayReviews(sort, walkwayId, customOAuth2User.getMemberId(),
                 new CursorRequest(lastId, size));
         return ResponseEntity.ok(
-                new CursorResponse<>(WalkwayReviewsResponse.from(response.getData()), response.getHasNext()));
+                new CursorResponse<>(WalkwayReviewsResponse.from(response.data()), response.hasNext()));
     }
 
     @Operation(summary = "리뷰 별점 보기")

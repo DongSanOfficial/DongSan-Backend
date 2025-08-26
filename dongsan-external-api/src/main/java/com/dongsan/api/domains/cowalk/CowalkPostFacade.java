@@ -1,5 +1,13 @@
 package com.dongsan.api.domains.cowalk;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkCommentRequest;
 import com.dongsan.api.domains.cowalk.dto.request.CreateCowalkPostRequest;
 import com.dongsan.api.domains.cowalk.dto.response.CowalkCommentResponse;
@@ -18,13 +26,6 @@ import com.dongsan.domain.lock.CowalkPostLockService;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorResponse;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class CowalkPostFacade {
@@ -86,7 +87,7 @@ public class CowalkPostFacade {
 
     public CursorResponse<CowalkPostsResponse> getCowalkPosts(Long crewId, Integer size, Long lastId) {
         CursorResponse<CowalkPost> cowalkPosts = cowalkPostRdbService.getCowalkPosts(size, lastId, crewId);
-        List<CowalkPost> cowalkPostList = cowalkPosts.getData();
+        List<CowalkPost> cowalkPostList = cowalkPosts.data();
 
         List<Long> memberIds = cowalkPostList.stream()
                 .map(CowalkPost::getMemberId)
@@ -106,7 +107,7 @@ public class CowalkPostFacade {
                 commentCountMap
         );
 
-        return new CursorResponse<>(cowalkPostsResponseList, cowalkPosts.getHasNext());
+        return new CursorResponse<>(cowalkPostsResponseList, cowalkPosts.hasNext());
     }
 
     @Transactional
@@ -123,7 +124,7 @@ public class CowalkPostFacade {
         CursorResponse<CowalkComment> cowalkComments
                 = cowalkCommentRdbService.getCowalkComments(size, lastId, cowalkPostId);
 
-        List<CowalkComment> cowalkCommentList = cowalkComments.getData();
+        List<CowalkComment> cowalkCommentList = cowalkComments.data();
 
         List<Long> memberIds = cowalkCommentList.stream()
                 .map(CowalkComment::getMemberId)
@@ -133,7 +134,7 @@ public class CowalkPostFacade {
 
         List<CowalkCommentResponse> responseList = CowalkCommentResponse.from(cowalkCommentList, memberMap);
 
-        return new CursorResponse<>(responseList, cowalkComments.getHasNext());
+        return new CursorResponse<>(responseList, cowalkComments.hasNext());
     }
 
     private LocalDate calculateEndDate(LocalDate startDate, LocalTime startTime, LocalTime endTime) {
