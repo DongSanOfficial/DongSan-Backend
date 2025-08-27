@@ -1,23 +1,39 @@
 package com.dongsan.api.domains.walkway;
 
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dongsan.api.domains.auth.CustomAuthUser;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayHistoryRequest;
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.request.UpdateWalkwayRequest;
-import com.dongsan.api.domains.walkway.dto.response.*;
+import com.dongsan.api.domains.walkway.dto.response.BookmarksWithMarkedWalkwayResponse;
+import com.dongsan.api.domains.walkway.dto.response.CourseImageIdResponse;
+import com.dongsan.api.domains.walkway.dto.response.SearchWalkwayResponse;
+import com.dongsan.api.domains.walkway.dto.response.WalkwayDetailResponse;
+import com.dongsan.api.domains.walkway.dto.response.WalkwayHistoryResponse;
+import com.dongsan.api.domains.walkway.dto.response.WalkwayIdResponse;
 import com.dongsan.domain.domains.bookmark.infrastructure.dto.BookmarkWithMarkedStatus;
 import com.dongsan.domain.domains.walkway.SearchWalkwayQuery;
 import com.dongsan.domain.domains.walkway.UpdateWalkwayCommand;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/walkways")
@@ -97,7 +113,7 @@ public class WalkwayController {
         CursorResponse<BookmarkWithMarkedStatus> response
                 = walkwayFacade.getBookmarksWithMarkedWalkway(customOAuth2User.getMemberId(), walkwayId, new CursorRequest(lastId, size));
         return ResponseEntity.ok(
-                new CursorResponse<>(BookmarksWithMarkedWalkwayResponse.from(response.getData()), response.getHasNext()));
+                new CursorResponse<>(BookmarksWithMarkedWalkwayResponse.from(response.data()), response.hasNext()));
     }
 
     @Operation(summary = "산책로 검색")

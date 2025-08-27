@@ -1,5 +1,11 @@
 package com.dongsan.api.domains.bookmark;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dongsan.domain.domains.bookmark.domain.Bookmark;
 import com.dongsan.domain.domains.bookmark.domain.MarkedWalkway;
 import com.dongsan.domain.domains.bookmark.service.BookmarkRdbService;
@@ -10,11 +16,6 @@ import com.dongsan.domain.domains.walkway.service.LikedWalkwayRdbService;
 import com.dongsan.domain.domains.walkway.service.WalkwayRdbService;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Map;
 
 @Component
 @Transactional
@@ -63,13 +64,13 @@ public class BookmarkFacade {
         bookmark.validateOwner(memberId);
         CursorResponse<MarkedWalkway> markedWalkways = bookmarkRdbService.getBookmarkWalkway(memberId, bookmarkId, paging.lastId(), paging.size());
 
-        List<Long> walkwayIds = markedWalkways.getData().stream().map(MarkedWalkway::getWalkwayId).toList();
+        List<Long> walkwayIds = markedWalkways.data().stream().map(MarkedWalkway::getWalkwayId).toList();
         Map<Long, Walkway> walkwayMap = walkwayRdbService.getWalkways(walkwayIds);
         Map<Long, ReviewStatistic> reviewStatMap = reviewRdbService.getReviewStats(walkwayIds);
         Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
 
-        List<MarkedWalkwayResponse> response = MarkedWalkwayResponse.from(markedWalkways.getData(), walkwayMap, reviewStatMap, likeCountMap);
-        return new CursorResponse<>(response, markedWalkways.getHasNext());
+        List<MarkedWalkwayResponse> response = MarkedWalkwayResponse.from(markedWalkways.data(), walkwayMap, reviewStatMap, likeCountMap);
+        return new CursorResponse<>(response, markedWalkways.hasNext());
     }
 
 }

@@ -1,5 +1,13 @@
 package com.dongsan.api.domains.walkway;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dongsan.api.domains.walkway.dto.request.CreateWalkwayRequest;
 import com.dongsan.api.domains.walkway.dto.response.SearchWalkwayResponse;
 import com.dongsan.api.domains.walkway.dto.response.WalkwayDetailResponse;
@@ -25,13 +33,6 @@ import com.dongsan.domain.domains.walkwayLog.WalkwayLogRdbService;
 import com.dongsan.domain.support.paging.CursorRequest;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Service
 public class WalkwayFacade {
@@ -121,15 +122,15 @@ public class WalkwayFacade {
     @Transactional(readOnly = true)
     public CursorResponse<SearchWalkwayResponse> searchWalkway(SearchWalkwayQuery searchQuery, CursorRequest paging) {
         CursorResponse<Walkway> walkways = searchWalkwayFactory.getService(searchQuery.sort()).search(searchQuery, paging);
-        List<Long> walkwayIds = walkways.getData().stream().map(Walkway::getId).toList();
-        List<WalkwaySnapshot> walkwaySnapshots = walkways.getData().stream().map(Walkway::snapshot).toList();
+        List<Long> walkwayIds = walkways.data().stream().map(Walkway::getId).toList();
+        List<WalkwaySnapshot> walkwaySnapshots = walkways.data().stream().map(Walkway::snapshot).toList();
 
         Map<Long, ReviewStatistic> reviewStatMap = reviewRdbService.getReviewStats(walkwayIds);
         Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
         Set<Long> likedWalkwaySet = likedWalkwayRdbService.likedWalkways(searchQuery.memberId(), walkwayIds);
 
         List<SearchWalkwayResponse> response = SearchWalkwayResponse.from(walkwaySnapshots, reviewStatMap, likeCountMap, likedWalkwaySet);
-        return new CursorResponse<>(response, walkways.getHasNext());
+        return new CursorResponse<>(response, walkways.hasNext());
     }
 
     @Transactional(readOnly = true)
@@ -140,15 +141,15 @@ public class WalkwayFacade {
             case RATING -> walkwayRdbService.getWalkwaysRating(memberId, paging.lastId(), paging.size());
             default -> walkwayRdbService.getWalkwaysLatest(memberId, paging.lastId(), paging.size());
         };
-        List<Long> walkwayIds = walkways.getData().stream().map(Walkway::getId).toList();
-        List<WalkwaySnapshot> walkwaySnapshots = walkways.getData().stream().map(Walkway::snapshot).toList();
+        List<Long> walkwayIds = walkways.data().stream().map(Walkway::getId).toList();
+        List<WalkwaySnapshot> walkwaySnapshots = walkways.data().stream().map(Walkway::snapshot).toList();
 
         Map<Long, ReviewStatistic> reviewStatMap = reviewRdbService.getReviewStats(walkwayIds);
         Map<Long, Long> likeCountMap = likedWalkwayRdbService.countLikesMap(walkwayIds);
         Set<Long> likedWalkwaySet = likedWalkwayRdbService.likedWalkways(memberId, walkwayIds);
 
         List<SearchWalkwayResponse> response = SearchWalkwayResponse.from(walkwaySnapshots, reviewStatMap, likeCountMap, likedWalkwaySet);
-        return new CursorResponse<>(response, walkways.getHasNext());
+        return new CursorResponse<>(response, walkways.hasNext());
     }
 
 }
