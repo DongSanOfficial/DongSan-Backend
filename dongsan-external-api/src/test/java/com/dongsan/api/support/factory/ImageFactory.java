@@ -15,4 +15,8 @@ public class ImageFactory {
     public Long save() {
         return imageRepository.save(DEFAULT_IMAGE_URL);
     }
+
+    public Long save(String imageUrl) {
+        return imageRepository.save(imageUrl);
+    }
 }
