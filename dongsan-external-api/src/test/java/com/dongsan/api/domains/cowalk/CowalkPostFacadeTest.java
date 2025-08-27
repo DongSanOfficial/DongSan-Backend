@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dongsan.api.support.IntegrationTest;
@@ -29,6 +31,7 @@ import com.dongsan.domain.domains.member.MemberRole;
 
 class CowalkPostFacadeTest extends IntegrationTest {
 
+    private static final Logger log = LoggerFactory.getLogger(CowalkPostFacadeTest.class);
     @Autowired
     private CowalkPostFacade cowalkPostFacade;
 
@@ -87,6 +90,7 @@ class CowalkPostFacadeTest extends IntegrationTest {
                 try {
                     cowalkPostFacade.joinCowalkPost(1L, 1L, memberId);
                 } catch (Exception ignored) {
+                    log.error(ignored.getMessage(), ignored);
                 } finally {
                     latch.countDown();
                 }

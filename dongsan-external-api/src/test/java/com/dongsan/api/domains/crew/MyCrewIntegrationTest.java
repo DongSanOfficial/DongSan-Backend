@@ -24,7 +24,7 @@ import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
 
-public class MyCrewIntegrationTest extends IntegrationTest {
+class MyCrewIntegrationTest extends IntegrationTest {
     @Autowired
     private TestAuthHelper authHelper;
     @Autowired

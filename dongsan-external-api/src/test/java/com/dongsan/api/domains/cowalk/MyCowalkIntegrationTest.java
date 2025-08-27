@@ -21,7 +21,7 @@ import com.dongsan.api.support.factory.CrewFactory;
 import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
 import com.dongsan.domain.support.paging.CursorResponse;
 
-public class MyCowalkIntegrationTest extends IntegrationTest {
+class MyCowalkIntegrationTest extends IntegrationTest {
     @Autowired
     private TestAuthHelper authHelper;
     @Autowired
