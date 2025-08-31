@@ -1,17 +1,12 @@
 package com.dongsan.domain.domains.crew.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.dongsan.domain.domains.crew.domain.Capacity;
-import com.dongsan.domain.domains.crew.domain.Crew;
-import com.dongsan.domain.domains.crew.domain.CrewAccessPolicy;
-import com.dongsan.domain.domains.crew.domain.CrewInfo;
-import com.dongsan.domain.domains.crew.domain.CrewRepository;
+import com.dongsan.domain.domains.crew.domain.*;
 import com.dongsan.domain.support.error.CoreErrorCode;
 import com.dongsan.domain.support.error.CoreException;
 import com.dongsan.domain.support.paging.CursorResponse;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CrewRdbService {
@@ -25,11 +20,6 @@ public class CrewRdbService {
 
     public Crew getCrew(Long crewId) {
         return crewRepository.findById(crewId)
-                .orElseThrow(() -> new CoreException(CoreErrorCode.CREW_NOT_FOUND));
-    }
-
-    public Crew getCrewWithLock(Long crewId) {
-        return crewRepository.findByIdWithLock(crewId)
                 .orElseThrow(() -> new CoreException(CoreErrorCode.CREW_NOT_FOUND));
     }
 

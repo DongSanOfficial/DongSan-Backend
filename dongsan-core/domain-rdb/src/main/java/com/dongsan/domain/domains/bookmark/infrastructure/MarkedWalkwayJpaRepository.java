@@ -19,8 +19,6 @@ public interface MarkedWalkwayJpaRepository extends JpaRepository<MarkedWalkway,
     @Query("delete from MarkedWalkway mw where mw.bookmarkId = :bookmarkId")
     void deleteAllByBookmarkId(@Param("bookmarkId") Long bookmarkId);
 
-    int countByBookmarkId(Long bookmarkId);
-
     Optional<MarkedWalkway> findByBookmarkIdAndWalkwayId(Long bookmarkId, Long walkwayId);
 
     void deleteAllInBatchByWalkwayId(Long walkwayId);
