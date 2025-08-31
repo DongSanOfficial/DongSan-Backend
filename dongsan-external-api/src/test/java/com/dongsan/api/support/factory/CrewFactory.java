@@ -1,42 +1,31 @@
 package com.dongsan.api.support.factory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
-import javax.sql.DataSource;
-
+import com.dongsan.domain.domains.crew.domain.*;
+import com.dongsan.domain.domains.crew.service.PasswordHasher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dongsan.domain.domains.crew.domain.Capacity;
-import com.dongsan.domain.domains.crew.domain.Crew;
-import com.dongsan.domain.domains.crew.domain.CrewAccessPolicy;
-import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
-import com.dongsan.domain.domains.crew.domain.CrewInfo;
-import com.dongsan.domain.domains.crew.domain.CrewMember;
-import com.dongsan.domain.domains.crew.domain.CrewMemberRepository;
-import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
-import com.dongsan.domain.domains.crew.domain.CrewRepository;
-import com.dongsan.domain.domains.crew.service.PasswordHasher;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 @Component
 public class CrewFactory {
-    private static final String DEFAULT_NAME        = "테스트 크루";
+    private static final String DEFAULT_NAME = "테스트 크루";
     private static final String DEFAULT_DESCRIPTION = "설명입니다";
-    private static final String DEFAULT_RULE        = "규칙입니다";
-    private static final String DEFAULT_IMAGE_URL   = "https://example.com/crew.png";
+    private static final String DEFAULT_RULE = "규칙입니다";
+    private static final String DEFAULT_IMAGE_URL = "https://example.com/crew.png";
     private static final boolean DEFAULT_LIMIT_ENABLE = true;
-    private static final int DEFAULT_MEMBER_LIMIT     = 50;
-    private static final String DEFAULT_PRIVATE_PASSWORD = "1234";
-
+    private static final int DEFAULT_MEMBER_LIMIT = 50;
+    private static final String DEFAULT_PRIVATE_PASSWORD = "123456789";
+    @Autowired
+    DataSource dataSource;
     @Autowired
     private CrewRepository crewRepository;
     @Autowired
     private CrewMemberRepository crewMemberRepository;
     @Autowired
     private PasswordHasher passwordHasher;
-    @Autowired
-    DataSource dataSource;
 
     public Long save(CrewExposeLevel crewExposeLevel, Long memberId) {
         CrewInfo info = new CrewInfo(
