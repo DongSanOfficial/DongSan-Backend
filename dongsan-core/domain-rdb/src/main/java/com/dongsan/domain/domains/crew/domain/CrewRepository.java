@@ -1,17 +1,14 @@
 package com.dongsan.domain.domains.crew.domain;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.dongsan.domain.support.paging.CursorResponse;
 import org.springframework.stereotype.Repository;
 
-import com.dongsan.domain.support.paging.CursorResponse;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CrewRepository {
     Optional<Crew> findById(Long crewId);
-
-    Optional<Crew> findByIdWithLock(Long crewId);
 
     Long save(Crew crew);
 

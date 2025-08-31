@@ -1,13 +1,5 @@
 package com.dongsan.domain.domains.crew.infrastructure;
 
-import static com.dongsan.domain.domains.crew.domain.QCrewMember.*;
-import static com.dongsan.domain.domains.crew.domain.QMetaCrewRanking.*;
-
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Repository;
-
 import com.dongsan.domain.domains.crew.domain.Crew;
 import com.dongsan.domain.domains.crew.domain.CrewRepository;
 import com.dongsan.domain.domains.crew.domain.MetaCrewRanking;
@@ -15,6 +7,13 @@ import com.dongsan.domain.domains.crew.domain.QCrew;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import static com.dongsan.domain.domains.crew.domain.QCrewMember.crewMember;
+import static com.dongsan.domain.domains.crew.domain.QMetaCrewRanking.metaCrewRanking;
 
 @Repository
 public class CrewCoreRepository implements CrewRepository {
@@ -30,11 +29,6 @@ public class CrewCoreRepository implements CrewRepository {
     @Override
     public Optional<Crew> findById(Long crewId) {
         return crewJpaRepository.findById(crewId);
-    }
-
-    @Override
-    public Optional<Crew> findByIdWithLock(Long crewId) {
-        return crewJpaRepository.findByIdWithLock(crewId);
     }
 
     @Override

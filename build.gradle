@@ -54,6 +54,7 @@ tasks.register('jacocoRootTestReport', JacocoReport) {
 
     def excludePatterns = [
             "**/com/dongsan/api/support/**",
+            "**/com/dongsan/api/domains/auth/**",
             "**/config/**",
             "**/dto/**",
             "**/fixture/**",

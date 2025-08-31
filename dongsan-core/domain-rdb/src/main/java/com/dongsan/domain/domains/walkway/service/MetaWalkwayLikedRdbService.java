@@ -16,10 +16,6 @@ public class MetaWalkwayLikedRdbService {
         this.metaWalkwayLikedRepository = metaWalkwayLikedRepository;
     }
 
-    private Optional<MetaWalkwayLiked> findByWalkwayId(Long walkwayId) {
-        return metaWalkwayLikedRepository.findByWalkwayId(walkwayId);
-    }
-
     private Optional<MetaWalkwayLiked> findByWalkwayIdForUpdate(Long walkwayId) {
         return metaWalkwayLikedRepository.findByWalkwayIdForUpdate(walkwayId);
     }

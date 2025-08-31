@@ -15,11 +15,7 @@ public class MetaWalkwayRatingRdbService {
     public MetaWalkwayRatingRdbService(MetaWalkwayRatingRepository metaWalkwayRatingRepository) {
         this.metaWalkwayRatingRepository = metaWalkwayRatingRepository;
     }
-
-    private Optional<MetaWalkwayRating> findByWalkwayId(Long walkwayId) {
-        return metaWalkwayRatingRepository.findByWalkwayId(walkwayId);
-    }
-
+    
     private Optional<MetaWalkwayRating> findByWalkwayIdForUpdate(Long walkwayId) {
         return metaWalkwayRatingRepository.findByWalkwayIdForUpdate(walkwayId);
     }

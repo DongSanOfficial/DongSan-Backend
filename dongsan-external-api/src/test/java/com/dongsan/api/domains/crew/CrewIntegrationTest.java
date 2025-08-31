@@ -1,35 +1,6 @@
 package com.dongsan.api.domains.crew;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-
-import java.time.LocalDate;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.dongsan.api.domains.crew.dto.response.CreateCrewImageResponse;
-import com.dongsan.api.domains.crew.dto.response.CreateCrewResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewFeedResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewInfoResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewMemberRankingResponse;
-import com.dongsan.api.domains.crew.dto.response.GetCrewsResponse;
-import com.dongsan.api.domains.crew.dto.response.IsNameUniqueResponse;
+import com.dongsan.api.domains.crew.dto.response.*;
 import com.dongsan.api.support.IntegrationTest;
 import com.dongsan.api.support.TestAuthHelper;
 import com.dongsan.api.support.factory.CrewFactory;
@@ -40,6 +11,24 @@ import com.dongsan.domain.domains.crew.domain.CrewExposeLevel;
 import com.dongsan.domain.domains.crew.domain.CrewMemberRole;
 import com.dongsan.domain.support.paging.CursorResponse;
 import com.dongsan.file.service.S3FileService;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 class CrewIntegrationTest extends IntegrationTest {
     @Autowired
@@ -121,7 +110,7 @@ class CrewIntegrationTest extends IntegrationTest {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<GetCrewInfoResponse> response = restTemplate.exchange(
-                "http://localhost:" + port + "/crews/"+ crewId +"/info",
+                "http://localhost:" + port + "/crews/" + crewId + "/info",
                 HttpMethod.GET,
                 entity,
                 GetCrewInfoResponse.class
@@ -139,7 +128,7 @@ class CrewIntegrationTest extends IntegrationTest {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<GetCrewInfoResponse> response = restTemplate.exchange(
-                "http://localhost:" + port + "/crews/"+ crewId +"/info",
+                "http://localhost:" + port + "/crews/" + crewId + "/info",
                 HttpMethod.GET,
                 entity,
                 GetCrewInfoResponse.class
@@ -226,6 +215,36 @@ class CrewIntegrationTest extends IntegrationTest {
     }
 
     @Test
+    void createCrewTest_duplicateName() {
+        Long memberId = 1L;
+        HttpHeaders headers = authHelper.generateTokenHeader(memberId);
+        crewFactory.save("중복이름", CrewExposeLevel.PUBLIC, memberId);
+
+        String jsonBody = """
+                {
+                    "name": "중복이름",
+                    "description": "크루 설명",
+                    "rule": "크루 규칙",
+                    "visibility": "PUBLIC",
+                    "password": "12345678",
+                    "limitEnable": true,
+                    "memberLimit": 50,
+                    "crewImageId": null
+                }
+                """;
+        HttpEntity<String> entity = new HttpEntity<>(jsonBody, headers);
+
+        ResponseEntity<CreateCrewResponse> response = restTemplate.exchange(
+                "http://localhost:" + port + "/crews",
+                HttpMethod.POST,
+                entity,
+                CreateCrewResponse.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
     void createCrewImage() {
         Long memberId = 1L;
         HttpHeaders headers = authHelper.generateTokenHeader(memberId);
@@ -256,7 +275,7 @@ class CrewIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void joinCrewTest() {
+    void joinCrewTest_publicCrew() {
         Long managerMemberId = 2L;
         Long crewId = crewFactory.save(CrewExposeLevel.PUBLIC, managerMemberId);
 
@@ -278,6 +297,56 @@ class CrewIntegrationTest extends IntegrationTest {
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void joinCrewTest_privateCrew() {
+        Long managerMemberId = 2L;
+        Long crewId = crewFactory.save(CrewExposeLevel.PRIVATE, managerMemberId);
+
+        Long memberId = 1L;
+        HttpHeaders headers = authHelper.generateTokenHeader(memberId);
+
+        String jsonBody = """
+                {
+                    "password": "123456789"
+                }
+                """;
+        HttpEntity<String> entity = new HttpEntity<>(jsonBody, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "http://localhost:" + port + "/crews/" + crewId + "/members",
+                HttpMethod.POST,
+                entity,
+                Void.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void joinCrewTest_privateCrew_passwordFail() {
+        Long managerMemberId = 2L;
+        Long crewId = crewFactory.save(CrewExposeLevel.PRIVATE, managerMemberId);
+
+        Long memberId = 1L;
+        HttpHeaders headers = authHelper.generateTokenHeader(memberId);
+
+        String jsonBody = """
+                {
+                    "password": "1234567890"
+                }
+                """;
+        HttpEntity<String> entity = new HttpEntity<>(jsonBody, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "http://localhost:" + port + "/crews/" + crewId + "/members",
+                HttpMethod.POST,
+                entity,
+                Void.class
+        );
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
 
     @Test
@@ -308,6 +377,37 @@ class CrewIntegrationTest extends IntegrationTest {
         );
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void updateCrewTest_duplicateName() {
+        Long memberId = 1L;
+        crewFactory.save("크루1", CrewExposeLevel.PUBLIC, memberId);
+        Long crew2Id = crewFactory.save("크루2", CrewExposeLevel.PUBLIC, memberId);
+        HttpHeaders headers = authHelper.generateTokenHeader(memberId);
+
+        String jsonBody = """
+                {
+                    "name": "크루1",
+                    "description": "설명변경",
+                    "rule": "규칙변경",
+                    "visibility": "PUBLIC",
+                    "password": "12345678",
+                    "limitEnable": true,
+                    "memberLimit": 50,
+                    "crewImageId": null
+                }
+                """;
+        HttpEntity<String> entity = new HttpEntity<>(jsonBody, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "http://localhost:" + port + "/crews/" + crew2Id,
+                HttpMethod.PUT,
+                entity,
+                Void.class
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test

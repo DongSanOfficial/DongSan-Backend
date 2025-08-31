@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface MetaWalkwayRatingJpaRepository extends JpaRepository<MetaWalkwayRating, Long> {
-    Optional<MetaWalkwayRating> findByWalkwayId(Long walkwayId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select mw from MetaWalkwayRating mw where mw.walkwayId = :walkwayId")

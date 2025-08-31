@@ -6,7 +6,6 @@ import java.util.Optional;
 
 @Repository
 public interface MetaWalkwayLikedRepository {
-    Optional<MetaWalkwayLiked> findByWalkwayId(Long walkwayId);
 
     void save(MetaWalkwayLiked metaWalkwayLiked);
 
