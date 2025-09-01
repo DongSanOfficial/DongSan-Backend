@@ -50,10 +50,10 @@ public class CookieService {
         cookie.setMaxAge(maxAge);
         cookie.setDomain(domain);
         cookie.setPath("/");
-        cookie.setHttpOnly(true);
+        cookie.setHttpOnly(false);
 
         // http 쿠키 전송을 위해
-        cookie.setAttribute("SameSite", "Lax");
+        cookie.setAttribute("SameSite", "None");
         cookie.setSecure(true);
 
         return cookie;
