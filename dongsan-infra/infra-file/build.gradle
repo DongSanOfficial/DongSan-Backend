@@ -14,4 +14,8 @@ tasks.register('copyConfig', Copy) {
     into 'src/main/resources'
 }
 
+test {
+    useJUnitPlatform()
+}
+
 processResources.dependsOn('copyConfig')

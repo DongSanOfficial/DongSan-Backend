@@ -113,7 +113,7 @@ public class CowalkPostFacade {
     @Transactional
     public Long saveCowalkComment(Long memberId, Long cowalkPostId,
                                   CreateCowalkCommentRequest createCowalkCommentRequest) {
-        cowalkParticipantRdbService.validNotJoin(cowalkPostId, memberId);
+        cowalkParticipantRdbService.validNotJoin(memberId, cowalkPostId);
         return cowalkCommentRdbService.save(memberId, cowalkPostId, createCowalkCommentRequest.content());
     }
 
